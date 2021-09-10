@@ -1,0 +1,16 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "search.exclude": {
+    "**/build": true,
+    "**/dist": true
+  },
+  "cSpell.words": [
+    "noreferrer",
+    "semibold",
+    "UGRC"
+  ]
+}
