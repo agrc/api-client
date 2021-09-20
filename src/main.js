@@ -1,15 +1,14 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const Store = require('electron-store');
+require('./config');
+const getFields = require('./components/csv').getFields;
+const getRecordCount = require('./components/csv').getRecordCount;
 
-const store = new Store();
-
-ipcMain.handle('loadContent', () => {
-  return store.get('config.key');
+ipcMain.handle('getFieldsFromFile', (_, content) => {
+  return getFields(content);
 });
-
-ipcMain.on('saveContent', (_, content) => {
-  store.set('config.key', content);
+ipcMain.handle('getRecordCount', (_, content) => {
+  return getRecordCount(content);
 });
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.

@@ -1,6 +1,6 @@
-import * as ReactDOM from 'react-dom';
 import * as React from 'react';
-import Routes from './Routes.jsx';
+import * as ReactDOM from 'react-dom';
+import Routes from './pages/Routes.jsx';
 import './tailwind.css';
 
 (async () => {

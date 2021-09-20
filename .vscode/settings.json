@@ -8,5 +8,16 @@
     "**/build": true,
     "**/dist": true
   },
-  "cSpell.words": ["noreferrer", "semibold", "UGRC", "vercel", "tailwindcss", "relocator", "loglevel"]
+  "cSpell.words": [
+    "Dropzone",
+    "fulladd",
+    "loglevel",
+    "noreferrer",
+    "relocator",
+    "semibold",
+    "tailwindcss",
+    "UGRC",
+    "vercel",
+    "zipcode"
+  ]
 }

@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { useGeocodeContext } from '../components/GeocodeContext';
 
-const updateConfig = (newValue) => {
-  window.ugrc.saveContent(newValue);
-};
-
-export function App() {
-  const [key, setKey] = useState('');
+export default function ApiKey() {
+  const [geocodeContext, setGeocodeContext] = useGeocodeContext();
+  const history = useHistory();
 
   useEffect(() => {
-    const getKey = async () => {
-      setKey(await window.ugrc.apiKey());
-    };
-
-    getKey();
+    window.ugrc.getConfigItem('apiKey').then((key) => {
+      setGeocodeContext({ apiKey: key });
+      if (key) {
+        console.log('pushing');
+        history.push('/data');
+      }
+    });
   }, []);
 
   return (
@@ -46,13 +46,14 @@ export function App() {
             className="ml-4 text-2xl border-0 border-t border-b border-l rounded-none rounded-l"
             type="text"
             id="apiKey"
-            value={key}
-            onChange={(e) => setKey(e.target.value)}
+            value={geocodeContext.apiKey}
+            onChange={(e) => setGeocodeContext({ apiKey: e.target.value })}
           />
           <Link
-            onClick={() => updateConfig(key)}
+            onClick={() => window.ugrc.saveConfig({ apiKey: geocodeContext.apiKey })}
             to="/data"
             type="button"
+            disabled={!geocodeContext.apiKey}
             className="border-0 border-t border-b border-r rounded-none rounded-r"
           >
             Next
@@ -60,20 +61,5 @@ export function App() {
         </div>
       </section>
     </article>
-  );
-}
-
-export function Data() {
-  return (
-    <>
-      <Link className="px-4 py-1 text-white bg-indigo-400 border border-indigo-600 rounded shadow" to="/">
-        &larr; Back
-      </Link>
-      <h1 className="my-6 text-3xl">Add your data</h1>
-      <p className="mb-2 text-base">This data needs to be structured data in a CSV format, ideally with a header row</p>
-      <div className="flex items-center justify-center w-full bg-gray-100 border border-indigo-800 rounded shadow h-28">
-        <span className="text-gray-400">Drag and drop address data</span>
-      </div>
-    </>
   );
 }

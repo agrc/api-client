@@ -101,12 +101,15 @@
   "dependencies": {
     "assert": "^2.0.0",
     "crypto-browserify": "^3.12.0",
+    "csv-parse": "^4.16.3",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.0",
+    "humanize-duration": "^3.27.0",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-dropzone": "^11.4.0",
     "react-router-dom": "^5.3.0",
     "stream-browserify": "^3.0.0",
     "util": "^0.12.4"
@@ -126,7 +129,8 @@
     },
     "env": {
       "browser": true,
-      "node": true
+      "node": true,
+      "es6": true
     },
     "globals": {
       "MAIN_WINDOW_WEBPACK_ENTRY": "readonly"
@@ -134,14 +138,16 @@
     "rules": {
       "react/jsx-uses-react": "error",
       "react/react-in-jsx-scope": "off",
-      "react/prop-types": "off"
+      "react/prop-types": "off",
+      "jsx-a11y/no-onchange": "off"
     },
     "extends": [
       "eslint:recommended",
       "plugin:react/recommended",
       "plugin:react-hooks/recommended",
       "plugin:jsx-a11y/recommended",
-      "plugin:prettier/recommended"
+      "plugin:prettier/recommended",
+      "prettier"
     ]
   },
   "prettier": {
