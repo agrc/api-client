@@ -8,9 +8,5 @@
     "**/build": true,
     "**/dist": true
   },
-  "cSpell.words": [
-    "noreferrer",
-    "semibold",
-    "UGRC"
-  ]
+  "cSpell.words": ["noreferrer", "semibold", "UGRC", "vercel", "tailwindcss", "relocator", "loglevel"]
 }
