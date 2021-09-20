@@ -10,7 +10,7 @@ export function App() {
 
   useEffect(() => {
     const getKey = async () => {
-      setKey(await window.ugrc.apiKey);
+      setKey(await window.ugrc.apiKey());
     };
 
     getKey();
