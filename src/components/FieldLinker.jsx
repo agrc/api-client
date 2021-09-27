@@ -6,7 +6,7 @@ const FieldLinker = ({ fieldList }) => {
 
   return (
     <section>
-      <aside className="px-3 py-4 my-4 bg-indigo-100 border rounded shadow">
+      <aside className="px-3 py-4 my-4 text-base bg-indigo-100 border rounded shadow">
         <p className="pb-4">
           The UGRC API requires 2 inputs to geocode. The first is a street address in the form of house number, prefix
           direction, street name, street type or suffix direction. e.g. 301 South Main Street or 301 South 100 East
