@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
+import { DocumentAddIcon, DocumentRemoveIcon } from '@heroicons/react/outline';
 import DropzoneMessaging from '../components/DropzoneMessaging.jsx';
 import FieldLinker from '../components/FieldLinker.jsx';
 import ApiKey from '../components/ApiKey.jsx';
@@ -100,16 +101,19 @@ export default function Data() {
       </div>
       {geocodeContext.file ? (
         <button
+          className="flex flex-row"
           type="button"
           onClick={() => {
             onDrop(null);
           }}
         >
-          <span className="self-center justify-between">Clear</span>
+          <DocumentRemoveIcon className="self-center justify-between inline-block w-6 h-6 mr-2" />
+          Clear
         </button>
       ) : (
-        <button type="button" onClick={open}>
-          <span className="self-center justify-between">Choose File</span>
+        <button className="flex flex-row" type="button" onClick={open}>
+          <DocumentAddIcon className="self-center justify-between inline-block w-6 h-6 mr-2" />
+          Choose File
         </button>
       )}
 
