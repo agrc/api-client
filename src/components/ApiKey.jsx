@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useGeocodeContext } from '../components/GeocodeContext';
 
 export default function ApiKey() {
@@ -8,7 +9,9 @@ export default function ApiKey() {
     <section className="absolute top-0 right-0 h-4">
       <div className="flex px-3 py-2 text-sm text-indigo-900 bg-gray-100 border-b border-l rounded-bl-lg">
         <h3>ApiKey:</h3>
-        <span className="font-bold">{geocodeContext.apiKey}</span>
+        <Link to="/?skip-forward=1" className="font-bold">
+          {geocodeContext.apiKey}
+        </Link>
       </div>
     </section>
   );
