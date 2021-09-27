@@ -4,12 +4,14 @@ import GeocodeContextProvider from '../components/GeocodeContext.js';
 import ApiKey from './ApiKey.jsx';
 import Data from './Data.jsx';
 import Plan from './Plan.jsx';
+import Geocoding from './Geocoding.jsx';
 
 export default function Routes() {
   return (
     <GeocodeContextProvider>
       <Router defaultRoute>
         <Switch>
+          <Route path="/geocode" component={() => <Geocoding />} />
           <Route path="/plan" component={() => <Plan />} />
           <Route path="/data" component={() => <Data />} />
           <Route path="/" component={() => <ApiKey />} />
