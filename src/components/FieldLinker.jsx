@@ -5,27 +5,29 @@ const FieldLinker = ({ fieldList }) => {
   const [geocodeContext, setGeocodeContext] = useGeocodeContext();
 
   return (
-    <section>
-      <aside className="px-3 py-4 my-4 text-base bg-indigo-100 border rounded shadow">
+    <section className="text-xl">
+      <aside className="px-3 py-4 my-4 text-base text-indigo-600 bg-indigo-100 border border-indigo-800 rounded shadow">
         <p className="pb-4">
           The UGRC API requires 2 inputs to geocode. The first is a street address in the form of house number, prefix
           direction, street name, street type or suffix direction. e.g. 301 South Main Street or 301 South 100 East
         </p>
-        <p className="pb-4">
+        <p>
           The second required input is a zone. A zone can be a zip code or a city name. If your data has both available,
           prefer the zip code.
         </p>
       </aside>
-      <aside className="px-3 py-4 my-4 border rounded shadow">
+      <aside className="px-3 py-4 my-4 border divide-y divide-indigo-700 rounded shadow">
         <p className="pb-4">
           We were able to find these fields in the data provided. If the fields look like the headings in your file
           please map them to the <code>address</code>, <code>city</code>, and or <code>zip</code> field required to
           geocode the data. If the following values do not look like headings, then map the data representing the{' '}
           <code>address</code>, <code>city</code> and or <code>zip</code> field to the fields required for geocoding.
         </p>
-        <div className="flex justify-around">
+        <div className="flex justify-around pt-4">
           {fieldList.map((field) => (
-            <div key={field}>{field}</div>
+            <div className="w-1/6 text-center bg-indigo-100 border border-indigo-600 rounded shadow" key={field}>
+              {field}
+            </div>
           ))}
         </div>
       </aside>
