@@ -1,15 +1,7 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
-require('./config');
-const getFields = require('./components/csv').getFields;
-const getRecordCount = require('./components/csv').getRecordCount;
-
-ipcMain.handle('getFieldsFromFile', (_, content) => {
-  return getFields(content);
-});
-ipcMain.handle('getRecordCount', (_, content) => {
-  return getRecordCount(content);
-});
+require('./services/config');
+require('./services/csv');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -25,7 +17,7 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'services', 'preload.js'),
     },
   });
 
