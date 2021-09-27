@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import DropzoneMessaging from '../components/DropzoneMessaging.jsx';
@@ -8,18 +8,51 @@ import { useGeocodeContext } from '../components/GeocodeContext.js';
 
 const acceptableFileTypes = ['.csv'];
 
+const chooseCommonFieldName = (fieldName, fieldsFromFile, commonFieldNames) => {
+  if (!fieldName) return;
+
+  if (!['street', 'zone'].includes(fieldName)) {
+    return '';
+  }
+
+  const filtered = fieldsFromFile.filter((field) => commonFieldNames[fieldName].includes(field.toLowerCase()));
+
+  return filtered.length > 0 ? filtered[0] : '';
+};
+
 export default function Data() {
   const [geocodeContext, setGeocodeContext] = useGeocodeContext();
   const [fieldList, setFieldList] = useState([]);
+  const onDrop = async (files) => {
+    if (!files) {
+      setGeocodeContext({ file: null });
+
+      return;
+    }
+
+    const file = files[0];
+    const fieldsFromFile = await window.ugrc.getFieldsFromFile(file.path);
+
+    setFieldList(fieldsFromFile);
+
+    setGeocodeContext({
+      file,
+      fields: {
+        street: chooseCommonFieldName('street', fieldsFromFile, commonFieldNames.current),
+        zone: chooseCommonFieldName('zone', fieldsFromFile, commonFieldNames.current),
+      },
+    });
+  };
+
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     noClick: true,
     noKeyboard: true,
     multiple: false,
     maxFiles: 1,
     accept: acceptableFileTypes.join(),
-    onDrop: (files) => setGeocodeContext({ file: files[0] }),
+    onDrop,
   });
-  const commonFieldNames = React.useRef({
+  const commonFieldNames = useRef({
     street: [],
     zone: [],
   });
@@ -29,39 +62,6 @@ export default function Data() {
     window.ugrc.getConfigItem('streetFields').then((f) => (commonFieldNames.current.street = f));
     window.ugrc.getConfigItem('zoneFields').then((f) => (commonFieldNames.current.zone = f));
   }, []);
-
-  useEffect(() => {
-    if (!geocodeContext.file) return;
-
-    const chooseCommonFieldName = (fieldName, fieldsFromFile) => {
-      if (!fieldName) return;
-
-      if (!['street', 'zone'].includes(fieldName)) {
-        return '';
-      }
-
-      const filtered = fieldsFromFile.filter((field) =>
-        commonFieldNames.current[fieldName].includes(field.toLowerCase())
-      );
-
-      return filtered.length > 0 ? filtered[0] : '';
-    };
-
-    const getFile = async () => {
-      const fieldsFromFile = await window.ugrc.getFieldsFromFile(geocodeContext.file.path);
-
-      setFieldList(fieldsFromFile);
-
-      setGeocodeContext({
-        fields: {
-          street: chooseCommonFieldName('street', fieldsFromFile),
-          zone: chooseCommonFieldName('zone', fieldsFromFile),
-        },
-      });
-    };
-
-    getFile();
-  }, [geocodeContext.file, setFieldList, setGeocodeContext]);
 
   const saveFieldPreferences = async () => {
     const existingStreetFields = new Set(await window.ugrc.getConfigItem('streetFields'));
@@ -102,7 +102,7 @@ export default function Data() {
         <button
           type="button"
           onClick={() => {
-            setGeocodeContext({ file: null });
+            onDrop(null);
           }}
         >
           <span className="self-center justify-between">Clear</span>
@@ -116,7 +116,7 @@ export default function Data() {
       {geocodeContext.file ? <FieldLinker fieldList={fieldList} /> : null}
 
       {geocodeContext.fields.street && geocodeContext.fields.zone ? (
-        <button onClick={saveFieldPreferences} type="button">
+        <button className="mt-4" onClick={saveFieldPreferences} type="button">
           Next
         </button>
       ) : null}

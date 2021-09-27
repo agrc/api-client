@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 
-const GeocodeContext = React.createContext();
+const GeocodeContext = createContext();
 
 export default function GeocodeContextProvider({ children }) {
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     apiKey: '',
     fields: {
       street: '',
@@ -11,18 +11,21 @@ export default function GeocodeContextProvider({ children }) {
     },
     file: null,
   });
-  const setField = (obj) => {
-    setState({
-      ...state,
-      ...obj,
-    });
-  };
+  const setField = useCallback(
+    (obj) => {
+      setState({
+        ...state,
+        ...obj,
+      });
+    },
+    [state]
+  );
 
   return <GeocodeContext.Provider value={[state, setField]}>{children}</GeocodeContext.Provider>;
 }
 
 export function useGeocodeContext() {
-  const context = React.useContext(GeocodeContext);
+  const context = useContext(GeocodeContext);
 
   if (!context) {
     throw new Error('useGeocodeContext must be used within a GeocodeContextProvider');
