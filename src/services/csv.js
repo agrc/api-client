@@ -61,7 +61,13 @@ const coolYourJets = () => {
   return new Promise((resolve) => setTimeout(resolve, Math.random() * (max - min) + min));
 };
 
-export const geocode = async (event, { abortSignal, filePath, fields, apiKey }) => {
+let cancelled = false;
+export const cancelGeocode = () => {
+  cancelled = true;
+};
+
+export const geocode = async (event, { filePath, fields, apiKey }) => {
+  cancelled = false;
   const parser = fs.createReadStream(filePath).pipe(parse({ columns: true, skipEmptyLines: true }));
 
   const packageInfo = await readPackageUpAsync();
@@ -71,7 +77,7 @@ export const geocode = async (event, { abortSignal, filePath, fields, apiKey }) 
   let failures = 0;
 
   for await (const record of parser) {
-    if (abortSignal.aborted) {
+    if (cancelled) {
       return;
     }
 
@@ -131,4 +137,7 @@ ipcMain.handle('getRecordCount', (_, content) => {
 });
 ipcMain.on('geocode', (event, content) => {
   return geocode(event, content);
+});
+ipcMain.on('cancelGeocode', () => {
+  return cancelGeocode();
 });

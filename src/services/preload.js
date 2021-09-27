@@ -7,4 +7,5 @@ contextBridge.exposeInMainWorld('ugrc', {
   getConfigItem: (content) => ipcRenderer.invoke('getConfigItem', content),
   onGeocodingUpdate: (event, arg) => ipcRenderer.on('onGeocodingUpdate', event, arg),
   geocode: (content) => ipcRenderer.send('geocode', content),
+  cancelGeocode: (content) => ipcRenderer.send('cancelGeocode', content),
 });

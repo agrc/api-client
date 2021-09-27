@@ -36,7 +36,7 @@ export default function Geocoding() {
   const estimatedTimeRemaining = timePerRow * (status.totalRows - status.rowsProcessed);
 
   const cancel = () => {
-    abortController.current.abort();
+    window.ugrc.cancelGeocode();
   };
 
   return (
