@@ -33,7 +33,7 @@ export default function ApiKey() {
         </li>
         <li>
           Create a <a href="https://developer.mapserv.utah.gov/secure/GenerateKey">browser application key</a> with the{' '}
-          <code>URL Pattern</code> set to <code>https://api-client.ugrc.utah.gov</code>
+          <code>URL Pattern</code> set to <code>api-client.ugrc.utah.gov</code>
         </li>
         <li>Copy and paste the newly created key into the box below</li>
       </ol>
