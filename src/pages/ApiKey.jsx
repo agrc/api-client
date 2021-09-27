@@ -8,7 +8,7 @@ export default function ApiKey() {
 
   useEffect(() => {
     window.ugrc.getConfigItem('apiKey').then((key) => {
-      setGeocodeContext({ apiKey: key });
+      setGeocodeContext({ apiKey: key ?? '' });
       if (key) {
         console.log('pushing');
         history.push('/data');
