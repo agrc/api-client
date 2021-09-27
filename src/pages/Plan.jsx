@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useGeocodeContext } from '../components/GeocodeContext';
 import humanizeDuration from 'humanize-duration';
 
-export default function Info() {
+export default function Plan() {
   const geocodingContext = useGeocodeContext()[0];
   const [rows, setRows] = useState(0);
   const duration = (rows / 3) * 1000;
