@@ -43,7 +43,7 @@ export default function ApiKey() {
             API Key:
           </label>
           <input
-            className="ml-4 text-2xl border-0 border-t border-b border-l rounded-none rounded-l"
+            className="flex-grow max-w-lg ml-4 text-2xl border-0 border-t border-b border-l rounded-none rounded-l"
             type="text"
             id="apiKey"
             value={geocodeContext.apiKey}
