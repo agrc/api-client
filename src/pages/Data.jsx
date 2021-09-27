@@ -83,7 +83,10 @@ export default function Data() {
   return (
     <>
       <ApiKey />
-      <Link className="px-4 py-1 text-white bg-indigo-400 border border-indigo-600 rounded shadow" to="/">
+      <Link
+        className="px-4 py-1 text-white bg-indigo-400 border border-indigo-600 rounded shadow"
+        to="/?skip-forward=1"
+      >
         &larr; Back
       </Link>
       <h1 className="my-6 text-3xl">Add your data</h1>

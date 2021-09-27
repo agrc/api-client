@@ -9,8 +9,7 @@ export default function ApiKey() {
   useEffect(() => {
     window.ugrc.getConfigItem('apiKey').then((key) => {
       setGeocodeContext({ apiKey: key ?? '' });
-      if (key) {
-        console.log('pushing');
+      if (key && history.location.search !== '?skip-forward=1') {
         history.push('/data');
       }
     });
