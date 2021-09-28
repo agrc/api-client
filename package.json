@@ -105,6 +105,7 @@
     "csv-parse": "^4.16.3",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.1",
+    "file-loader": "^6.2.0",
     "got": "^11.8.2",
     "humanize-duration": "^3.27.0",
     "os-browserify": "^0.3.0",
