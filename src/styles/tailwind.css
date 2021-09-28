@@ -18,15 +18,39 @@
   [multiple],
   textarea,
   select {
-    @apply px-4 py-2 mb-1 font-light text-indigo-700 uppercase transition-all duration-150 ease-linear bg-white border border-indigo-600 rounded outline-none focus:outline-none;
+    @apply px-4 py-2 mb-1 font-light text-indigo-700 uppercase transition-all duration-150 ease-linear bg-white border border-indigo-600 rounded outline-none focus:outline-none caret-indigo-600;
   }
   [type='button'] {
-    @apply px-4 py-2 mb-1 font-bold tracking-wider text-white uppercase transition-all duration-150 ease-linear bg-indigo-600 border border-indigo-900 rounded outline-none hover:border-indigo-600 hover:bg-purple-100 hover:text-indigo-500 active:bg-indigo-600 focus:outline-none;
+    @apply px-4 py-2 mb-1 text-2xl font-extrabold tracking-tight text-white uppercase transition-all duration-150 ease-linear bg-indigo-600 border border-indigo-900 rounded outline-none hover:border-indigo-600 hover:bg-purple-100 hover:text-indigo-500 active:bg-indigo-600 focus:outline-none disabled:bg-gray-500 disabled:text-gray-900;
+  }
+  [type='back-button'] {
+    @apply px-4 py-2 mb-1 text-xl font-bold tracking-tight text-white uppercase transition-all duration-150 ease-linear bg-indigo-400 border border-indigo-700 rounded shadow outline-none hover:border-indigo-400 hover:bg-purple-100 hover:text-indigo-500 focus:outline-none;
   }
   code {
     @apply px-2 font-light text-gray-700 bg-gray-100 border;
   }
   a {
     @apply text-indigo-600 hover:text-indigo-900;
+  }
+  progress[value]::-webkit-progress-bar {
+    @apply border rounded-full bg-gray-50;
+  }
+  progress[value]::-webkit-progress-value {
+    @apply rounded-full bg-gradient-to-r from-indigo-900 via-indigo-400 to-pink-400;
+  }
+  h1 {
+    @apply text-5xl font-extrabold tracking-tight;
+  }
+  h2 {
+    @apply my-6 text-4xl font-extrabold tracking-tight text-gray-900;
+  }
+  h3 {
+    @apply my-5 text-3xl font-extrabold tracking-tight text-gray-800;
+  }
+  p {
+    @apply mb-6 text-lg font-medium text-gray-800;
+  }
+  label {
+    @apply font-extrabold tracking-tight text-gray-600;
   }
 }

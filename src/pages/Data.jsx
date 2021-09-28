@@ -4,7 +4,6 @@ import { useDropzone } from 'react-dropzone';
 import { DocumentAddIcon, DocumentRemoveIcon } from '@heroicons/react/outline';
 import DropzoneMessaging from '../components/DropzoneMessaging.jsx';
 import FieldLinker from '../components/FieldLinker.jsx';
-import ApiKey from '../components/ApiKey.jsx';
 import { useGeocodeContext } from '../components/GeocodeContext.js';
 
 const acceptableFileTypes = ['.csv'];
@@ -82,15 +81,11 @@ export default function Data() {
   };
 
   return (
-    <>
-      <ApiKey />
-      <Link
-        className="px-4 py-1 text-white bg-indigo-400 border border-indigo-600 rounded shadow"
-        to="/?skip-forward=1"
-      >
+    <article>
+      <Link type="back-button" to="/?skip-forward=1">
         &larr; Back
       </Link>
-      <h1 className="my-6 text-3xl">Add your data</h1>
+      <h2>Add your data</h2>
       <p className="mb-2 text-base">This data needs to be structured data in a CSV format, ideally with a header row</p>
       <div
         {...getRootProps()}
@@ -124,6 +119,6 @@ export default function Data() {
           Next
         </button>
       ) : null}
-    </>
+    </article>
   );
 }

@@ -9,13 +9,13 @@ const DropzoneMessaging = ({ isDragActive, file }) => {
     return (
       <div className="">
         <div className="flex flex-row">
-          <span className="self-center overflow-hidden text-gray-400 lowercase truncate">{file.name}</span>
+          <h2 className="self-center text-gray-400 lowercase truncate">{file.name}</h2>
         </div>
       </div>
     );
   }
 
-  return <p className="self-center text-center text-gray-400">Drop a file here or</p>;
+  return <h2 className="self-center text-center text-gray-400 uppercase">Drop files here</h2>;
 };
 
 export default DropzoneMessaging;

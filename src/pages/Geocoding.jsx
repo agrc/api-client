@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import humanizeDuration from 'humanize-duration';
-import ApiKey from '../components/ApiKey.jsx';
 import { useGeocodeContext } from '../components/GeocodeContext.js';
 
 const percentFormatter = new Intl.NumberFormat('en-US', { style: 'percent' });
@@ -40,16 +39,15 @@ export default function Geocoding() {
   };
 
   return (
-    <>
-      <ApiKey />
-      <Link className="px-4 py-1 text-white bg-indigo-400 border border-indigo-600 rounded shadow" to="/plan">
+    <article>
+      <Link type="back-button" to="/plan">
         &larr; Back
       </Link>
-      <h1 className="my-6 text-3xl">Geocoding Status</h1>
-      <progress className="w-full h-16 rounded" value={progress}>
+      <h2>Geocoding progress</h2>
+      <progress className="w-full h-16 " value={progress}>
         {progress}%
       </progress>
-      <div>
+      <section>
         <dl>
           <div className="px-4 py-5 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="font-medium text-gray-500">Rows processed</dt>
@@ -82,10 +80,14 @@ export default function Geocoding() {
             </dd>
           </div>
         </dl>
-      </div>
-      <button type="button" onClick={cancel}>
+      </section>
+      <button
+        type="button"
+        onClick={cancel}
+        disabled={status.rowsProcessed > 0 && status.totalRows === status.rowsProcessed}
+      >
         Cancel
       </button>
-    </>
+    </article>
   );
 }

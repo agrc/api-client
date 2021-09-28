@@ -4,6 +4,7 @@ const GeocodeContext = createContext();
 
 export default function GeocodeContextProvider({ children }) {
   const [state, setState] = useState({
+    version: '1.0.0',
     apiKey: '',
     fields: {
       street: '',

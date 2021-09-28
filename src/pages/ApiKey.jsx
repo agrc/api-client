@@ -17,11 +17,14 @@ export default function ApiKey() {
 
   return (
     <article>
-      <h1 className="mb-6 text-5xl">UGRC API Client</h1>
-      <p className="mb-10">
+      <p>
         Welcome to the UGRC API Client. This is the official client for geocoding with the UGRC API. To get started you
         will need a complimentary account and an API key.
       </p>
+      <h2 className="text-center -rotate-3">
+        <span className="block">Ready?</span>
+        <span className="block text-indigo-600">Let&apos;s go!</span>
+      </h2>
       <ol className="mb-4 ml-10 text-lg list-decimal">
         <li>
           Navigate to the{' '}
@@ -38,8 +41,8 @@ export default function ApiKey() {
       </ol>
       <section className="flex flex-col justify-center p-6 mt-10 border rounded shadow bg-gray-50">
         <div className="flex items-center">
-          <label className="inline font-semibold" htmlFor="apiKey">
-            API Key:
+          <label className="inline" htmlFor="apiKey">
+            API Key
           </label>
           <input
             className="flex-grow max-w-lg ml-4 text-2xl border-0 border-t border-b border-l rounded-none rounded-l"
