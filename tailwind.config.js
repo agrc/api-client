@@ -4,6 +4,9 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},
+    cursor: {
+      grab: 'grab',
+    },
   },
   variants: {
     extend: {},

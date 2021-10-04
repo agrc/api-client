@@ -68,11 +68,12 @@ export const cancelGeocode = () => {
   cancelled = true;
 };
 
+const output = 'ugrc_geocode_results.csv';
 export const geocode = async (event, { filePath, fields, apiKey }) => {
   cancelled = false;
   const parser = fs.createReadStream(filePath).pipe(parse({ columns: true, skipEmptyLines: true }));
   const columns = await getFields(filePath);
-  const writer = fs.createWriteStream(path.join(app.getPath('userData'), 'output.csv'));
+  const writer = fs.createWriteStream(path.join(app.getPath('userData'), output));
   const stringifier = stringify({ columns: [...columns, 'x', 'y', 'score', 'match_address'], header: true });
   stringifier.pipe(writer);
 
@@ -84,8 +85,17 @@ export const geocode = async (event, { filePath, fields, apiKey }) => {
 
   for await (const record of parser) {
     if (cancelled) {
+      event.reply('onGeocodingUpdate', {
+        totalRows,
+        rowsProcessed,
+        averageScore: Math.round(totalScore / (rowsProcessed - failures)),
+        activeMatchRate: (rowsProcessed - failures) / rowsProcessed,
+        status: 'cancelled',
+      });
+
       return;
     }
+
     const newRecord = { ...record, x: null, y: null, score: 0, match_address: null };
 
     const street = cleanseStreet(record[fields.street]);
@@ -141,12 +151,21 @@ export const geocode = async (event, { filePath, fields, apiKey }) => {
       rowsProcessed,
       averageScore: Math.round(totalScore / (rowsProcessed - failures)),
       activeMatchRate: (rowsProcessed - failures) / rowsProcessed,
+      status: 'running',
     });
 
     await coolYourJets();
   }
 
   stringifier.end();
+
+  event.reply('onGeocodingUpdate', {
+    totalRows,
+    rowsProcessed,
+    averageScore: Math.round(totalScore / (rowsProcessed - failures)),
+    activeMatchRate: (rowsProcessed - failures) / rowsProcessed,
+    status: 'complete',
+  });
 };
 
 ipcMain.handle('getFieldsFromFile', (_, content) => {
@@ -160,4 +179,10 @@ ipcMain.on('geocode', (event, content) => {
 });
 ipcMain.on('cancelGeocode', () => {
   return cancelGeocode();
+});
+ipcMain.on('ondragstart', (event) => {
+  event.sender.startDrag({
+    file: path.join(app.getPath('userData'), output),
+    icon: path.join(process.cwd(), 'src', 'assets', 'draganddrop.png'),
+  });
 });

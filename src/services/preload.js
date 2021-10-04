@@ -8,4 +8,5 @@ contextBridge.exposeInMainWorld('ugrc', {
   onGeocodingUpdate: (event, arg) => ipcRenderer.on('onGeocodingUpdate', event, arg),
   geocode: (content) => ipcRenderer.send('geocode', content),
   cancelGeocode: (content) => ipcRenderer.send('cancelGeocode', content),
+  startDrag: (content) => ipcRenderer.send('ondragstart', content),
 });
