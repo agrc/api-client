@@ -37,7 +37,7 @@ module.exports = [
     },
   },
   {
-    test: /\.svg$/,
+    test: /\.svg$|\.png$/,
     exclude: /(node_modules|.webpack)/,
     loader: 'file-loader',
   },

@@ -16,8 +16,10 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
+      contextIsolation: true,
+      autoHideMenuBar: true,
       nodeIntegration: true,
-      nodeIntegrationInWorker: true,
+      sandbox: true,
       preload: path.join(__dirname, 'services', 'preload.js'),
     },
   });
