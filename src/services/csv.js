@@ -1,8 +1,10 @@
+const { app, ipcMain } = require('electron');
 const fs = require('fs');
+const path = require('path');
 const parse = require('csv-parse');
 const got = require('got');
 const { readPackageUpAsync } = require('read-pkg-up');
-const { ipcMain } = require('electron');
+const stringify = require('csv-stringify');
 
 export const getFields = async (filePath) => {
   const parser = fs.createReadStream(filePath).pipe(parse({ columns: true, skipEmptyLines: true }));
@@ -69,6 +71,10 @@ export const cancelGeocode = () => {
 export const geocode = async (event, { filePath, fields, apiKey }) => {
   cancelled = false;
   const parser = fs.createReadStream(filePath).pipe(parse({ columns: true, skipEmptyLines: true }));
+  const columns = await getFields(filePath);
+  const writer = fs.createWriteStream(path.join(app.getPath('userData'), 'output.csv'));
+  const stringifier = stringify({ columns: [...columns, 'x', 'y', 'score', 'match_address'], header: true });
+  stringifier.pipe(writer);
 
   const packageInfo = await readPackageUpAsync();
   let totalRows = await getRecordCount(filePath);
@@ -80,6 +86,7 @@ export const geocode = async (event, { filePath, fields, apiKey }) => {
     if (cancelled) {
       return;
     }
+    const newRecord = { ...record, x: null, y: null, score: 0, match_address: null };
 
     const street = cleanseStreet(record[fields.street]);
     const zone = cleanseZone(record[fields.zone]);
@@ -112,9 +119,20 @@ export const geocode = async (event, { filePath, fields, apiKey }) => {
 
     if (response.status === 200) {
       const result = response.result;
-      const { score } = result;
+      const {
+        score,
+        matchAddress,
+        location: { x, y },
+      } = result;
+
       totalScore += score;
+      newRecord.score = score;
+      newRecord.x = x;
+      newRecord.y = y;
+      newRecord.match_address = matchAddress;
     }
+
+    stringifier.write(newRecord);
 
     rowsProcessed++;
 
@@ -127,6 +145,8 @@ export const geocode = async (event, { filePath, fields, apiKey }) => {
 
     await coolYourJets();
   }
+
+  stringifier.end();
 };
 
 ipcMain.handle('getFieldsFromFile', (_, content) => {
