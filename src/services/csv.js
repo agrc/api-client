@@ -6,6 +6,30 @@ const got = require('got');
 const { readPackageUpAsync } = require('read-pkg-up');
 const stringify = require('csv-stringify');
 
+export const checkApiKey = async (apiKey) => {
+  const packageInfo = await readPackageUpAsync();
+  let response;
+
+  try {
+    response = await got(`geocode/326 east south temple street/slc`, {
+      headers: {
+        'x-agrc-geocode-client': 'electron-api-client',
+        'x-agrc-geocode-client-version': packageInfo.version,
+        Referer: 'https://api-client.ugrc.utah.gov/',
+      },
+      searchParams: {
+        apiKey: apiKey,
+      },
+      prefixUrl: 'https://api.mapserv.utah.gov/api/v1/',
+      timeout: 5000,
+    }).json();
+  } catch (error) {
+    response = JSON.parse(error.response.body);
+  }
+
+  return response.status === 200;
+};
+
 export const getFields = async (filePath) => {
   const parser = fs.createReadStream(filePath).pipe(parse({ columns: true, skipEmptyLines: true }));
 
@@ -168,6 +192,9 @@ export const geocode = async (event, { filePath, fields, apiKey }) => {
   });
 };
 
+ipcMain.handle('checkApiKey', (_, content) => {
+  return checkApiKey(content);
+});
 ipcMain.handle('getFieldsFromFile', (_, content) => {
   return getFields(content);
 });

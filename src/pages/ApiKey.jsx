@@ -1,19 +1,45 @@
-import React, { useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useGeocodeContext } from '../components/GeocodeContext';
 
 export default function ApiKey() {
   const [geocodeContext, setGeocodeContext] = useGeocodeContext();
   const history = useHistory();
+  const [isValid, setIsValid] = useState(false);
+  const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
     window.ugrc.getConfigItem('apiKey').then((key) => {
       setGeocodeContext({ apiKey: key ?? '' });
       if (key && history.location.search !== '?skip-forward=1') {
         history.push('/data');
+      } else {
+        setInputValue(key ?? '');
       }
     });
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [history]);
+
+  const onApiKeyChange = async (event) => {
+    const apiKey = event.target.value;
+    setInputValue(apiKey);
+
+    if (apiKey.length > 19 || apiKey.length < 19) {
+      setIsValid(false);
+      setGeocodeContext({ apiKey: '' });
+
+      return;
+    }
+
+    const checkResult = await window.ugrc.checkApiKey(apiKey);
+    setIsValid(checkResult);
+
+    if (checkResult) {
+      setGeocodeContext({ apiKey });
+    } else {
+      setGeocodeContext({ apiKey: '' });
+    }
+  };
 
   return (
     <article>
@@ -48,18 +74,20 @@ export default function ApiKey() {
             className="flex-grow max-w-lg ml-4 text-2xl border-0 border-t border-b border-l rounded-none rounded-l"
             type="text"
             id="apiKey"
-            value={geocodeContext.apiKey}
-            onChange={(e) => setGeocodeContext({ apiKey: e.target.value })}
+            value={inputValue}
+            onChange={onApiKeyChange}
           />
-          <Link
-            onClick={() => window.ugrc.saveConfig({ apiKey: geocodeContext.apiKey })}
-            to="/data"
+          <button
+            onClick={() => {
+              window.ugrc.saveConfig({ apiKey: geocodeContext.apiKey });
+              history.push('/data');
+            }}
             type="button"
-            disabled={!geocodeContext.apiKey}
+            disabled={!isValid}
             className="border-0 border-t border-b border-r rounded-none rounded-r"
           >
             Next
-          </Link>
+          </button>
         </div>
       </section>
     </article>
