@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { withRouter, MemoryRouter as Router, Route, Switch } from 'react-router-dom';
 import GeocodeContextProvider from '../components/GeocodeContext.js';
 import ApiKey from './ApiKey.jsx';

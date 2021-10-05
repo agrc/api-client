@@ -111,7 +111,7 @@
       "MAIN_WINDOW_WEBPACK_ENTRY": "readonly"
     },
     "rules": {
-      "react/jsx-uses-react": "error",
+      "react/jsx-uses-react": "off",
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
       "jsx-a11y/no-onchange": "off",

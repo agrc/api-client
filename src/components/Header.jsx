@@ -1,4 +1,3 @@
-import React from 'react';
 import QuickApiKey from './QuickApiKey.jsx';
 import logo from '../assets/logo.svg';
 

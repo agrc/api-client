@@ -1,4 +1,3 @@
-import React from 'react';
 import { useGeocodeContext } from './GeocodeContext';
 
 const FieldLinker = ({ fieldList }) => {
