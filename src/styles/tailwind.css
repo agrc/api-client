@@ -39,7 +39,7 @@
     @apply rounded-full bg-gradient-to-r from-indigo-900 via-indigo-400 to-pink-400;
   }
   h1 {
-    @apply text-5xl font-extrabold tracking-tight select-none;
+    @apply text-5xl font-black tracking-tight select-none;
   }
   h2 {
     @apply my-6 text-4xl font-extrabold tracking-tight text-gray-900 select-none;
