@@ -1,5 +1,5 @@
 import React from 'react';
-import ApiKey from './ApiKey.jsx';
+import QuickApiKey from './QuickApiKey.jsx';
 import logo from '../assets/logo.svg';
 
 export default function Header() {
@@ -10,7 +10,7 @@ export default function Header() {
     >
       <img src={logo} alt="logo" className="w-16 h-16" />
       <h1 className="self-end ml-2 text-indigo-100 drop-shadow-lg">API Client</h1>
-      <ApiKey />
+      <QuickApiKey />
     </section>
   );
 }

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { KeyIcon } from '@heroicons/react/outline';
-import { useGeocodeContext } from '../components/GeocodeContext';
+import { useGeocodeContext } from './GeocodeContext';
 
-export default function ApiKey() {
+export default function QuickApiKey() {
   const geocodeContext = useGeocodeContext()[0];
 
   return geocodeContext.apiKey ? (

@@ -1,6 +1,6 @@
-import ApiKey from '../ApiKey.jsx';
+import QuickApiKey from '../QuickApiKey.jsx';
 import Footer from '../Footer.jsx';
 import Chrome from '../Chrome.jsx';
 import Header from '../Header.jsx';
 
-export { Chrome, ApiKey as QuickApiKey, Header, Footer };
+export { Chrome, QuickApiKey, Header, Footer };
