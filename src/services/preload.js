@@ -11,4 +11,5 @@ contextBridge.exposeInMainWorld('ugrc', {
   startDrag: (content) => ipcRenderer.send('ondragstart', content),
   checkApiKey: (content) => ipcRenderer.invoke('checkApiKey', content),
   getAppVersion: (content) => ipcRenderer.invoke('getAppVersion', content),
+  getAppInfo: (content) => ipcRenderer.invoke('getAppInfo', content),
 });

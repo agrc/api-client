@@ -99,3 +99,13 @@ app.on('web-contents-created', (_, contents) => {
 ipcMain.handle('getAppVersion', () => {
   return app.getVersion();
 });
+
+ipcMain.handle('getAppInfo', () => {
+  return {
+    applicationName: 'UGRC API Client',
+    applicationVersion: app.getVersion(),
+    version: process.versions.electron,
+    website: 'https://api.mapserv.utah.gov',
+    repo: 'https://github.com/agrc/api-client',
+  };
+});

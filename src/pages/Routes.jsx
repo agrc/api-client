@@ -4,6 +4,7 @@ import GeocodeContextProvider from '../components/GeocodeContext.js';
 import ApiKey from './ApiKey.jsx';
 import Data from './Data.jsx';
 import Plan from './Plan.jsx';
+import About from './About.jsx';
 import Geocoding from './Geocoding.jsx';
 import { Chrome, Header, Footer } from '../components/PageElements';
 
@@ -18,6 +19,7 @@ export default function Routes() {
             <Route path="/geocode" component={() => <Geocoding />} />
             <Route path="/plan" component={() => <Plan />} />
             <Route path="/data" component={() => <Data />} />
+            <Route path="/about" component={() => <About />} />
             <Route path="/" component={() => <ApiKey />} />
           </Switch>
         </Chrome>

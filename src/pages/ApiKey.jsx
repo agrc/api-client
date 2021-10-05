@@ -74,7 +74,7 @@ export default function ApiKey() {
         </li>
         <li>Copy and paste the newly created key into the box below</li>
       </ol>
-      <section className="flex flex-col justify-center p-6 mt-10 border rounded shadow bg-gray-50">
+      <section className="flex flex-col justify-center p-6 pb-2 mt-10 border rounded shadow bg-gray-50">
         <div className="flex items-center">
           <label className="inline" htmlFor="apiKey">
             API Key
