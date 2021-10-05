@@ -72,6 +72,8 @@ const config = {
     [
       '@electron-forge/plugin-webpack',
       {
+        contentSecurityPolicy:
+          "default-src 'self' *.mapserv.utah.gov; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:",
         mainConfig: './webpack.main.config.js',
         renderer: {
           config: './webpack.renderer.config.js',
