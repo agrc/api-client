@@ -89,4 +89,9 @@ app.on('web-contents-created', (_, contents) => {
 
     return { action: 'deny' };
   });
+
+  // our app uses all internal navigation. prevent all navigation requests.
+  contents.on('will-navigate', (event) => {
+    event.preventDefault();
+  });
 });
