@@ -58,23 +58,23 @@ app.on('activate', () => {
   }
 });
 
-const isSafeForExternalOpen = (urlString) => {
-  const safeHosts = ['github.com', 'api.mapserv.utah.gov', 'developer.mapserv.utah.gov'];
+app.on('web-contents-created', (_, contents) => {
+  const isSafeForExternalOpen = (urlString) => {
+    const safeHosts = ['github.com', 'api.mapserv.utah.gov', 'developer.mapserv.utah.gov'];
 
-  try {
-    const url = new URL(urlString);
+    try {
+      const url = new URL(urlString);
 
-    if (!url.protocol === 'https:' || !safeHosts.includes(url.hostname)) {
+      if (!url.protocol === 'https:' || !safeHosts.includes(url.hostname)) {
+        return false;
+      }
+
+      return true;
+    } catch (e) {
       return false;
     }
+  };
 
-    return true;
-  } catch (e) {
-    return false;
-  }
-};
-
-app.on('web-contents-created', (_, contents) => {
   contents.setWindowOpenHandler(({ url }) => {
     // Ask the operating system
     // to open this event's url in the default browser.
