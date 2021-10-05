@@ -60,8 +60,11 @@ export default function ApiKey() {
           and create an account
         </li>
         <li>
-          Create a <a href="https://developer.mapserv.utah.gov/secure/GenerateKey">browser application key</a> with the{' '}
-          <code>URL Pattern</code> set to <code>api-client.ugrc.utah.gov</code>
+          Create a{' '}
+          <a href="https://developer.mapserv.utah.gov/secure/GenerateKey" target="_blank" rel="noreferrer">
+            browser application key
+          </a>{' '}
+          with the <code>URL Pattern</code> set to <code>api-client.ugrc.utah.gov</code>
         </li>
         <li>Copy and paste the newly created key into the box below</li>
       </ol>
