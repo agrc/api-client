@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, shell } = require('electron');
 const path = require('path');
 require('./services/config');
 require('./services/csv');
@@ -58,5 +58,35 @@ app.on('activate', () => {
   }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+const isSafeForExternalOpen = (urlString) => {
+  const safeHosts = ['github.com', 'api.mapserv.utah.gov', 'developer.mapserv.utah.gov'];
+
+  try {
+    const url = new URL(urlString);
+
+    if (!url.protocol === 'https:' || !safeHosts.includes(url.hostname)) {
+      return false;
+    }
+
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+app.on('web-contents-created', (_, contents) => {
+  contents.setWindowOpenHandler(({ url }) => {
+    // Ask the operating system
+    // to open this event's url in the default browser.
+    //
+    // See the following item for considerations regarding what
+    // URLs should be allowed through to shell.openExternal.
+    if (isSafeForExternalOpen(url)) {
+      setImmediate(() => {
+        shell.openExternal(url);
+      });
+    }
+
+    return { action: 'deny' };
+  });
+});
