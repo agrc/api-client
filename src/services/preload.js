@@ -10,4 +10,5 @@ contextBridge.exposeInMainWorld('ugrc', {
   cancelGeocode: (content) => ipcRenderer.send('cancelGeocode', content),
   startDrag: (content) => ipcRenderer.send('ondragstart', content),
   checkApiKey: (content) => ipcRenderer.invoke('checkApiKey', content),
+  getAppVersion: (content) => ipcRenderer.invoke('getAppVersion', content),
 });

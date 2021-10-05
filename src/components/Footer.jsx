@@ -1,7 +1,13 @@
+import { useState, useEffect } from 'react';
 import logo from '../assets/logo.svg';
-// import { app } from 'electron';
 
 export default function Footer() {
+  const [version, setVersion] = useState('1.0.0');
+
+  useEffect(() => {
+    window.ugrc.getAppVersion().then((version) => setVersion(version));
+  }, []);
+
   return (
     <section className="fixed inset-x-0 bottom-0 grid items-center grid-cols-2 px-3 py-2 mt-10 text-indigo-200 bg-indigo-900">
       <div className="grid grid-flow-col auto-cols-max">
@@ -12,10 +18,9 @@ export default function Footer() {
             href="https://github.com/agrc/api-client/releases"
             target="_blank"
             rel="noreferrer"
-            className="text-yellow-500"
+            className="text-yellow-500 hover:text-yellow-300"
           >
-            {/* {app.getVersion()} */}
-            v0.0.0
+            v{version}
           </a>
         </div>
       </div>

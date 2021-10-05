@@ -1,4 +1,4 @@
-const { app, BrowserWindow, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 require('./services/config');
 require('./services/csv');
@@ -94,4 +94,8 @@ app.on('web-contents-created', (_, contents) => {
   contents.on('will-navigate', (event) => {
     event.preventDefault();
   });
+});
+
+ipcMain.handle('getAppVersion', () => {
+  return app.getVersion();
 });
