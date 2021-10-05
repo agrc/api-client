@@ -90,8 +90,8 @@ export const geocode = async (event, { filePath, fields, apiKey }) => {
       event.reply('onGeocodingUpdate', {
         totalRows,
         rowsProcessed,
-        averageScore: Math.round(totalScore / (rowsProcessed - failures)),
-        activeMatchRate: (rowsProcessed - failures) / rowsProcessed,
+        averageScore: Math.round(totalScore / (rowsProcessed - failures)) || 0,
+        activeMatchRate: (rowsProcessed - failures) / rowsProcessed || 0,
         status: 'cancelled',
       });
 
