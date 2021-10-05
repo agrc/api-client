@@ -19,11 +19,11 @@ const createWindow = () => {
     minHeight: 500,
     titleBarStyle: 'hidden',
     webPreferences: {
+      preload: path.join(__dirname, 'services', 'preload.js'),
+      sandbox: true,
+      nodeIntegration: false,
       contextIsolation: true,
       autoHideMenuBar: true,
-      nodeIntegration: true,
-      sandbox: true,
-      preload: path.join(__dirname, 'services', 'preload.js'),
     },
   });
 
