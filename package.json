@@ -131,6 +131,9 @@
     "printWidth": 120,
     "semi": true
   },
+  "browserslist": [
+    "electron >= 15.1.1"
+  ],
   "babel": {
     "env": {
       "test": {
