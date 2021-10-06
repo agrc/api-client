@@ -22,6 +22,9 @@ const store = new Store({
       },
       default: ['zone', 'zip', 'zip5', 'zipcode', 'zip_code', 'city'],
     },
+    wkid: {
+      type: 'number',
+    },
   },
 });
 

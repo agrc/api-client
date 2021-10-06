@@ -29,11 +29,14 @@ export default function Geocoding() {
       setStats(data);
     });
 
-    window.ugrc.geocode({
-      filePath: geocodeContext.file.path,
-      fields: geocodeContext.fields,
-      apiKey: geocodeContext.apiKey,
-      abortSignal: abortController.current.signal,
+    window.ugrc.getConfigItem('wkid').then((wkid) => {
+      window.ugrc.geocode({
+        filePath: geocodeContext.file.path,
+        fields: geocodeContext.fields,
+        apiKey: geocodeContext.apiKey,
+        wkid,
+        abortSignal: abortController.current.signal,
+      });
     });
   }, [geocodeContext]);
 

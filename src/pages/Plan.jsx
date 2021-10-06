@@ -19,7 +19,7 @@ export default function Plan() {
 
   return (
     <article>
-      <Link type="back-button" to="/data">
+      <Link type="back-button" to="/wkid">
         &larr; Back
       </Link>
       <h2>The plan</h2>

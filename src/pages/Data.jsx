@@ -77,7 +77,7 @@ export default function Data() {
       zoneFields: Array.from(existingZoneFields),
     });
 
-    history.push('/plan');
+    history.push('/wkid');
   };
 
   return (

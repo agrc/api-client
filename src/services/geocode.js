@@ -72,7 +72,7 @@ export const checkApiKey = async (apiKey) => {
 };
 
 const output = 'ugrc_geocode_results.csv';
-export const geocode = async (event, { filePath, fields, apiKey }) => {
+export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912 }) => {
   cancelled = false;
   const parser = fs.createReadStream(filePath).pipe(parse({ columns: true, skipEmptyLines: true }));
   const columns = await getFields(filePath);
@@ -118,6 +118,7 @@ export const geocode = async (event, { filePath, fields, apiKey }) => {
           },
           searchParams: {
             apiKey: apiKey,
+            spatialReference: wkid,
           },
           prefixUrl: 'https://api.mapserv.utah.gov/api/v1/',
           timeout: 5000,
