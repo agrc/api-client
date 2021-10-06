@@ -44,7 +44,7 @@ const config = {
           'https://raw.githubusercontent.com/agrc/api-client/dac3554721f3ef6341910e5eee5c5395820ec8f1/src/assets/logo.ico',
         loadingGif: './src/assets/loading.gif',
         noMsi: true,
-        setupExe: `electron-fiddle-${version}-win32-setup.exe`,
+        setupExe: `ugrc-api-client-${version}-win32-setup.exe`,
         setupIcon: path.resolve(assets, 'logo.ico'),
         certificateFile: process.env['WINDOWS_CODESIGN_FILE'],
         certificatePassword: process.env['WINDOWS_CODESIGN_PASSWORD'],
