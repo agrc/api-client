@@ -2,10 +2,11 @@
   "name": "api-client",
   "productName": "api-client",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "The official UGRC API client",
   "main": ".webpack/main",
   "scripts": {
     "start": "ELECTRON_ENABLE_LOGGING=1 && electron-forge start",
+    "start:win": "set ELECTRON_ENABLE_LOGGING=1 && electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -15,56 +16,25 @@
     "lint": "eslint ./src --ext .jsx,.js --ignore-path ./.gitignore",
     "lint:fix": "eslint ./src --ext .jsx,.js --quiet --fix --ignore-path ./.gitignore"
   },
-  "keywords": [],
-  "author": {
-    "name": "steveoh",
-    "email": "sgourley@utah.gov"
-  },
+  "keywords": [
+    "utah",
+    "geocoding",
+    "ugrc",
+    "agrc"
+  ],
+  "contributors": [
+    {
+      "name": "Steve Gourley",
+      "email": "sgourley@utah.gov"
+    },
+    {
+      "name": "Scott Davis",
+      "email": "stdavis@utah.gov"
+    }
+  ],
   "license": "MIT",
   "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "api_client"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ],
-      "plugins": [
-        [
-          "@electron-forge/plugin-webpack",
-          {
-            "mainConfig": "./webpack.main.config.js",
-            "renderer": {
-              "config": "./webpack.renderer.config.js",
-              "entryPoints": [
-                {
-                  "html": "./src/index.html",
-                  "js": "./src/renderer.js",
-                  "name": "main_window"
-                }
-              ]
-            }
-          }
-        ]
-      ]
-    }
+    "forge": "./forge.config.js"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
@@ -79,11 +49,12 @@
     "@electron-forge/plugin-webpack": "^6.0.0-beta.60",
     "@tailwindcss/forms": "^0.3.4",
     "@vercel/webpack-asset-relocator-loader": "^1.7.0",
-    "autoprefixer": "^10.3.6",
+    "autoprefixer": "^10.3.7",
     "babel-loader": "^8.2.2",
     "babel-preset-react-app": "^10.0.0",
+    "copy-webpack-plugin": "^9.0.1",
     "css-loader": "^6.3.0",
-    "electron": "^15.1.0",
+    "electron": "^15.1.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jsx-a11y": "^6.4.1",
@@ -92,15 +63,17 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "node-loader": "^2.0.0",
-    "postcss": "^8.3.8",
+    "postcss": "^8.3.9",
     "postcss-loader": "^6.1.1",
     "prettier": "^2.4.1",
     "style-loader": "^3.3.0",
     "tailwindcss": "^2.2.16"
   },
   "dependencies": {
+    "@headlessui/react": "^1.4.1",
     "@heroicons/react": "^1.0.4",
     "assert": "^2.0.0",
+    "clsx": "^1.1.1",
     "crypto-browserify": "^3.12.0",
     "csv-parse": "^4.16.3",
     "csv-stringify": "^5.6.5",
@@ -115,7 +88,6 @@
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.4.2",
     "react-router-dom": "^5.3.0",
-    "read-pkg-up": "^8.0.0",
     "stream-browserify": "^3.0.0",
     "util": "^0.12.4"
   },
@@ -141,7 +113,7 @@
       "MAIN_WINDOW_WEBPACK_ENTRY": "readonly"
     },
     "rules": {
-      "react/jsx-uses-react": "error",
+      "react/jsx-uses-react": "off",
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
       "jsx-a11y/no-onchange": "off",
@@ -161,6 +133,9 @@
     "printWidth": 120,
     "semi": true
   },
+  "browserslist": [
+    "electron >= 15.1.1"
+  ],
   "babel": {
     "env": {
       "test": {

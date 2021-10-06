@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useGeocodeContext } from '../components/GeocodeContext';
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/outline';
 
 export default function ApiKey() {
   const [geocodeContext, setGeocodeContext] = useGeocodeContext();
@@ -11,9 +12,17 @@ export default function ApiKey() {
   useEffect(() => {
     window.ugrc.getConfigItem('apiKey').then((key) => {
       setGeocodeContext({ apiKey: key ?? '' });
+
       if (key && history.location.search !== '?skip-forward=1') {
         history.push('/data');
       } else {
+        if (key) {
+          checkApiKey(key).then((isValid) => {
+            setIsValid(isValid);
+            setGeocodeContext(isValid ? { apiKey: key } : { apiKey: '' });
+          });
+        }
+
         setInputValue(key ?? '');
       }
     });
@@ -24,21 +33,18 @@ export default function ApiKey() {
     const apiKey = event.target.value;
     setInputValue(apiKey);
 
+    const isValid = await checkApiKey(apiKey);
+
+    setIsValid(isValid);
+    setGeocodeContext(isValid ? { apiKey } : { apiKey: '' });
+  };
+
+  const checkApiKey = (apiKey) => {
     if (apiKey.length > 19 || apiKey.length < 19) {
-      setIsValid(false);
-      setGeocodeContext({ apiKey: '' });
-
-      return;
+      return false;
     }
 
-    const checkResult = await window.ugrc.checkApiKey(apiKey);
-    setIsValid(checkResult);
-
-    if (checkResult) {
-      setGeocodeContext({ apiKey });
-    } else {
-      setGeocodeContext({ apiKey: '' });
-    }
+    return window.ugrc.checkApiKey(apiKey);
   };
 
   return (
@@ -60,12 +66,15 @@ export default function ApiKey() {
           and create an account
         </li>
         <li>
-          Create a <a href="https://developer.mapserv.utah.gov/secure/GenerateKey">browser application key</a> with the{' '}
-          <code>URL Pattern</code> set to <code>api-client.ugrc.utah.gov</code>
+          Create a{' '}
+          <a href="https://developer.mapserv.utah.gov/secure/GenerateKey" target="_blank" rel="noreferrer">
+            browser application key
+          </a>{' '}
+          with the <code>URL Pattern</code> set to <code>api-client.ugrc.utah.gov</code>
         </li>
         <li>Copy and paste the newly created key into the box below</li>
       </ol>
-      <section className="flex flex-col justify-center p-6 mt-10 border rounded shadow bg-gray-50">
+      <section className="flex flex-col justify-center p-6 pb-2 mt-10 border rounded shadow bg-gray-50">
         <div className="flex items-center">
           <label className="inline" htmlFor="apiKey">
             API Key
@@ -74,6 +83,7 @@ export default function ApiKey() {
             className="flex-grow max-w-lg ml-4 text-2xl border-0 border-t border-b border-l rounded-none rounded-l"
             type="text"
             id="apiKey"
+            maxLength="19"
             value={inputValue}
             onChange={onApiKeyChange}
           />
@@ -88,6 +98,14 @@ export default function ApiKey() {
           >
             Next
           </button>
+        </div>
+        <div className="flex flex-col items-center justify-center mt-6">
+          <div className="font-bold tracking-tight text-gray-600">API Key Test</div>
+          {isValid ? (
+            <CheckCircleIcon className="w-16 text-indigo-900" />
+          ) : (
+            <XCircleIcon className="w-16 text-yellow-500" />
+          )}
         </div>
       </section>
     </article>

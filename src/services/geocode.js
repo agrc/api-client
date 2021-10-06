@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const parse = require('csv-parse');
 const got = require('got');
-const { readPackageUpAsync } = require('read-pkg-up');
 const stringify = require('csv-stringify');
 const getFields = require('./csv').getFields;
 const getRecordCount = require('./csv').getRecordCount;
@@ -46,14 +45,13 @@ export const cancelGeocode = () => {
 };
 
 export const checkApiKey = async (apiKey) => {
-  const packageInfo = await readPackageUpAsync();
   let response;
 
   try {
     response = await got(`geocode/326 east south temple street/slc`, {
       headers: {
         'x-agrc-geocode-client': 'electron-api-client',
-        'x-agrc-geocode-client-version': packageInfo.version,
+        'x-agrc-geocode-client-version': app.getVersion(),
         Referer: 'https://api-client.ugrc.utah.gov/',
       },
       searchParams: {
@@ -63,14 +61,18 @@ export const checkApiKey = async (apiKey) => {
       timeout: 5000,
     }).json();
   } catch (error) {
-    response = JSON.parse(error.response.body);
+    if (error?.response?.body) {
+      response = JSON.parse(error.response.body);
+    } else {
+      throw error;
+    }
   }
 
   return response.status === 200;
 };
 
 const output = 'ugrc_geocode_results.csv';
-export const geocode = async (event, { filePath, fields, apiKey }) => {
+export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912 }) => {
   cancelled = false;
   const parser = fs.createReadStream(filePath).pipe(parse({ columns: true, skipEmptyLines: true }));
   const columns = await getFields(filePath);
@@ -78,7 +80,6 @@ export const geocode = async (event, { filePath, fields, apiKey }) => {
   const stringifier = stringify({ columns: [...columns, 'x', 'y', 'score', 'match_address'], header: true });
   stringifier.pipe(writer);
 
-  const packageInfo = await readPackageUpAsync();
   let totalRows = await getRecordCount(filePath);
   let rowsProcessed = 0;
   let totalScore = 0;
@@ -89,8 +90,8 @@ export const geocode = async (event, { filePath, fields, apiKey }) => {
       event.reply('onGeocodingUpdate', {
         totalRows,
         rowsProcessed,
-        averageScore: Math.round(totalScore / (rowsProcessed - failures)),
-        activeMatchRate: (rowsProcessed - failures) / rowsProcessed,
+        averageScore: Math.round(totalScore / (rowsProcessed - failures)) || 0,
+        activeMatchRate: (rowsProcessed - failures) / rowsProcessed || 0,
         status: 'cancelled',
       });
 
@@ -112,11 +113,12 @@ export const geocode = async (event, { filePath, fields, apiKey }) => {
         response = await got(`geocode/${street}/${zone}`, {
           headers: {
             'x-agrc-geocode-client': 'electron-api-client',
-            'x-agrc-geocode-client-version': packageInfo.version,
+            'x-agrc-geocode-client-version': app.getVersion(),
             Referer: 'https://api-client.ugrc.utah.gov/',
           },
           searchParams: {
             apiKey: apiKey,
+            spatialReference: wkid,
           },
           prefixUrl: 'https://api.mapserv.utah.gov/api/v1/',
           timeout: 5000,
@@ -181,6 +183,6 @@ ipcMain.on('cancelGeocode', () => {
 ipcMain.on('ondragstart', (event) => {
   event.sender.startDrag({
     file: path.join(app.getPath('userData'), output),
-    icon: path.join(process.cwd(), 'src', 'assets', 'draganddrop.png'),
+    icon: path.resolve(__dirname, 'assets', 'draganddrop.png'),
   });
 });

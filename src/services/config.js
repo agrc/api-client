@@ -5,7 +5,8 @@ const store = new Store({
   schema: {
     apiKey: {
       type: 'string',
-      maximum: 50,
+      maxLength: 19,
+      minLength: 19,
     },
     streetFields: {
       type: 'array',
@@ -20,6 +21,9 @@ const store = new Store({
         type: 'string',
       },
       default: ['zone', 'zip', 'zip5', 'zipcode', 'zip_code', 'city'],
+    },
+    wkid: {
+      type: 'number',
     },
   },
 });

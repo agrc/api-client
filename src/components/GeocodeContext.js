@@ -1,10 +1,9 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import { createContext, useCallback, useContext, useState } from 'react';
 
 const GeocodeContext = createContext();
 
 export default function GeocodeContextProvider({ children }) {
   const [state, setState] = useState({
-    version: '1.0.0',
     apiKey: '',
     fields: {
       street: '',

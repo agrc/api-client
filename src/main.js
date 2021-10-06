@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 require('./services/config');
 require('./services/csv');
@@ -13,12 +13,17 @@ if (require('electron-squirrel-startup')) {
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 700,
+    height: 1000,
+    minWidth: 525,
+    minHeight: 500,
+    titleBarStyle: 'hidden',
     webPreferences: {
-      nodeIntegration: true,
-      nodeIntegrationInWorker: true,
       preload: path.join(__dirname, 'services', 'preload.js'),
+      sandbox: true,
+      nodeIntegration: false,
+      contextIsolation: true,
+      autoHideMenuBar: true,
     },
   });
 
@@ -53,5 +58,54 @@ app.on('activate', () => {
   }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+app.on('web-contents-created', (_, contents) => {
+  const isSafeForExternalOpen = (urlString) => {
+    const safeHosts = ['github.com', 'api.mapserv.utah.gov', 'developer.mapserv.utah.gov'];
+
+    try {
+      const url = new URL(urlString);
+
+      if (!url.protocol === 'https:' || !safeHosts.includes(url.hostname)) {
+        return false;
+      }
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  contents.setWindowOpenHandler(({ url }) => {
+    // Ask the operating system
+    // to open this event's url in the default browser.
+    //
+    // See the following item for considerations regarding what
+    // URLs should be allowed through to shell.openExternal.
+    if (isSafeForExternalOpen(url)) {
+      setImmediate(() => {
+        shell.openExternal(url);
+      });
+    }
+
+    return { action: 'deny' };
+  });
+
+  // our app uses all internal navigation. prevent all navigation requests.
+  contents.on('will-navigate', (event) => {
+    event.preventDefault();
+  });
+});
+
+ipcMain.handle('getAppVersion', () => {
+  return app.getVersion();
+});
+
+ipcMain.handle('getAppInfo', () => {
+  return {
+    applicationName: 'UGRC API Client',
+    applicationVersion: app.getVersion(),
+    version: process.versions.electron,
+    website: 'https://api.mapserv.utah.gov',
+    repo: 'https://github.com/agrc/api-client',
+  };
+});

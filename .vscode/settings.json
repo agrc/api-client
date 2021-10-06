@@ -11,11 +11,19 @@
   "cSpell.words": [
     "agrc",
     "apos",
+    "asar",
+    "clsx",
+    "CODESIGN",
     "draganddrop",
     "Dropzone",
     "fulladd",
+    "Gourley",
+    "headlessui",
     "heroicons",
+    "icns",
+    "larr",
     "loglevel",
+    "mapserv",
     "noreferrer",
     "relocator",
     "semibold",
@@ -23,6 +31,7 @@
     "tailwindcss",
     "UGRC",
     "vercel",
+    "Wkid",
     "zipcode"
   ]
 }

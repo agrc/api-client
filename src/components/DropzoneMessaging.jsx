@@ -1,5 +1,3 @@
-import React from 'react';
-
 const DropzoneMessaging = ({ isDragActive, file }) => {
   if (isDragActive) {
     return <p className="self-center">Ok, drop it!</p>;
