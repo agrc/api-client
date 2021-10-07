@@ -85,6 +85,7 @@ const config = {
       },
     ],
   ],
+  buildIdentifier: 'prod',
 };
 
 module.exports = config;
