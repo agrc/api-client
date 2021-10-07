@@ -1,6 +1,6 @@
 const path = require('path');
-const fs = require('fs');
 const packageJson = require('./package.json');
+require('dotenv').config();
 
 const { version } = packageJson;
 const assets = path.resolve(__dirname, 'src', 'assets');
@@ -11,26 +11,25 @@ const config = {
     executableName: 'ugrc-api-client',
     asar: true,
     icon: path.resolve(assets, 'logo.icns'),
-    appBundleId: 'com.ugrc.ugrc-api-client',
+    appBundleId: process.env.APPLE_BUNDLE_ID,
     appCategoryType: 'public.app-category.developer-tools',
     win32metadata: {
       CompanyName: 'UGRC',
       OriginalFilename: 'UGRC API Client',
     },
-    // osxSign: {
-    //   identity: `Developer ID Application: State of Utah Department of Technology Services (${process.env.APPLE_ID_PROVIDER})`,
-    //   'hardened-runtime': true,
-    //   'gatekeeper-assess': false,
-    //   entitlements: 'build/entitlements.plist',
-    //   'entitlements-inherit': 'build/entitlements.plist',
-    //   'signature-flags': 'library',
-    // },
-    // osxNotarize: {
-    //   appBundleId: 'com.ugrc.ugrc-api-client',
-    //   appleId: process.env.APPLE_ID_EMAIL,
-    //   appleIdPassword: process.env.APPLE_ID_PASSWORD,
-    //   ascProvider: process.env.APPLE_ID_PROVIDER,
-    // },
+    osxSign: {
+      identity: process.env.APPLE_IDENTITY,
+      hardenedRuntime: true,
+      'gatekeeper-assess': false,
+      entitlements: 'build/entitlements.plist',
+      'entitlements-inherit': 'build/entitlements.plist',
+    },
+    osxNotarize: {
+      appBundleId: process.env.APPLE_BUNDLE_ID,
+      appleId: process.env.APPLE_USER_ID,
+      appleIdPassword: process.env.APPLE_PASSWORD,
+      // ascProvider: process.env.APPLE_TEAM_ID,
+    },
   },
   makers: [
     {
