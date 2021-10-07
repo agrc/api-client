@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { RadioGroup } from '@headlessui/react';
 import clsx from 'clsx';
 
@@ -19,9 +19,9 @@ export default function Wkid() {
   }, []);
   return (
     <article>
-      <button type="back-button" onClick={() => history.goBack()}>
+      <Link type="back-button" to="/data">
         &larr; Back
-      </button>
+      </Link>
       <h2>Choose your spatial reference</h2>
       <p className="mb-2 text-base">
         The way the coordinates are returned from the API can vary based on the spatial reference. They can be returned
