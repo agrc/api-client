@@ -59,7 +59,7 @@ const config = {
       name: '@electron-forge/publisher-github',
       config: {
         repository: {
-          owner: 'ugrc',
+          owner: 'agrc',
           name: 'api-client',
         },
         draft: true,
