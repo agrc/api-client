@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Prompt } from 'react-router-dom';
 import humanizeDuration from 'humanize-duration';
 import { DocumentTextIcon } from '@heroicons/react/outline';
 import { useGeocodeContext } from '../components/GeocodeContext.js';
@@ -108,13 +108,16 @@ export default function Geocoding() {
         )}
       </section>
       {stats.status === 'running' ? (
-        <button
-          type="button"
-          onClick={cancel}
-          disabled={stats.rowsProcessed > 0 && stats.totalRows === stats.rowsProcessed}
-        >
-          Cancel
-        </button>
+        <>
+          <button
+            type="button"
+            onClick={cancel}
+            disabled={stats.rowsProcessed > 0 && stats.totalRows === stats.rowsProcessed}
+          >
+            Cancel
+          </button>
+          <Prompt message="Navigating to a different page will cancel the current geocoding process. Are you sure?" />
+        </>
       ) : null}
       {stats.status === 'cancelled' ? (
         <section className="flex flex-col justify-center p-6 bg-red-100 border border-red-200 rounded shadow">
