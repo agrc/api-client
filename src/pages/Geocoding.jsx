@@ -116,6 +116,17 @@ export default function Geocoding() {
           Cancel
         </button>
       ) : null}
+      {stats.status === 'cancelled' ? (
+        <section className="flex flex-col justify-center p-6 bg-red-100 border border-red-200 rounded shadow">
+          <div className="flex items-center">
+            <p className="mb-0 text-base">
+              Geocoding has been cancelled.
+              <br />
+              <Link to="/plan">Go back to the plan page</Link> to restart the process.
+            </p>
+          </div>
+        </section>
+      ) : null}
     </article>
   );
 }
