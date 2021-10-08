@@ -15,7 +15,6 @@ export default function Geocoding() {
     status: 'idle',
   });
   const startTime = useRef(new Date());
-  const abortController = useRef(new AbortController());
   const geocodeContext = useGeocodeContext()[0];
   const draggable = useRef(null);
 
@@ -24,8 +23,12 @@ export default function Geocoding() {
     window.ugrc.startDrag('ugrc_geocode_results.csv');
   };
 
+  const cancel = () => {
+    window.ugrc.cancelGeocode();
+  };
+
   useEffect(() => {
-    window.ugrc.onGeocodingUpdate((_, data) => {
+    window.ugrc.subscribeToGeocodingUpdates((_, data) => {
       setStats(data);
     });
 
@@ -35,19 +38,19 @@ export default function Geocoding() {
         fields: geocodeContext.fields,
         apiKey: geocodeContext.apiKey,
         wkid,
-        abortSignal: abortController.current.signal,
       });
     });
+
+    return () => {
+      cancel();
+      window.ugrc.unsubscribeFromGeocodingUpdates();
+    };
   }, [geocodeContext]);
 
   const progress = stats.rowsProcessed / stats.totalRows || 0;
   const elapsedTime = new Date().getTime() - startTime.current.getTime();
   const timePerRow = elapsedTime / stats.rowsProcessed;
   const estimatedTimeRemaining = timePerRow * (stats.totalRows - stats.rowsProcessed);
-
-  const cancel = () => {
-    window.ugrc.cancelGeocode();
-  };
 
   return (
     <article>
