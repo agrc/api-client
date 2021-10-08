@@ -12,7 +12,10 @@ import { Chrome, Header, Footer } from '../components/PageElements';
 export default function Routes() {
   return (
     <GeocodeContextProvider>
-      <Router defaultRoute>
+      <Router
+        defaultRoute
+        getUserConfirmation={(message, callback) => window.ugrc.getUserConfirmation(message).then(callback)}
+      >
         <Header />
         <Chrome>
           <ScrollToTop />

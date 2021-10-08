@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
 const path = require('path');
 require('./services/config');
 require('./services/csv');
@@ -38,6 +38,18 @@ const createWindow = () => {
   if (process.env.NODE_ENV === 'development') {
     mainWindow.webContents.openDevTools();
   }
+
+  ipcMain.handle('getUserConfirmation', (_, message) => {
+    const buttonIndex = dialog.showMessageBoxSync(mainWindow, {
+      message,
+      type: 'warning',
+      buttons: ['Yes', 'Cancel'],
+      defaultId: 1,
+      cancelId: 1,
+    });
+
+    return buttonIndex === 0;
+  });
 };
 
 // This method will be called when Electron has finished
