@@ -37,3 +37,4 @@ jobs:
           APPLE_BUNDLE_ID: ${{ secrets.APPLE_BUNDLE_ID }}
           APPLE_USER_ID: ${{ secrets.APPLE_USER_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
