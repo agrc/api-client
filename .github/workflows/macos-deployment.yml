@@ -1,5 +1,3 @@
-name: Build & Release
-
 on:
   push:
     branches:
@@ -7,21 +5,21 @@ on:
 
 jobs:
   build:
-    name: Build (macOS)
+    name: Draft Release
     runs-on: macos-latest
     environment:
       name: prod
     steps:
-      - name: Checkout
+      - name: Set up code
         uses: actions/checkout@v2
 
-      - name: Setup NodeJS
+      - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: lts/*
           cache: npm
 
-      - name: Set macOS signing certs
+      - name: Set up signing certificates
         uses: apple-actions/import-codesign-certs@v1
         with:
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
