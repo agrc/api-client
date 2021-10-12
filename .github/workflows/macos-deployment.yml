@@ -3,6 +3,14 @@ on:
   push:
     branches:
       - main
+    paths:
+      - src/**
+      - .github/workflows/*.yml
+      - forge.config.js
+      - package-lock.json
+      - postcss.config.js
+      - tailwind.config.js
+      - webpack.*.js
 jobs:
   build:
     name: Draft Release
