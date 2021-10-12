@@ -9,6 +9,8 @@ jobs:
   build:
     name: Build (macOS)
     runs-on: macos-latest
+    environment:
+      name: prod
     steps:
       - name: Checkout
         uses: actions/checkout@v2
