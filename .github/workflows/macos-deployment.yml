@@ -1,8 +1,8 @@
+name: macos-deployment
 on:
   push:
     branches:
       - main
-
 jobs:
   build:
     name: Draft Release
