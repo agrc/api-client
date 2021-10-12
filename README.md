@@ -1,5 +1,7 @@
 # UGRC API Client
 
+[![macos-deployment](https://github.com/agrc/api-client/actions/workflows/macos-deployment.yml/badge.svg)](https://github.com/agrc/api-client/actions/workflows/macos-deployment.yml)
+
 <img src="https://github.com/agrc/api-client/blob/main/src/assets/logo.svg" width="125px" />
 
 The Utah Geospatial Resource Center (UGRC) is the State of Utah’s map technology coordination office. The UGRC creates, maintains, and stores geospatial data in the State Geographic Information Database (SGID), a one-stop shop to hundreds of data layers developed, aggregated, or acquired by state government. UGRC’s Web API is an http-enabled service for accessing this valuable geospatial data.
