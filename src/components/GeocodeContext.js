@@ -10,6 +10,7 @@ export default function GeocodeContextProvider({ children }) {
       zone: '',
     },
     file: null,
+    fieldsFromFile: [],
   });
   const setField = useCallback(
     (obj) => {
