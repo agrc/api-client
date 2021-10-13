@@ -53,6 +53,36 @@ const config = {
       name: '@electron-forge/maker-zip',
       platforms: ['darwin'],
     },
+    {
+      name: '@electron-forge/maker-dmg',
+      config: {
+        title: '${productName} ${version}',
+        window: {
+          size: {
+            width: 400,
+            height: 274,
+          },
+        },
+        background: './src/assets/dmg-background.png',
+        icon: './src/assets/logo.icns',
+        contents: (options) => {
+          return [
+            {
+              x: 75,
+              y: 140,
+              type: 'file',
+              path: options.appPath,
+            },
+            {
+              x: 300,
+              y: 140,
+              type: 'link',
+              path: '/Applications',
+            },
+          ];
+        },
+      },
+    },
   ],
   publishers: [
     {
