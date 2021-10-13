@@ -4,14 +4,14 @@ import { Link, useHistory } from 'react-router-dom';
 import { useGeocodeContext } from '../components/GeocodeContext';
 
 export default function Plan() {
-  const geocodingContext = useGeocodeContext()[0];
+  const { geocodeContext } = useGeocodeContext();
   const [rows, setRows] = useState(0);
   const history = useHistory();
   const duration = (rows / 3) * 1000;
 
   useEffect(() => {
-    window.ugrc.getRecordCount(geocodingContext.file.path).then(setRows);
-  }, [geocodingContext.file.path]);
+    window.ugrc.getRecordCount(geocodeContext.data.file.path).then(setRows);
+  }, [geocodeContext.data.file.path]);
 
   const start = () => {
     history.push('/geocode');
@@ -33,7 +33,7 @@ export default function Plan() {
           <span className="block text-base text-gray-400">to complete</span>
         </div>
       </section>
-      <h3 className="text-center">{geocodingContext.file.name}</h3>
+      <h3 className="text-center">{geocodeContext.data.file.name}</h3>
       <button onClick={start} type="button">
         Start
       </button>

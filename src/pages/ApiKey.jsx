@@ -4,14 +4,14 @@ import { useGeocodeContext } from '../components/GeocodeContext';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/outline';
 
 export default function ApiKey() {
-  const [geocodeContext, setGeocodeContext] = useGeocodeContext();
+  const { geocodeContext, geocodeDispatch } = useGeocodeContext();
   const history = useHistory();
   const [isValid, setIsValid] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
     window.ugrc.getConfigItem('apiKey').then((key) => {
-      setGeocodeContext({ apiKey: key ?? '' });
+      geocodeDispatch({ type: 'UPDATE_KEY', payload: key ?? '' });
 
       if (key && history.location.search !== '?skip-forward=1') {
         history.push('/data');
@@ -19,7 +19,7 @@ export default function ApiKey() {
         if (key) {
           checkApiKey(key).then((isValid) => {
             setIsValid(isValid);
-            setGeocodeContext(isValid ? { apiKey: key } : { apiKey: '' });
+            geocodeDispatch({ type: 'UPDATE_KEY', payload: isValid ? key : '' });
           });
         }
 
@@ -36,7 +36,7 @@ export default function ApiKey() {
     const isValid = await checkApiKey(apiKey);
 
     setIsValid(isValid);
-    setGeocodeContext(isValid ? { apiKey } : { apiKey: '' });
+    geocodeDispatch({ type: 'UPDATE_KEY', payload: isValid ? apiKey : '' });
   };
 
   const checkApiKey = (apiKey) => {
