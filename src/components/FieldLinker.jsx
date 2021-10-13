@@ -1,7 +1,7 @@
 import { useGeocodeContext } from './GeocodeContext';
 
 const FieldLinker = () => {
-  const [geocodeContext, setGeocodeContext] = useGeocodeContext();
+  const { geocodeContext, geocodeDispatch } = useGeocodeContext();
 
   return (
     <section className="mt-6">
@@ -35,7 +35,7 @@ const FieldLinker = () => {
         <code>address</code>, <code>city</code> and or <code>zip</code> field to the fields required for geocoding.
       </p>
       <div className="flex justify-around my-6">
-        {geocodeContext.fieldsFromFile.map((field) => (
+        {geocodeContext.data.fieldsFromFile.map((field) => (
           <div className="w-1/6 text-center bg-indigo-100 border border-indigo-600 rounded shadow" key={field}>
             {field}
           </div>
@@ -47,22 +47,24 @@ const FieldLinker = () => {
         <label htmlFor="street">Street Field Name</label>
         <select
           name="street"
-          onChange={(event) => setGeocodeContext({ fields: { ...geocodeContext.fields, street: event.target.value } })}
-          value={geocodeContext.fields.street}
+          onChange={(event) =>
+            geocodeDispatch({ action: 'UPDATE_FIELDS', payload: event.target.value, meta: 'street' })
+          }
+          value={geocodeContext.data.street}
         >
           <option>please select a field</option>
-          {geocodeContext.fieldsFromFile.map((field) => (
+          {geocodeContext.data.fieldsFromFile.map((field) => (
             <option key={field}>{field}</option>
           ))}
         </select>
         <label htmlFor="zone">Zone Field Name</label>
         <select
           name="zone"
-          onChange={(event) => setGeocodeContext({ fields: { ...geocodeContext.fields, zone: event.target.value } })}
-          value={geocodeContext.fields.zone}
+          onChange={(event) => geocodeDispatch({ action: 'UPDATE_FIELDS', payload: event.target.value, meta: 'zone' })}
+          value={geocodeContext.data.zone}
         >
           <option>please select a field</option>
-          {geocodeContext.fieldsFromFile.map((field) => (
+          {geocodeContext.data.fieldsFromFile.map((field) => (
             <option key={field}>{field}</option>
           ))}
         </select>

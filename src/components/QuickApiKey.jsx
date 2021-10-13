@@ -3,7 +3,7 @@ import { KeyIcon } from '@heroicons/react/outline';
 import { useGeocodeContext } from './GeocodeContext';
 
 export default function QuickApiKey() {
-  const geocodeContext = useGeocodeContext()[0];
+  const { geocodeContext } = useGeocodeContext();
 
   return geocodeContext.apiKey ? (
     <section className="absolute top-0 right-0 h-4">

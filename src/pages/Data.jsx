@@ -21,11 +21,14 @@ const chooseCommonFieldName = (fieldName, fieldsFromFile, commonFieldNames) => {
 };
 
 export default function Data() {
-  const [geocodeContext, setGeocodeContext] = useGeocodeContext();
+  const { geocodeContext, geocodeDispatch } = useGeocodeContext();
 
   const onDrop = async (files) => {
     if (!files) {
-      setGeocodeContext({ file: null });
+      geocodeDispatch({
+        type: 'RESET',
+        payload: 'data',
+      });
 
       return;
     }
@@ -33,10 +36,11 @@ export default function Data() {
     const file = files[0];
     const fieldsFromFile = await window.ugrc.getFieldsFromFile(file.path);
 
-    setGeocodeContext({
-      file,
-      fieldsFromFile,
-      fields: {
+    geocodeDispatch({
+      type: 'UPDATE_FILE',
+      payload: {
+        file,
+        fieldsFromFile,
         street: chooseCommonFieldName('street', fieldsFromFile, commonFieldNames.current),
         zone: chooseCommonFieldName('zone', fieldsFromFile, commonFieldNames.current),
       },
@@ -65,11 +69,11 @@ export default function Data() {
   const saveFieldPreferences = async () => {
     const existingStreetFields = new Set(await window.ugrc.getConfigItem('streetFields'));
 
-    existingStreetFields.add(geocodeContext.fields.street.toLowerCase());
+    existingStreetFields.add(geocodeContext.data.street.toLowerCase());
 
     const existingZoneFields = new Set(await window.ugrc.getConfigItem('zoneFields'));
 
-    existingZoneFields.add(geocodeContext.fields.zone.toLowerCase());
+    existingZoneFields.add(geocodeContext.data.zone.toLowerCase());
 
     await window.ugrc.saveConfig({
       streetFields: Array.from(existingStreetFields),
@@ -91,9 +95,9 @@ export default function Data() {
         className="flex items-center justify-center w-full mb-4 bg-gray-100 border border-indigo-800 rounded shadow h-28"
       >
         <input {...getInputProps()} />
-        <DropzoneMessaging isDragActive={isDragActive} file={geocodeContext.file} />
+        <DropzoneMessaging isDragActive={isDragActive} file={geocodeContext.data.file} />
       </div>
-      {geocodeContext.file ? (
+      {geocodeContext.data.file ? (
         <button
           className="flex flex-row"
           type="button"
@@ -111,9 +115,9 @@ export default function Data() {
         </button>
       )}
 
-      {geocodeContext.file ? <FieldLinker /> : null}
+      {geocodeContext.data.file ? <FieldLinker /> : null}
 
-      {geocodeContext.fields.street && geocodeContext.fields.zone ? (
+      {geocodeContext.data.street && geocodeContext.data.zone ? (
         <button className="mt-4" onClick={saveFieldPreferences} type="button">
           Next
         </button>

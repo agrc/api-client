@@ -15,7 +15,7 @@ export default function Geocoding() {
     status: 'idle',
   });
   const startTime = useRef(new Date());
-  const geocodeContext = useGeocodeContext()[0];
+  const { geocodeContext } = useGeocodeContext();
   const draggable = useRef(null);
 
   const onDragStart = (event) => {
@@ -34,8 +34,8 @@ export default function Geocoding() {
 
     window.ugrc.getConfigItem('wkid').then((wkid) => {
       window.ugrc.geocode({
-        filePath: geocodeContext.file.path,
-        fields: geocodeContext.fields,
+        filePath: geocodeContext.data.file.path,
+        fields: { street: geocodeContext.data.street, zone: geocodeContext.data.zone },
         apiKey: geocodeContext.apiKey,
         wkid,
       });
