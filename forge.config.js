@@ -50,10 +50,6 @@ const config = {
       },
     },
     {
-      name: '@electron-forge/maker-zip',
-      platforms: ['darwin'],
-    },
-    {
       name: '@electron-forge/maker-dmg',
       config: {
         title: '${productName} ${version}',
