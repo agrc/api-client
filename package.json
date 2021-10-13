@@ -3,8 +3,27 @@
   "productName": "ugrc-api-client",
   "version": "1.1.0",
   "description": "The official UGRC API client",
-  "main": ".webpack/main",
+  "license": "MIT",
   "repository": "https://github.com/agrc/api-client",
+  "homepage": "https://github.com/agrc/api-client#readme",
+  "bugs": "https://github.com/agrc/api-client/issues",
+  "contributors": [
+    {
+      "name": "Steve Gourley",
+      "email": "sgourley@utah.gov"
+    },
+    {
+      "name": "Scott Davis",
+      "email": "stdavis@utah.gov"
+    }
+  ],
+  "keywords": [
+    "utah",
+    "geocoding",
+    "ugrc",
+    "agrc",
+    "electron"
+  ],
   "scripts": {
     "start": "ELECTRON_ENABLE_LOGGING=1 && electron-forge start",
     "start:win": "set ELECTRON_ENABLE_LOGGING=1 && electron-forge start",
@@ -17,24 +36,7 @@
     "lint": "eslint ./src --ext .jsx,.js --ignore-path ./.gitignore",
     "lint:fix": "eslint ./src --ext .jsx,.js --quiet --fix --ignore-path ./.gitignore"
   },
-  "keywords": [
-    "utah",
-    "geocoding",
-    "ugrc",
-    "agrc",
-    "electron"
-  ],
-  "contributors": [
-    {
-      "name": "Steve Gourley",
-      "email": "sgourley@utah.gov"
-    },
-    {
-      "name": "Scott Davis",
-      "email": "stdavis@utah.gov"
-    }
-  ],
-  "license": "MIT",
+  "main": ".webpack/main",
   "config": {
     "forge": "./forge.config.js"
   },
@@ -68,7 +70,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "node-loader": "^2.0.0",
     "postcss": "^8.3.9",
-    "postcss-loader": "^6.1.1",
+    "postcss-loader": "^6.2.0",
     "prettier": "^2.4.1",
     "style-loader": "^3.3.0",
     "tailwindcss": "^2.2.16"
