@@ -1,0 +1,10 @@
+enhancement: feat/*
+bug: fix/*
+chore: chore/*
+documentation: docs/*
+style: style/*
+refactoring: refactor/*
+performance: perf/*
+testing: test/*
+continuous integration: ci/*
+revert: revert/*
