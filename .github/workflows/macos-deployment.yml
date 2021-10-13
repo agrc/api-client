@@ -1,16 +1,8 @@
 name: macos-deployment
 on:
   push:
-    branches:
-      - main
-    paths:
-      - src/**
-      - .github/workflows/*.yml
-      - forge.config.js
-      - package-lock.json
-      - postcss.config.js
-      - tailwind.config.js
-      - webpack.*.js
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 jobs:
   build:
     name: Draft Release
