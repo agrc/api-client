@@ -2,13 +2,11 @@ name-template: 'v$RESOLVED_VERSION 🌈'
 tag-template: 'v$RESOLVED_VERSION'
 categories:
   - title: '🚀 Features'
-    labels:
-      - 'enhancement'
+    label: 'enhancement'
   - title: '🐛 Bug Fixes'
-    labels:
-      - 'bug'
+    label: 'bug'
   - title: '🧰 Maintenance'
-    label:
+    labels:
       - 'chore'
       - 'style'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
