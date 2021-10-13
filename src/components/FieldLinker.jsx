@@ -1,6 +1,6 @@
 import { useGeocodeContext } from './GeocodeContext';
 
-const FieldLinker = ({ fieldList }) => {
+const FieldLinker = () => {
   const [geocodeContext, setGeocodeContext] = useGeocodeContext();
 
   return (
@@ -35,7 +35,7 @@ const FieldLinker = ({ fieldList }) => {
         <code>address</code>, <code>city</code> and or <code>zip</code> field to the fields required for geocoding.
       </p>
       <div className="flex justify-around my-6">
-        {fieldList.map((field) => (
+        {geocodeContext.fieldsFromFile.map((field) => (
           <div className="w-1/6 text-center bg-indigo-100 border border-indigo-600 rounded shadow" key={field}>
             {field}
           </div>
@@ -51,7 +51,7 @@ const FieldLinker = ({ fieldList }) => {
           value={geocodeContext.fields.street}
         >
           <option>please select a field</option>
-          {fieldList.map((field) => (
+          {geocodeContext.fieldsFromFile.map((field) => (
             <option key={field}>{field}</option>
           ))}
         </select>
@@ -62,7 +62,7 @@ const FieldLinker = ({ fieldList }) => {
           value={geocodeContext.fields.zone}
         >
           <option>please select a field</option>
-          {fieldList.map((field) => (
+          {geocodeContext.fieldsFromFile.map((field) => (
             <option key={field}>{field}</option>
           ))}
         </select>

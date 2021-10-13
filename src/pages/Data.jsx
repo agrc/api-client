@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import { DocumentAddIcon, DocumentRemoveIcon } from '@heroicons/react/outline';
@@ -22,7 +22,7 @@ const chooseCommonFieldName = (fieldName, fieldsFromFile, commonFieldNames) => {
 
 export default function Data() {
   const [geocodeContext, setGeocodeContext] = useGeocodeContext();
-  const [fieldList, setFieldList] = useState([]);
+
   const onDrop = async (files) => {
     if (!files) {
       setGeocodeContext({ file: null });
@@ -33,10 +33,9 @@ export default function Data() {
     const file = files[0];
     const fieldsFromFile = await window.ugrc.getFieldsFromFile(file.path);
 
-    setFieldList(fieldsFromFile);
-
     setGeocodeContext({
       file,
+      fieldsFromFile,
       fields: {
         street: chooseCommonFieldName('street', fieldsFromFile, commonFieldNames.current),
         zone: chooseCommonFieldName('zone', fieldsFromFile, commonFieldNames.current),
@@ -112,7 +111,7 @@ export default function Data() {
         </button>
       )}
 
-      {geocodeContext.file ? <FieldLinker fieldList={fieldList} /> : null}
+      {geocodeContext.file ? <FieldLinker /> : null}
 
       {geocodeContext.fields.street && geocodeContext.fields.zone ? (
         <button className="mt-4" onClick={saveFieldPreferences} type="button">
