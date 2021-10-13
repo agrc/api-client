@@ -80,6 +80,9 @@ app.on('web-contents-created', (_, contents) => {
 
     try {
       const url = new URL(urlString);
+      if (url.protocol === 'mailto:') {
+        return true;
+      }
 
       if (!url.protocol === 'https:' || !safeHosts.includes(url.hostname)) {
         return false;

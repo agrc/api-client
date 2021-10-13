@@ -21,7 +21,14 @@ export default function Footer() {
         </div>
       </div>
       <div className="text-right">
-        <div>Feedback</div>
+        <a
+          className="text-yellow-500 hover:text-yellow-300"
+          href={`mailto:agrc-dev@utah.gov?subject=UGRC API Client ${version} Feedback`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Feedback
+        </a>
       </div>
     </section>
   );
