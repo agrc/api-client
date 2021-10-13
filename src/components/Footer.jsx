@@ -23,7 +23,7 @@ export default function Footer() {
       <div className="text-right">
         <a
           className="text-yellow-500 hover:text-yellow-300"
-          href={`mailto:agrc-dev@utah.gov?subject=UGRC API Client ${version} Feedback`}
+          href={`mailto:ugrc-developers@utah.gov?subject=UGRC API Client ${version} Feedback`}
           target="_blank"
           rel="noopener noreferrer"
         >
