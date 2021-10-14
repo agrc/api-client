@@ -14,9 +14,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm version $(gh release view --json tagName --jq ".tagName") -m "release: %s"
           git config user.name "Version Bot"
           git config user.email "version-bot@users.noreply.github.com"
+          npm version $(gh release view --json tagName --jq ".tagName") -m "release: %s"
           git push --follow-tags
 
   macos:
