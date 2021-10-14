@@ -28,7 +28,6 @@ const config = {
       appBundleId: process.env.APPLE_BUNDLE_ID,
       appleId: process.env.APPLE_USER_ID,
       appleIdPassword: process.env.APPLE_PASSWORD,
-      // ascProvider: process.env.APPLE_TEAM_ID,
     },
   },
   makers: [
@@ -45,8 +44,8 @@ const config = {
         noMsi: true,
         setupExe: `ugrc-api-client-${version}-win32-setup.exe`,
         setupIcon: path.resolve(assets, 'logo.ico'),
-        certificateFile: process.env['WINDOWS_CODESIGN_FILE'],
-        certificatePassword: process.env['WINDOWS_CODESIGN_PASSWORD'],
+        certificateFile: './build/cert/windows.p12',
+        certificatePassword: process.env.WINDOWS_CERTIFICATE_PASSWORD,
       },
     },
     {
