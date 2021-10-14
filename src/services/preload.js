@@ -14,4 +14,5 @@ contextBridge.exposeInMainWorld('ugrc', {
   getAppVersion: (content) => ipcRenderer.invoke('getAppVersion', content),
   getAppInfo: (content) => ipcRenderer.invoke('getAppInfo', content),
   getUserConfirmation: (content) => ipcRenderer.invoke('getUserConfirmation', content),
+  isMacOS: () => process.platform === 'darwin',
 });
