@@ -5,8 +5,9 @@ import { useGeocodeContext } from './GeocodeContext';
 export default function QuickApiKey() {
   const { geocodeContext } = useGeocodeContext();
 
-  const sectionClass = window.ugrc.isMacOS() ? 'top-0' : 'bottom-12';
-  const divClass = window.ugrc.isMacOS() ? 'rounded-bl-lg' : 'rounded-l-lg border-t';
+  const isMacOS = window.ugrc.isMacOS();
+  const sectionClass = isMacOS ? 'top-0' : 'bottom-12';
+  const divClass = isMacOS ? 'rounded-bl-lg' : 'rounded-l-lg border-t';
 
   return geocodeContext.apiKey ? (
     <section className={`${sectionClass} absolute right-0 h-4`}>
