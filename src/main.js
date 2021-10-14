@@ -5,8 +5,9 @@ require('./services/csv');
 require('./services/geocode');
 
 require('update-electron-app')({
-  updateInterval: '5 minutes',
+  updateInterval: '1 hour',
   logger: require('electron-log'),
+  notifyUser: false,
 });
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
