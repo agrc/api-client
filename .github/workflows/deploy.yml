@@ -1,4 +1,4 @@
-name: macos-deployment
+name: deploy
 on:
   release:
     types:
@@ -17,7 +17,6 @@ jobs:
         run: |
           npm version ${{ steps.release-drafter.outputs.tag_name }} -m "release: %s"
           git push --follow-tags
-
   macos:
     name: Draft Release
     runs-on: macos-latest
