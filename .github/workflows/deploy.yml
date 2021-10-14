@@ -2,9 +2,11 @@ name: deploy
 on:
   release:
     types: [published]
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   macos:
-    name: Draft Release
+    name: Publish macOS app to release
     runs-on: macos-latest
     environment:
       name: prod
@@ -43,7 +45,7 @@ jobs:
           WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   windows:
-    name: Draft Release
+    name: Publish windows app to release
     runs-on: windows-latest
     environment:
       name: prod
