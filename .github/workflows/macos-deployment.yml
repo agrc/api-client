@@ -25,8 +25,18 @@ jobs:
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
 
-      - name: NPM Install
+      - name: Install dependencies
         run: npm ci
+
+      - uses: release-drafter/release-drafter@v5
+        id: release-drafter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update semantic version
+        run: |
+          npm version ${{ steps.release-drafter.outputs.tag_name }} -m "release: %s"
+          git push --follow-tags
 
       - name: Build, Package, & Release
         run: npm run publish
