@@ -6,6 +6,8 @@ jobs:
   version:
     name: NPM Version
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Set up code
         uses: actions/checkout@v2
@@ -13,17 +15,25 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Update semantic version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Bump version
+        id: bump-version
         run: |
           git config user.name "Version Bot"
           git config user.email "version-bot@users.noreply.github.com"
           TAG=$(npm version from-git --no-git-tag-version)
-          git add package*.json
-          git commit -m "release: $TAG"
-          git push
+          git status
+          echo $TAG
+          echo ::set-output name=TAG::$TAG
 
+      - name: Create version commit
+        run: |
+          git add package*.json
+          git status
+          git commit -m "release: ${{ steps.bump-version.outputs.TAG }}"
+
+      - name: Push version commit
+        run: |
+          git push
   macos:
     name: Draft Release
     runs-on: macos-latest
