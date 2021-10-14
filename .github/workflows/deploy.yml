@@ -16,7 +16,7 @@ jobs:
         run: |
           git config user.name "Version Bot"
           git config user.email "version-bot@users.noreply.github.com"
-          npm version $(gh release view --json tagName --jq ".tagName") -m "release: %s"
+          npm version $(gh release view --json tagName --jq ".tagName") -m "release: %s" --allow-same-version
           git push --follow-tags
 
   macos:
