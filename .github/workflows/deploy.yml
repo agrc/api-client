@@ -42,11 +42,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - uses: release-drafter/release-drafter@v5
-        id: release-drafter
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build, Package, & Release
         run: npm run publish
         env:
