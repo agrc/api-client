@@ -1,6 +1,6 @@
 # UGRC API Client
 
-[![macos-deployment](https://github.com/agrc/api-client/actions/workflows/macos-deployment.yml/badge.svg)](https://github.com/agrc/api-client/actions/workflows/macos-deployment.yml)
+[![deploy](https://github.com/agrc/api-client/actions/workflows/deploy.yml/badge.svg)](https://github.com/agrc/api-client/actions/workflows/deploy.yml)
 
 <img src="https://github.com/agrc/api-client/blob/main/src/assets/logo.svg" width="125px" />
 
