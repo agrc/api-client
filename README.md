@@ -41,12 +41,4 @@ An apple developer certificate is required to sign the application for distribut
 
 ## Deploying a new version
 
-The GitHub Action pipeline will create a release with the signed application binaries. Therefore, in a branch other than `main`, the application version needs to be bumped.
-
-1. `npm version (major | minor | patch) -m "release: %s"`
-
-Once the action is complete, a draft release will be available to publish. To finish a [draft release](https://github.com/agrc/api-client/releases)
-
-1. Edit the release
-1. Auto-generate the release notes
-1. Publish
+GitHub Actions will create and update a draft release with every merged pull request. When a release is desired, publish the [draft release](https://github.com/agrc/api-client/releases). Another GitHub action will sign the binaries and upload them to the release assets. The API Clients will silently download the update and the installation will occur on the next restart of the app.
