@@ -11,10 +11,12 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Update semantic version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-
           npm version $(gh release view --json tagName --jq ".tagName") -m "release: %s"
           git push --follow-tags
+
   macos:
     name: Draft Release
     runs-on: macos-latest
