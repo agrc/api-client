@@ -7,14 +7,13 @@ jobs:
     name: NPM Version
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v5
-        id: release-drafter
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up code
+        uses: actions/checkout@v2
 
       - name: Update semantic version
         run: |
-          npm version ${{ steps.release-drafter.outputs.tag_name }} -m "release: %s"
+
+          npm version $(gh release view --json tagName --jq ".tagName") -m "release: %s"
           git push --follow-tags
   macos:
     name: Draft Release
