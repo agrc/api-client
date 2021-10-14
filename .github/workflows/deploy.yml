@@ -1,8 +1,7 @@
 name: deploy
 on:
   release:
-    types:
-      - published
+    types: [published]
 jobs:
   version:
     name: NPM Version
