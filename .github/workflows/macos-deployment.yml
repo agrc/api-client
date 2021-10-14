@@ -4,9 +4,24 @@ on:
     types:
       - published
 jobs:
-  build:
+  version:
+    name: NPM Version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: release-drafter/release-drafter@v5
+        id: release-drafter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update semantic version
+        run: |
+          npm version ${{ steps.release-drafter.outputs.tag_name }} -m "release: %s"
+          git push --follow-tags
+
+  macos:
     name: Draft Release
     runs-on: macos-latest
+    needs: version
     environment:
       name: prod
     steps:
@@ -33,11 +48,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Update semantic version
-        run: |
-          npm version ${{ steps.release-drafter.outputs.tag_name }} -m "release: %s"
-          git push --follow-tags
-
       - name: Build, Package, & Release
         run: npm run publish
         env:
@@ -45,5 +55,29 @@ jobs:
           APPLE_BUNDLE_ID: ${{ secrets.APPLE_BUNDLE_ID }}
           APPLE_USER_ID: ${{ secrets.APPLE_USER_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  windows:
+    name: Draft Release
+    runs-on: windows-latest
+    needs: version
+    environment:
+      name: prod
+    steps:
+      - name: Set up code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build, Package, & Release
+        run: npm run publish
+        env:
           WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
