@@ -61,6 +61,7 @@ jobs:
 
       - name: Bump version
         id: bump-version
+        shell: bash
         run: |
           TAG=$(gh release view --json tagName --jq ".tagName")
           npm version $TAG --no-git-tag-version
