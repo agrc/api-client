@@ -1,0 +1,81 @@
+name: Bug Report
+description: File a bug report
+title: '[Bug]: '
+labels: ['bug', 'triage']
+assignees:
+  - steveoh
+  - stdavis
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
+  - type: checkboxes
+    attributes:
+    label: Is there an existing issue for this?
+    description: Please search to see if an issue already exists for the bug you encountered.
+    options:
+      - label: I have searched the existing issues
+        required: true
+  - type: input
+    id: version
+    attributes:
+      label: App Version
+      description: Click in the lower left corner of the app on the version and provide the values.
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: input
+    id: electron-version
+    attributes:
+      label: Electron Version
+      description: Click in the lower left corner of the app on the version and provide the values.
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Operating System
+      description: What OS are you running?
+      options:
+        - Windows
+        - MacOS
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+      value: 'A bug happened!'
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Using this data...
+        2. With these fields...
+        3. See error...
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: |
+        Please copy and paste any relevant log output.
+        - macOS: `~/Library/Logs/ugrc-api-client/main.log`
+        - Windows: `%USERPROFILE%\AppData\Roaming\ugrc-api-client\logs\main.log
+      render: shell
