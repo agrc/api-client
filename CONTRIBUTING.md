@@ -2,7 +2,7 @@
 
 ![License](https://img.shields.io/github/license/agrc/api-client)
 
-👍🎉 First off, thanks for taking the time to contribute! 🎉👍
+👍🎉 First off, thank you for taking the time to contribute! 🎉👍
 
 The following is a set of guidelines for contributing to the AGRC Organization on GitHub. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
 
@@ -69,10 +69,10 @@ Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com
 
 ### Your First Code Contribution
 
-Unsure where to begin contributing? You can start by looking through these `good first issue` and `help-wanted` issues:
+Unsure where to begin contributing? You can start by looking through these `good first issue` and `help wanted` issues:
 
-- [good first issue](https://github.com/agrc/api-client/labels/good%20first%20issue)- issues which should only require a few lines of code.
-- [Help wanted issues][help-wanted] - issues which should be a bit more involved than `good first issue` issues.
+- [Good first issue](https://github.com/agrc/api-client/issues?q=is%3Aopen+label%3A%22good+first+issue%22+sort%3Acomments-desc) - issues which should only require a few lines of code.
+- [Help wanted](https://github.com/agrc/api-client/issues?q=is%3Aopen+label%3A%22help+wanted%22+sort%3Acomments-desc+) - issues which should be a bit more involved than `good first issue` issues.
 
 Both issue lists are sorted by total number of comments. While not perfect, number of comments is a reasonable proxy for impact a given change will have.
 
@@ -95,7 +95,7 @@ The process described here has several goals:
 
 Please follow these steps to have your contribution considered by the maintainers:
 
-1. Follow all instructions in [the template](PULL_REQUEST_TEMPLATE.md)
+1. Follow all instructions in the template
 2. Follow the style guide
 3. After you submit your pull request, verify that all [status checks](https://help.github.com/articles/about-status-checks/) are passing
 
