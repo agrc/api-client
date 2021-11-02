@@ -48,7 +48,7 @@ const FieldLinker = () => {
         <select
           name="street"
           onChange={(event) =>
-            geocodeDispatch({ action: 'UPDATE_FIELDS', payload: event.target.value, meta: 'street' })
+            geocodeDispatch({ type: 'UPDATE_FIELDS', payload: event.target.value, meta: 'street' })
           }
           value={geocodeContext.data.street}
         >
@@ -60,7 +60,7 @@ const FieldLinker = () => {
         <label htmlFor="zone">Zone Field Name</label>
         <select
           name="zone"
-          onChange={(event) => geocodeDispatch({ action: 'UPDATE_FIELDS', payload: event.target.value, meta: 'zone' })}
+          onChange={(event) => geocodeDispatch({ type: 'UPDATE_FIELDS', payload: event.target.value, meta: 'zone' })}
           value={geocodeContext.data.zone}
         >
           <option>please select a field</option>
