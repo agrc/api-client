@@ -44,12 +44,10 @@ const FieldLinker = () => {
 
       <h3>Assign Fields</h3>
       <form className="grid max-w-md gap-3 mx-auto grid-col-1">
-        <label htmlFor="street">Street Field Name</label>
+        <label htmlFor="street">Street Address Field</label>
         <select
           name="street"
-          onChange={(event) =>
-            geocodeDispatch({ type: 'UPDATE_FIELDS', payload: event.target.value, meta: 'street' })
-          }
+          onChange={(event) => geocodeDispatch({ type: 'UPDATE_FIELDS', payload: event.target.value, meta: 'street' })}
           value={geocodeContext.data.street}
         >
           <option>please select a field</option>
@@ -57,7 +55,7 @@ const FieldLinker = () => {
             <option key={field}>{field}</option>
           ))}
         </select>
-        <label htmlFor="zone">Zone Field Name</label>
+        <label htmlFor="zone">Zone Field</label>
         <select
           name="zone"
           onChange={(event) => geocodeDispatch({ type: 'UPDATE_FIELDS', payload: event.target.value, meta: 'zone' })}
