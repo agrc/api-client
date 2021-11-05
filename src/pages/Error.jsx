@@ -25,15 +25,19 @@ export default function Error({ error }) {
           <pre className="overflow-auto text-base text-gray-400">{error.toString()}</pre>
         ) : null}
         <div className="flex justify-between">
-          <button type="button" onClick={window.ugrc.relaunchApp}>
-            Restart application
-          </button>
-          <button
-            type="button"
-            onClick={() => window.ugrc.openIssue({ message: error.message, stack: error.stack })}
-          >
-            Report this issue
-          </button>
+          {window.ugrc ? (
+            <>
+              <button type="button" onClick={window.ugrc.relaunchApp}>
+                Restart application
+              </button>
+              <button
+                type="button"
+                onClick={() => window.ugrc.openIssue({ message: error.message, stack: error.stack })}
+              >
+                Report this issue
+              </button>
+            </>
+          ) : null}
         </div>
       </div>
     </article>
