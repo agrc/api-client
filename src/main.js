@@ -3,6 +3,7 @@ const path = require('path');
 require('./services/config');
 require('./services/csv');
 require('./services/geocode');
+require('./services/errors');
 
 require('update-electron-app')({
   updateInterval: '1 hour',
