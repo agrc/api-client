@@ -131,7 +131,12 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912 })
         }).json();
       } catch (error) {
         log.error(`Error geocoding ${street} ${zone}: ${error}`);
-        response = JSON.parse(error.response.body);
+
+        try {
+          response = JSON.parse(error.response.body);
+        } catch (error) {
+          response = { error: error.message };
+        }
 
         failures += 1;
       }
