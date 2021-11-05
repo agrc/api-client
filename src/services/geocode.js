@@ -6,6 +6,7 @@ const got = require('got');
 const stringify = require('csv-stringify');
 const getFields = require('./csv').getFields;
 const getRecordCount = require('./csv').getRecordCount;
+const log = require('electron-log');
 
 const SPACES = / +/;
 const INVALID_CHARS = /[^a-zA-Z0-9]/;
@@ -45,6 +46,8 @@ export const cancelGeocode = () => {
 };
 
 export const checkApiKey = async (apiKey) => {
+  log.info(`Checking API key: ${apiKey}`);
+
   let response;
 
   try {
@@ -62,6 +65,7 @@ export const checkApiKey = async (apiKey) => {
     }).json();
   } catch (error) {
     if (error?.response?.body) {
+      log.error(`Error checking api key: ${error.response.body}`);
       response = JSON.parse(error.response.body);
     } else {
       throw error;
@@ -73,6 +77,7 @@ export const checkApiKey = async (apiKey) => {
 
 const output = 'ugrc_geocode_results.csv';
 export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912 }) => {
+  log.info(`Geocoding: ${filePath}, ${JSON.stringify(fields)}, ${apiKey}, ${wkid}`);
   cancelled = false;
   const parser = fs.createReadStream(filePath).pipe(parse({ columns: true, skipEmptyLines: true }));
   const columns = await getFields(filePath);
@@ -87,6 +92,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912 })
 
   for await (const record of parser) {
     if (cancelled) {
+      log.warn('Geocoding cancelled');
       event.reply('onGeocodingUpdate', {
         totalRows,
         rowsProcessed,
@@ -124,6 +130,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912 })
           timeout: 5000,
         }).json();
       } catch (error) {
+        log.error(`Error geocoding ${street} ${zone}: ${error}`);
         response = JSON.parse(error.response.body);
 
         failures += 1;
