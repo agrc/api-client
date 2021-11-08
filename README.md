@@ -38,6 +38,11 @@ An apple developer certificate is required to sign the application for distribut
    - `APPLE_BUNDLE_ID`: _the app bundle id (e.g. com.apple.calculator)_
    - `APPLE_USER_ID`: _your apple developer id_
    - `APPLE_PASSWORD`: _your apple developer password_
+   - `SENTRY_DSN`: _your sentry dsn (not specific to an environment)_
+  
+### Updating Electron
+
+1. `node sentry-symbols` - Uploads new electron-related symbols to Sentry.
 
 ## Deploying a new version
 

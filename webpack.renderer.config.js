@@ -10,4 +10,7 @@ module.exports = {
   module: {
     rules,
   },
+  externals: {
+    electron: 'commonjs electron',
+  },
 };

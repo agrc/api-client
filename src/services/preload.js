@@ -1,4 +1,7 @@
 const { ipcRenderer, contextBridge } = require('electron');
+const Sentry = require('@sentry/electron');
+
+ipcRenderer.invoke('getSentryConfig', Sentry.init);
 
 contextBridge.exposeInMainWorld('ugrc', {
   getFieldsFromFile: (content) => ipcRenderer.invoke('getFieldsFromFile', content),
@@ -17,4 +20,5 @@ contextBridge.exposeInMainWorld('ugrc', {
   isMacOS: () => process.platform === 'darwin',
   relaunchApp: () => ipcRenderer.send('relaunchApp'),
   openIssue: (content) => ipcRenderer.send('openIssue', content),
+  getSentryConfig: () => ipcRenderer.invoke('getSentryConfig'),
 });

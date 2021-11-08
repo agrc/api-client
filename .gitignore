@@ -88,3 +88,7 @@ typings/
 # Electron-Forge
 out/
 ugrc-api-client*
+
+# Sentry
+sentry.properties
+.electron-symbols*

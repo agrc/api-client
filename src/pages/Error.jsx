@@ -1,4 +1,11 @@
+import { useEffect } from 'react';
+import * as Sentry from '@sentry/electron';
+
 export default function Error({ error }) {
+  useEffect(() => {
+    Sentry.captureException(error);
+  }, [error]);
+
   return (
     <article className="">
       <div className="p-10">

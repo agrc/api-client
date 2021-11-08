@@ -1,5 +1,6 @@
 const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
-const path = require('path');
+
+require('./services/sentry');
 require('./services/config');
 require('./services/csv');
 require('./services/geocode');
@@ -29,7 +30,7 @@ const createWindow = () => {
       color: 'rgba(0, 0, 0, 0)',
     },
     webPreferences: {
-      preload: path.join(__dirname, 'services', 'preload.js'),
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       sandbox: true,
       nodeIntegration: false,
       contextIsolation: true,
