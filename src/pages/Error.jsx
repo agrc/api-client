@@ -7,7 +7,17 @@ export default function Error({ error, children }) {
         <h2 className="text-indigo-600">This is a little embarrassing...</h2>
         <p>
           We are really sorry. There was an error in the application that caused it to crash. The best way to make this
-          not happen again for you or anyone else is to report the issue to us. It should only take a few moments.
+          not happen again for you or anyone else is to report the issue to us. It should only take a few moments. But
+          first check our{' '}
+          <a
+            className="text-yellow-500 hover:text-yellow-300"
+            href="https://agrc-status.netlify.app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            status page
+          </a>{' '}
+          to see if it is already being worked on.
         </p>
         <h2 className="mb-8 text-center">Report by</h2>
         <section className="grid grid-cols-2 gap-4 mb-8 text-center">
