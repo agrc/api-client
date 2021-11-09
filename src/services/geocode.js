@@ -40,9 +40,9 @@ const coolYourJets = () => {
   return new Promise((resolve) => setTimeout(resolve, Math.random() * (max - min) + min));
 };
 
-let cancelled = false;
-export const cancelGeocode = () => {
-  cancelled = true;
+let cancelled;
+export const cancelGeocode = (status = 'cancelled') => {
+  cancelled = status;
 };
 
 export const checkApiKey = async (apiKey) => {
@@ -78,7 +78,7 @@ export const checkApiKey = async (apiKey) => {
 const output = 'ugrc_geocode_results.csv';
 export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912 }) => {
   log.info(`Geocoding: ${filePath}, ${JSON.stringify(fields)}, ${apiKey}, ${wkid}`);
-  cancelled = false;
+  cancelGeocode(null);
   const parser = fs.createReadStream(filePath).pipe(parse({ columns: true, skipEmptyLines: true }));
   const columns = await getFields(filePath);
   const writer = fs.createWriteStream(path.join(app.getPath('userData'), output));
@@ -89,16 +89,18 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912 })
   let rowsProcessed = 0;
   let totalScore = 0;
   let failures = 0;
+  const fastFailLimit = 25;
 
   for await (const record of parser) {
     if (cancelled) {
-      log.warn('Geocoding cancelled');
+      log.warn('Geocoding stopping');
       event.reply('onGeocodingUpdate', {
         totalRows,
         rowsProcessed,
+        failures,
         averageScore: Math.round(totalScore / (rowsProcessed - failures)) || 0,
         activeMatchRate: (rowsProcessed - failures) / rowsProcessed || 0,
-        status: 'cancelled',
+        status: cancelled,
       });
 
       return;
@@ -164,10 +166,15 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912 })
     event.reply('onGeocodingUpdate', {
       totalRows,
       rowsProcessed,
+      failures,
       averageScore: Math.round(totalScore / (rowsProcessed - failures)),
       activeMatchRate: (rowsProcessed - failures) / rowsProcessed,
       status: 'running',
     });
+
+    if (failures === fastFailLimit && fastFailLimit === rowsProcessed) {
+      cancelGeocode('fail-fast');
+    }
 
     await coolYourJets();
   }
@@ -177,6 +184,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912 })
   event.reply('onGeocodingUpdate', {
     totalRows,
     rowsProcessed,
+    failures,
     averageScore: Math.round(totalScore / (rowsProcessed - failures)),
     activeMatchRate: (rowsProcessed - failures) / rowsProcessed,
     status: 'complete',
