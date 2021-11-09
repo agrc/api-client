@@ -1,4 +1,4 @@
-export default function Error({ error }) {
+export default function Error({ error, children }) {
   return (
     <article className="">
       <div className="p-10">
@@ -39,6 +39,7 @@ export default function Error({ error }) {
             </>
           ) : null}
         </div>
+        {children}
       </div>
     </article>
   );
