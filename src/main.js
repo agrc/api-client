@@ -82,7 +82,7 @@ app.on('activate', () => {
 
 app.on('web-contents-created', (_, contents) => {
   const isSafeForExternalOpen = (urlString) => {
-    const safeHosts = ['github.com', 'api.mapserv.utah.gov', 'developer.mapserv.utah.gov'];
+    const safeHosts = ['github.com', 'api.mapserv.utah.gov', 'developer.mapserv.utah.gov', 'agrc-status.netlify.app'];
 
     try {
       const url = new URL(urlString);
