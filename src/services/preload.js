@@ -17,4 +17,5 @@ contextBridge.exposeInMainWorld('ugrc', {
   isMacOS: () => process.platform === 'darwin',
   relaunchApp: () => ipcRenderer.send('relaunchApp'),
   openIssue: (content) => ipcRenderer.send('openIssue', content),
+  openEmail: (content) => ipcRenderer.send('openEmail', content),
 });
