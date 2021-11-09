@@ -14,9 +14,17 @@ import ErrorPage from './Error.jsx';
 const RouterErrorPage = ({ error }) => {
   return (
     <ErrorPage error={error}>
-      <Link className="mt-2" type="back-button" to="/?skip-forward=1" replace={true}>
-        &larr; Back
-      </Link>
+      <p>
+        You may now{' '}
+        <Link className="font-bold text-yellow-500 hover:text-yellow-300" to="/?skip-forward=1" replace={true}>
+          go back
+        </Link>{' '}
+        to the previous page to check your settings to try again or{' '}
+        <button className="font-bold text-yellow-500 hover:text-yellow-300" onClick={window.ugrc.relaunchApp}>
+          restart the application
+        </button>{' '}
+        to see if that helps.
+      </p>
     </ErrorPage>
   );
 };
