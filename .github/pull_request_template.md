@@ -3,8 +3,9 @@
 👋 Hello there! Welcome. Please follow the steps below to tell us about your contribution.
 
 - 🐛 Are you fixing a bug? Create a `fix/*` branch
-- 📝 Are you updating documentation? Create a `docs\*` branch
-- 🚀 Are you adding a new feature? Create a `feat\*` branch
+- 📝 Are you updating documentation? Create a `docs/*` branch
+- 🚀 Are you adding a new feature? Create a `feat/*` branch
+- 🧰 Are you updating dependencies? Create a `chore/*` branch
 
 ## Identify the issue referencing the feature or bug
 
