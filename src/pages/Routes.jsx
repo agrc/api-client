@@ -1,15 +1,9 @@
 import { useEffect } from 'react';
 import { Link, withRouter, MemoryRouter as Router, Route, Switch } from 'react-router-dom';
 import GeocodeContextProvider from '../components/GeocodeContext.js';
-import ApiKey from './ApiKey.jsx';
-import Data from './Data.jsx';
-import Plan from './Plan.jsx';
-import About from './About.jsx';
-import Geocoding from './Geocoding.jsx';
-import Wkid from './Wkid.jsx';
+import { ApiKey, Data, Plan, About, Geocoding, Wkid, Offline, ErrorPage } from '.';
 import { Chrome, Header, Footer } from '../components/PageElements';
 import { ErrorBoundary } from 'react-error-boundary';
-import ErrorPage from './Error.jsx';
 
 const RouterErrorPage = ({ error }) => {
   return (
