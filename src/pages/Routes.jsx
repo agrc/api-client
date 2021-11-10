@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { Link, withRouter, MemoryRouter as Router, Route, Switch } from 'react-router-dom';
+import { useNavigatorStatus } from 'react-navigator-status';
+import { ErrorBoundary } from 'react-error-boundary';
 import GeocodeContextProvider from '../components/GeocodeContext.js';
 import { ApiKey, Data, Plan, About, Geocoding, Wkid, Offline, ErrorPage } from '.';
 import { Chrome, Header, Footer } from '../components/PageElements';
-import { ErrorBoundary } from 'react-error-boundary';
 
 const RouterErrorPage = ({ error }) => {
   return (
@@ -33,6 +34,8 @@ const pages = [
 ];
 
 export default function Routes() {
+  const online = useNavigatorStatus();
+
   return (
     <GeocodeContextProvider>
       <Router
@@ -44,17 +47,21 @@ export default function Routes() {
           <ScrollToTop />
           <ErrorBoundary FallbackComponent={RouterErrorPage}>
             <Switch>
-              {pages.map(({ path, Component }) => (
-                <Route
-                  key={path}
-                  path={`/${path}`}
-                  component={() => (
-                    <ErrorBoundary FallbackComponent={RouterErrorPage}>
-                      <Component />
-                    </ErrorBoundary>
-                  )}
-                />
-              ))}
+              {online ? (
+                pages.map(({ path, Component }) => (
+                  <Route
+                    key={path}
+                    path={`/${path}`}
+                    component={() => (
+                      <ErrorBoundary FallbackComponent={RouterErrorPage}>
+                        <Component />
+                      </ErrorBoundary>
+                    )}
+                  />
+                ))
+              ) : (
+                <Route path="/" component={Offline} />
+              )}
             </Switch>
           </ErrorBoundary>
         </Chrome>
