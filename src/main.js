@@ -48,6 +48,7 @@ const createWindow = () => {
   ipcMain.handle('getUserConfirmation', (_, message) => {
     const buttonIndex = dialog.showMessageBoxSync(mainWindow, {
       message,
+      title: 'Confirm Cancellation',
       type: 'warning',
       buttons: ['Yes', 'Cancel'],
       defaultId: 1,
