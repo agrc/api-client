@@ -1,6 +1,6 @@
 const { app, ipcMain, shell } = require('electron');
 const { openNewGitHubIssue } = require('electron-util');
-const osName = require('os-name');
+import osName from 'os-name';
 
 ipcMain.on('relaunchApp', () => {
   app.relaunch();
