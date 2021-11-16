@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useGeocodeContext } from '../components/GeocodeContext';
-import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/outline';
+import { ThumbUpIcon, ThumbDownIcon } from '@heroicons/react/outline';
+import { Spinner } from '../components/PageElements';
 
 export default function ApiKey() {
   const { geocodeContext, geocodeDispatch } = useGeocodeContext();
   const history = useHistory();
-  const [isValid, setIsValid] = useState(false);
+  const [keyStatus, setKeyStatus] = useState('unknown');
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
@@ -18,7 +19,7 @@ export default function ApiKey() {
       } else {
         if (key) {
           checkApiKey(key).then((isValid) => {
-            setIsValid(isValid);
+            setKeyStatus(isValid ? 'valid' : 'invalid');
             geocodeDispatch({ type: 'UPDATE_KEY', payload: isValid ? key : '' });
           });
         }
@@ -35,12 +36,15 @@ export default function ApiKey() {
 
     const isValid = await checkApiKey(apiKey);
 
-    setIsValid(isValid);
+    setKeyStatus(isValid ? 'valid' : 'invalid');
     geocodeDispatch({ type: 'UPDATE_KEY', payload: isValid ? apiKey : '' });
   };
 
   const checkApiKey = (apiKey) => {
+    setKeyStatus('validating');
     if (apiKey.length > 19 || apiKey.length < 19) {
+      setKeyStatus('invalid');
+
       return false;
     }
 
@@ -80,7 +84,7 @@ export default function ApiKey() {
             API Key
           </label>
           <input
-            className="flex-grow max-w-lg ml-4 text-2xl border-0 border-t border-b border-l rounded-none rounded-l"
+            className="flex-grow h-12 max-w-lg ml-4 text-2xl border-0 border-t border-b border-l rounded-none rounded-l focus:ring-0"
             type="text"
             id="apiKey"
             maxLength="19"
@@ -93,18 +97,18 @@ export default function ApiKey() {
               history.push('/data');
             }}
             type="button"
-            disabled={!isValid}
-            className="border-0 border-t border-b border-r rounded-none rounded-r"
+            disabled={keyStatus === 'invalid'}
+            className="w-24 h-12 border-0 border-t border-b border-r rounded-none rounded-r"
           >
-            Next
+            {keyStatus === 'validating' ? <Spinner /> : <>Next</>}
           </button>
         </div>
         <div className="flex flex-col items-center justify-center mt-6">
-          <div className="font-bold tracking-tight text-gray-600">API Key Test</div>
-          {isValid ? (
-            <CheckCircleIcon className="w-16 text-indigo-900" />
+          <div className="font-bold tracking-tight text-gray-600">Is my key ok?</div>
+          {keyStatus === 'valid' ? (
+            <ThumbUpIcon className="w-16 text-indigo-900" />
           ) : (
-            <XCircleIcon className="w-16 text-yellow-500" />
+            <ThumbDownIcon className="w-16 text-yellow-500" />
           )}
         </div>
       </section>
