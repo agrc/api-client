@@ -64,7 +64,7 @@ export default function Geocoding() {
             >
               Cancel
             </button>
-            <Prompt message="Navigating to a different page will cancel the current geocoding process. Are you sure?" />
+            <Prompt message="Navigating to a different page will cancel the current geocoding process. Are you sure you would like to navigate?" />
           </>
         );
       }
