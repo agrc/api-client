@@ -1,12 +1,11 @@
 const { app, ipcMain } = require('electron');
 const fs = require('fs');
 const path = require('path');
-const parse = require('csv-parse');
 const got = require('got');
-const stringify = require('csv-stringify');
-const getFields = require('./csv').getFields;
-const getRecordCount = require('./csv').getRecordCount;
 const log = require('electron-log');
+import { parse } from 'csv-parse';
+import { stringify } from 'csv-stringify';
+import { getFields, getRecordCount } from './csv.js';
 
 const SPACES = / +/;
 const INVALID_CHARS = /[^a-zA-Z0-9]/;

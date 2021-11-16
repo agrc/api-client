@@ -1,6 +1,6 @@
 const { ipcMain } = require('electron');
 const fs = require('fs');
-const parse = require('csv-parse');
+import { parse } from 'csv-parse';
 
 export const getFields = async (filePath) => {
   const parser = fs.createReadStream(filePath).pipe(parse({ columns: true, skipEmptyLines: true }));
