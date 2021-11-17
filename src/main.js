@@ -45,9 +45,11 @@ const createWindow = () => {
     mainWindow.webContents.openDevTools();
   }
 
-  ipcMain.handle('getUserConfirmation', (_, message) => {
+  ipcMain.handle('getUserConfirmation', (_, json) => {
+    const { message, detail } = JSON.parse(json);
     const buttonIndex = dialog.showMessageBoxSync(mainWindow, {
       message,
+      detail,
       title: 'Confirm Cancellation',
       type: 'warning',
       buttons: ['Yes', 'Cancel'],

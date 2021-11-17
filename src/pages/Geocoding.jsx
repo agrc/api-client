@@ -64,7 +64,12 @@ export default function Geocoding() {
             >
               Cancel
             </button>
-            <Prompt message="Navigating to a different page will cancel the current geocoding process. Are you sure you would like to navigate?" />
+            <Prompt
+              message={JSON.stringify({
+                detail: 'Navigating to a different page will cancel the current geocoding process.',
+                message: 'Are you sure you would like to navigate?',
+              })}
+            />
           </>
         );
       }
