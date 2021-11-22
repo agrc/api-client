@@ -1,4 +1,5 @@
 const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
+const windowStateKeeper = require('electron-window-state');
 const path = require('path');
 require('./services/config');
 require('./services/csv');
@@ -18,10 +19,18 @@ if (require('electron-squirrel-startup')) {
 }
 
 const createWindow = () => {
+  const mainWindowState = windowStateKeeper({
+    defaultWidth: 700,
+    defaultHeight: 1000,
+    fullScreen: false,
+  });
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 700,
-    height: 1000,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
+    x: mainWindowState.x,
+    y: mainWindowState.y,
     minWidth: 525,
     minHeight: 500,
     titleBarStyle: 'hidden',
@@ -36,6 +45,8 @@ const createWindow = () => {
       autoHideMenuBar: true,
     },
   });
+
+  mainWindowState.manage(mainWindow);
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
