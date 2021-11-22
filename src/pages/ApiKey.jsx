@@ -69,6 +69,7 @@ export default function ApiKey() {
           </a>{' '}
           and create an account
         </li>
+        <li>Confirm your email address with the UGRC API</li>
         <li>
           Create a{' '}
           <a href="https://developer.mapserv.utah.gov/secure/GenerateKey" target="_blank" rel="noreferrer">
