@@ -13,7 +13,7 @@ const DropzoneMessaging = ({ isDragActive, file }) => {
     );
   }
 
-  return <h2 className="self-center text-center text-gray-400 uppercase">Drop files here</h2>;
+  return <h2 className="self-center text-center text-gray-400 uppercase">Drop the CSV file here</h2>;
 };
 
 export default DropzoneMessaging;

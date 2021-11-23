@@ -1,10 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import { DocumentAddIcon, DocumentRemoveIcon } from '@heroicons/react/outline';
 import DropzoneMessaging from '../components/DropzoneMessaging.jsx';
 import FieldLinker from '../components/FieldLinker.jsx';
 import { useGeocodeContext } from '../components/GeocodeContext.js';
+import AddressParts from '../components/AddressParts.jsx';
+import SampleFieldData from '../components/SampleFieldData.jsx';
 
 const acceptableFileTypes = ['.csv'];
 
@@ -22,6 +24,7 @@ const chooseCommonFieldName = (fieldName, fieldsFromFile, commonFieldNames) => {
 
 export default function Data() {
   const { geocodeContext, geocodeDispatch } = useGeocodeContext();
+  const [sample, setSample] = useState(null);
 
   const onDrop = async (files) => {
     if (!files) {
@@ -34,17 +37,20 @@ export default function Data() {
     }
 
     const file = files[0];
-    const fieldsFromFile = await window.ugrc.getFieldsFromFile(file.path);
+    const newSample = await window.ugrc.getSampleFromFile(file.path);
+    const fields = Object.keys(newSample);
 
     geocodeDispatch({
       type: 'UPDATE_FILE',
       payload: {
         file,
-        fieldsFromFile,
-        street: chooseCommonFieldName('street', fieldsFromFile, commonFieldNames.current),
-        zone: chooseCommonFieldName('zone', fieldsFromFile, commonFieldNames.current),
+        fieldsFromFile: fields,
+        street: chooseCommonFieldName('street', fields, commonFieldNames.current),
+        zone: chooseCommonFieldName('zone', fields, commonFieldNames.current),
       },
     });
+
+    setSample(newSample);
   };
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
@@ -89,7 +95,7 @@ export default function Data() {
         &larr; Back
       </Link>
       <h2>Add your data</h2>
-      <p className="mb-2 text-base">This data needs to be structured data in a CSV format, ideally with a header row</p>
+      <AddressParts />
       <div
         {...getRootProps()}
         className="flex items-center justify-center w-full mb-4 bg-gray-100 border border-indigo-800 rounded shadow h-28"
@@ -114,8 +120,12 @@ export default function Data() {
           Choose File
         </button>
       )}
-
-      {geocodeContext.data.file ? <FieldLinker /> : null}
+      {geocodeContext.data.file && sample ? (
+        <>
+          <FieldLinker />
+          <SampleFieldData street={geocodeContext.data.street} zone={geocodeContext.data.zone} sample={sample} />
+        </>
+      ) : null}
 
       {geocodeContext.data.street && geocodeContext.data.zone ? (
         <button className="mt-4" onClick={saveFieldPreferences} type="button">
