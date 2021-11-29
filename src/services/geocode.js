@@ -75,12 +75,11 @@ export const checkApiKey = async (apiKey) => {
 };
 
 const output = 'ugrc_geocode_results.csv';
-export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912 }) => {
+export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, sampleData }) => {
   log.info(`Geocoding: ${filePath}, ${JSON.stringify(fields)}, ${apiKey}, ${wkid}`);
   cancelGeocode(null);
   const parser = fs.createReadStream(filePath).pipe(parse({ columns: true, skipEmptyLines: true }));
 
-  const sampleData = await getDataSample(filePath);
   const columns = Object.keys(sampleData);
   const writer = fs.createWriteStream(path.join(app.getPath('userData'), output));
   const stringifier = stringify({ columns: [...columns, 'x', 'y', 'score', 'match_address'], header: true });
