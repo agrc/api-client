@@ -38,6 +38,7 @@ export default function Geocoding() {
         fields: { street: geocodeContext.data.street, zone: geocodeContext.data.zone },
         apiKey: geocodeContext.apiKey,
         wkid,
+        sampleData: geocodeContext.data.sampleData,
       });
     });
 

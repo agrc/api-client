@@ -23,6 +23,7 @@ const reducer = (draft, action) => {
       draft.data.fieldsFromFile = action.payload.fieldsFromFile;
       draft.data.street = action.payload.street;
       draft.data.zone = action.payload.zone;
+      draft.data.sampleData = action.payload.sampleData;
       break;
     case 'UPDATE_FIELDS':
       draft.data[action.meta] = action.payload;

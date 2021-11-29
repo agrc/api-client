@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import { DocumentAddIcon, DocumentRemoveIcon } from '@heroicons/react/outline';
@@ -24,7 +24,6 @@ const chooseCommonFieldName = (fieldName, fieldsFromFile, commonFieldNames) => {
 
 export default function Data() {
   const { geocodeContext, geocodeDispatch } = useGeocodeContext();
-  const [sample, setSample] = useState(null);
 
   const onDrop = async (files) => {
     if (!files) {
@@ -47,10 +46,9 @@ export default function Data() {
         fieldsFromFile: fields,
         street: chooseCommonFieldName('street', fields, commonFieldNames.current),
         zone: chooseCommonFieldName('zone', fields, commonFieldNames.current),
+        sampleData: newSample,
       },
     });
-
-    setSample(newSample);
   };
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
@@ -120,10 +118,14 @@ export default function Data() {
           Choose File
         </button>
       )}
-      {geocodeContext.data.file && sample ? (
+      {geocodeContext.data.file && geocodeContext.data.sampleData ? (
         <>
           <FieldLinker />
-          <SampleFieldData street={geocodeContext.data.street} zone={geocodeContext.data.zone} sample={sample} />
+          <SampleFieldData
+            street={geocodeContext.data.street}
+            zone={geocodeContext.data.zone}
+            sample={geocodeContext.data.sampleData}
+          />
         </>
       ) : null}
 
