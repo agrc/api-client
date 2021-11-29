@@ -5,7 +5,7 @@ const got = require('got');
 const log = require('electron-log');
 import { parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
-import { getDataSample, getRecordCount } from './csv.js';
+import { getRecordCount } from './csv.js';
 
 const SPACES = / +/;
 const INVALID_CHARS = /[^a-zA-Z0-9]/;
