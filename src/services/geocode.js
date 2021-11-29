@@ -5,7 +5,7 @@ const got = require('got');
 const log = require('electron-log');
 import { parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
-import { getFields, getRecordCount } from './csv.js';
+import { getDataSample, getRecordCount } from './csv.js';
 
 const SPACES = / +/;
 const INVALID_CHARS = /[^a-zA-Z0-9]/;
@@ -79,7 +79,9 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912 })
   log.info(`Geocoding: ${filePath}, ${JSON.stringify(fields)}, ${apiKey}, ${wkid}`);
   cancelGeocode(null);
   const parser = fs.createReadStream(filePath).pipe(parse({ columns: true, skipEmptyLines: true }));
-  const columns = await getFields(filePath);
+
+  const sampleData = await getDataSample(filePath);
+  const columns = Object.keys(sampleData);
   const writer = fs.createWriteStream(path.join(app.getPath('userData'), output));
   const stringifier = stringify({ columns: [...columns, 'x', 'y', 'score', 'match_address'], header: true });
   stringifier.pipe(writer);
