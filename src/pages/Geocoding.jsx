@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, Prompt } from 'react-router-dom';
 import humanizeDuration from 'humanize-duration';
 import { DocumentTextIcon } from '@heroicons/react/outline';
+import { useErrorHandler } from 'react-error-boundary';
 import { useGeocodeContext } from '../components/GeocodeContext.js';
 
 const percentFormatter = new Intl.NumberFormat('en-US', { style: 'percent' });
@@ -18,6 +19,7 @@ export default function Geocoding() {
   const startTime = useRef(new Date());
   const { geocodeContext } = useGeocodeContext();
   const draggable = useRef(null);
+  const handleError = useErrorHandler();
 
   const onDragStart = (event) => {
     event.preventDefault();
@@ -33,21 +35,26 @@ export default function Geocoding() {
       setStats(data);
     });
 
-    window.ugrc.getConfigItem('wkid').then((wkid) => {
-      window.ugrc.geocode({
-        filePath: geocodeContext.data.file.path,
-        fields: { street: geocodeContext.data.street, zone: geocodeContext.data.zone },
-        apiKey: geocodeContext.apiKey,
-        wkid,
-        sampleData: geocodeContext.data.sampleData,
-      });
-    });
+    window.ugrc
+      .getConfigItem('wkid')
+      .then((wkid) => {
+        window.ugrc
+          .geocode({
+            filePath: geocodeContext.data.file.path,
+            fields: { street: geocodeContext.data.street, zone: geocodeContext.data.zone },
+            apiKey: geocodeContext.apiKey,
+            wkid,
+            sampleData: geocodeContext.data.sampleData,
+          })
+          .catch(handleError);
+      })
+      .catch(handleError);
 
     return () => {
       cancel('back');
       window.ugrc.unsubscribeFromGeocodingUpdates();
     };
-  }, [geocodeContext]);
+  }, [geocodeContext, handleError]);
 
   const progress = stats.rowsProcessed / stats.totalRows || 0;
   const elapsedTime = new Date().getTime() - startTime.current.getTime();

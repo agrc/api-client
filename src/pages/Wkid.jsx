@@ -2,21 +2,26 @@ import { useEffect, useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { RadioGroup } from '@headlessui/react';
 import clsx from 'clsx';
+import { useErrorHandler } from 'react-error-boundary';
 
 export default function Wkid() {
   const [wkid, setWkid] = useState('');
   const [customWkid, setCustomWkid] = useState('');
   const history = useHistory();
+  const handleError = useErrorHandler();
 
   useEffect(() => {
-    window.ugrc.getConfigItem('wkid').then((id) => {
-      if ([26912, 4326, 3857].includes(id)) {
-        setWkid(id?.toString());
-      } else {
-        setCustomWkid(id?.toString());
-      }
-    });
-  }, []);
+    window.ugrc
+      .getConfigItem('wkid')
+      .then((id) => {
+        if ([26912, 4326, 3857].includes(id)) {
+          setWkid(id?.toString());
+        } else {
+          setCustomWkid(id?.toString());
+        }
+      })
+      .catch(handleError);
+  }, [handleError]);
   return (
     <article>
       <Link type="back-button" to="/data">

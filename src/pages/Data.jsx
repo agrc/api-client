@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import { DocumentAddIcon, DocumentRemoveIcon } from '@heroicons/react/outline';
+import { useErrorHandler } from 'react-error-boundary';
 import DropzoneMessaging from '../components/DropzoneMessaging.jsx';
 import FieldLinker from '../components/FieldLinker.jsx';
 import { useGeocodeContext } from '../components/GeocodeContext.js';
@@ -41,7 +42,7 @@ export default function Data() {
     });
 
     const file = files[0];
-    const newSample = await window.ugrc.getSampleFromFile(file.path);
+    const newSample = await window.ugrc.getSampleFromFile(file.path).catch(handleError);
     const fields = Object.keys(newSample);
 
     geocodeDispatch({
@@ -69,18 +70,25 @@ export default function Data() {
     zone: [],
   });
   const history = useHistory();
+  const handleError = useErrorHandler();
 
   useEffect(() => {
-    window.ugrc.getConfigItem('streetFields').then((f) => (commonFieldNames.current.street = f));
-    window.ugrc.getConfigItem('zoneFields').then((f) => (commonFieldNames.current.zone = f));
-  }, []);
+    window.ugrc
+      .getConfigItem('streetFields')
+      .then((f) => (commonFieldNames.current.street = f))
+      .catch(handleError);
+    window.ugrc
+      .getConfigItem('zoneFields')
+      .then((f) => (commonFieldNames.current.zone = f))
+      .catch(handleError);
+  }, [handleError]);
 
   const saveFieldPreferences = async () => {
-    const existingStreetFields = new Set(await window.ugrc.getConfigItem('streetFields'));
+    const existingStreetFields = new Set(await window.ugrc.getConfigItem('streetFields').catch(handleError));
 
     existingStreetFields.add(geocodeContext.data.street.toLowerCase());
 
-    const existingZoneFields = new Set(await window.ugrc.getConfigItem('zoneFields'));
+    const existingZoneFields = new Set(await window.ugrc.getConfigItem('zoneFields').catch(handleError));
 
     existingZoneFields.add(geocodeContext.data.zone.toLowerCase());
 
