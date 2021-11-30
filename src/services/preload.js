@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld('ugrc', {
   getConfigItem: (content) => ipcRenderer.invoke('getConfigItem', content),
   subscribeToGeocodingUpdates: (event, arg) => ipcRenderer.on('onGeocodingUpdate', event, arg),
   unsubscribeFromGeocodingUpdates: () => ipcRenderer.removeAllListeners('onGeocodingUpdate'),
-  geocode: (content) => ipcRenderer.send('geocode', content),
+  geocode: (content) => ipcRenderer.invoke('geocode', content),
   cancelGeocode: (content) => ipcRenderer.send('cancelGeocode', content),
   startDrag: (content) => ipcRenderer.send('ondragstart', content),
   checkApiKey: (content) => ipcRenderer.invoke('checkApiKey', content),
@@ -20,4 +20,5 @@ contextBridge.exposeInMainWorld('ugrc', {
   openEmail: (content) => ipcRenderer.send('openEmail', content),
   trackEvent: (content) => ipcRenderer.send('trackEvent', content),
   trackException: (content) => ipcRenderer.send('trackException', content),
+  throwError: (content) => ipcRenderer.send('throwError', content),
 });

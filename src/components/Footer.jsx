@@ -1,13 +1,18 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useErrorHandler } from 'react-error-boundary';
 import logo from '../assets/logo.svg';
 
 export default function Footer() {
-  const [version, setVersion] = useState('1.0.0');
+  const [version, setVersion] = useState('0.0.0');
+  const handleError = useErrorHandler();
 
   useEffect(() => {
-    window.ugrc.getAppVersion().then((version) => setVersion(version));
-  }, []);
+    window.ugrc
+      .getAppVersion()
+      .then((version) => setVersion(version))
+      .catch(handleError);
+  }, [handleError]);
 
   return (
     <section className="fixed inset-x-0 bottom-0 z-20 grid items-center grid-cols-2 px-3 py-2 mt-10 text-indigo-200 bg-indigo-900">

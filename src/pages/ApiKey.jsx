@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useGeocodeContext } from '../components/GeocodeContext';
 import { ThumbUpIcon, ThumbDownIcon } from '@heroicons/react/outline';
+import { useErrorHandler } from 'react-error-boundary';
+import { useGeocodeContext } from '../components/GeocodeContext';
 import { Spinner } from '../components/PageElements';
 
 export default function ApiKey() {
@@ -9,26 +10,30 @@ export default function ApiKey() {
   const history = useHistory();
   const [keyStatus, setKeyStatus] = useState('unknown');
   const [inputValue, setInputValue] = useState('');
+  const handleError = useErrorHandler();
 
   useEffect(() => {
-    window.ugrc.getConfigItem('apiKey').then((key) => {
-      geocodeDispatch({ type: 'UPDATE_KEY', payload: key ?? '' });
+    window.ugrc
+      .getConfigItem('apiKey')
+      .then((key) => {
+        geocodeDispatch({ type: 'UPDATE_KEY', payload: key ?? '' });
 
-      if (key && history.location.search !== '?skip-forward=1') {
-        history.push('/data');
-      } else {
-        if (key) {
-          checkApiKey(key).then((isValid) => {
-            setKeyStatus(isValid ? 'valid' : 'invalid');
-            geocodeDispatch({ type: 'UPDATE_KEY', payload: isValid ? key : '' });
-          });
+        if (key && history.location.search !== '?skip-forward=1') {
+          history.push('/data');
+        } else {
+          if (key) {
+            checkApiKey(key).then((isValid) => {
+              setKeyStatus(isValid ? 'valid' : 'invalid');
+              geocodeDispatch({ type: 'UPDATE_KEY', payload: isValid ? key : '' });
+            });
+          }
+
+          setInputValue(key ?? '');
         }
-
-        setInputValue(key ?? '');
-      }
-    });
+      })
+      .catch(handleError);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [history]);
+  }, [history, handleError]);
 
   const onApiKeyChange = async (event) => {
     const apiKey = event.target.value;
@@ -48,7 +53,7 @@ export default function ApiKey() {
       return false;
     }
 
-    return window.ugrc.checkApiKey(apiKey);
+    return window.ugrc.checkApiKey(apiKey).catch(handleError);
   };
 
   return (

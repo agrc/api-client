@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import humanizeDuration from 'humanize-duration';
 import { Link, useHistory } from 'react-router-dom';
+import { useErrorHandler } from 'react-error-boundary';
 import { useGeocodeContext } from '../components/GeocodeContext';
 
 export default function Plan() {
@@ -8,10 +9,11 @@ export default function Plan() {
   const [rows, setRows] = useState(0);
   const history = useHistory();
   const duration = (rows / 3) * 1000;
+  const handleError = useErrorHandler();
 
   useEffect(() => {
-    window.ugrc.getRecordCount(geocodeContext.data.file.path).then(setRows);
-  }, [geocodeContext.data.file.path]);
+    window.ugrc.getRecordCount(geocodeContext.data.file.path).then(setRows).catch(handleError);
+  }, [geocodeContext.data.file.path, handleError]);
 
   const start = () => {
     history.push('/geocode');

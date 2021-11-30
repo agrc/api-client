@@ -1,20 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useErrorHandler } from 'react-error-boundary';
 import logo from '../assets/logo.svg';
 
 export default function About() {
   const [info, setInfo] = useState({
     applicationName: 'UGRC API Client',
-    version: '1.0.0',
-    electronVersion: '15.1.1',
+    version: '0.0.0',
+    electronVersion: '0.0.0',
     website: 'https://api.mapserv.utah.gov',
     repo: 'https://github.com/agrc/api-client',
   });
   const history = useHistory();
+  const handleError = useErrorHandler();
 
   useEffect(() => {
-    window.ugrc.getAppInfo().then(setInfo);
-  }, []);
+    window.ugrc.getAppInfo().then(setInfo).catch(handleError);
+  }, [handleError]);
 
   return (
     <article>

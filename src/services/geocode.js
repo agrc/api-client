@@ -252,7 +252,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
 ipcMain.handle('checkApiKey', (_, content) => {
   return checkApiKey(content);
 });
-ipcMain.on('geocode', (event, content) => {
+ipcMain.handle('geocode', (event, content) => {
   return geocode(event, content);
 });
 ipcMain.on('cancelGeocode', (_, content) => {
