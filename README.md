@@ -10,6 +10,8 @@ From querying any data layer in the SGID to geocoding addresses against the most
 
 The UGRC API Client is an app to help make geocoding addresses simple. This app allows the user to use the UGRC API without any licensed software or programming knowledge; Drag and drop a file and then click start.
 
+Check out our [introductory blog post](https://gis.utah.gov/introducing-the-official-ugrc-api-client/) and our [getting started video](https://vimeo.com/659380032).
+
 ## Development Specifics
 
 ### Certificates
