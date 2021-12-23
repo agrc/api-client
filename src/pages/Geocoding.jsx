@@ -13,6 +13,7 @@ export default function Geocoding() {
     activeMatchRate: 0,
     averageScore: 0,
     status: 'idle',
+    lastRequest: null,
   });
   const startTime = useRef(new Date());
   const { geocodeContext } = useGeocodeContext();
@@ -52,6 +53,20 @@ export default function Geocoding() {
   const elapsedTime = new Date().getTime() - startTime.current.getTime();
   const timePerRow = elapsedTime / stats.rowsProcessed;
   const estimatedTimeRemaining = timePerRow * (stats.totalRows - stats.rowsProcessed);
+
+  const formatError = (statusCode, body) => {
+    if (statusCode >= 500) {
+      return body;
+    }
+
+    try {
+      const response = JSON.parse(body);
+
+      return response.message;
+    } catch {
+      return body;
+    }
+  };
 
   const getElementsByStatus = (status) => {
     switch (status) {
@@ -104,9 +119,37 @@ export default function Geocoding() {
             <h3 className="text-center text-red-800">This job has fast failed</h3>
             <p>
               A fast failure occurs when the <span className="font-bold">first {stats.failures} records</span> do not
-              succeed to geocode. This is often an indication that the data being processed is not correct. You should
-              try to fix the data and re-run the job.
+              succeed to geocode. You might need to remove or reorder the first {stats.failures} rows of your data to
+              avoid fast failing.
             </p>
+            <ol className="ml-8 list-decimal">
+              <li>
+                <strong>The fields could be mapped incorrectly.</strong>{' '}
+                <Link to="/data">Go back to the data page</Link> and make sure the sample data looks correct.
+              </li>
+              <li>
+                <strong>Your API key could be invalid.</strong> <Link to="/?skip-forward=1">Check that your key</Link>{' '}
+                has a thumbs up on the API page and create a new key if this is incorrect.
+              </li>
+              <li>
+                <strong>The Web API is having trouble.</strong>{' '}
+                <a href="https://agrc-status.netlify.app" target="_blank" rel="noopener noreferrer">
+                  Check our status page
+                </a>{' '}
+                for any reported outages.
+              </li>
+            </ol>
+            <p>
+              This is the Web API response for the last request (street: {stats.lastRequest?.request.street}, zone:{' '}
+              {stats.lastRequest?.request.zone}) to help debug the issue
+            </p>
+            <pre className="px-3 py-2 mx-6 text-white whitespace-normal bg-red-400 border-red-800 rounded shadow">
+              <div className="mb-2">{stats.lastRequest.request.url}</div>
+              <div>
+                {stats.lastRequest?.response.status} -{' '}
+                {formatError(stats.lastRequest?.response.status, stats.lastRequest?.response.body)}
+              </div>
+            </pre>
             <p>
               <Link to="/plan">Go back to the plan page</Link> to restart the process.
             </p>

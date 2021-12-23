@@ -90,6 +90,17 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
   let totalScore = 0;
   let failures = 0;
   const fastFailLimit = 25;
+  let lastRequest = {
+    request: {
+      street: null,
+      zone: null,
+      url: null,
+    },
+    response: {
+      status: 0,
+      body: null,
+    },
+  };
 
   for await (const record of parser) {
     if (cancelled) {
@@ -101,6 +112,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
         averageScore: Math.round(totalScore / (rowsProcessed - failures)) || 0,
         activeMatchRate: (rowsProcessed - failures) / rowsProcessed || 0,
         status: cancelled,
+        lastRequest,
       });
 
       return;
@@ -117,6 +129,18 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
 
       response = { status: -1 };
     } else {
+      lastRequest = {
+        request: {
+          street,
+          zone,
+          url: null,
+        },
+        response: {
+          status: 0,
+          body: null,
+        },
+      };
+
       try {
         response = await got(`geocode/${street}/${zone}`, {
           headers: {
@@ -131,14 +155,25 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
           prefixUrl: 'https://api.mapserv.utah.gov/api/v1/',
           timeout: 5000,
         }).json();
+
+        lastRequest.response = {
+          status: response.status,
+          body: response.body,
+        };
       } catch (error) {
         log.error(`Error geocoding ${street} ${zone}: ${error}`);
 
         try {
           response = JSON.parse(error.response.body);
-        } catch (error) {
+        } catch {
           response = { error: error.message };
         }
+
+        lastRequest.request.url = error?.request?.requestUrl;
+        lastRequest.response = {
+          status: error.response.statusCode,
+          body: response?.error ?? response?.message,
+        };
 
         failures += 1;
       }
@@ -170,6 +205,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
       averageScore: Math.round(totalScore / (rowsProcessed - failures)),
       activeMatchRate: (rowsProcessed - failures) / rowsProcessed,
       status: 'running',
+      lastRequest,
     });
 
     if (failures === fastFailLimit && fastFailLimit === rowsProcessed) {
@@ -188,6 +224,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
     averageScore: Math.round(totalScore / (rowsProcessed - failures)),
     activeMatchRate: (rowsProcessed - failures) / rowsProcessed,
     status: 'complete',
+    lastRequest,
   });
 };
 

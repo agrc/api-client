@@ -48,7 +48,9 @@
     @apply my-5 text-3xl font-extrabold tracking-tight text-gray-800 select-none;
   }
   p,
-  summary {
+  summary,
+  li,
+  pre {
     @apply mb-6 text-lg font-medium text-gray-800;
   }
   label {
