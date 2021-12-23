@@ -15,14 +15,14 @@ export default function Footer() {
         <img src={logo} alt="logo" className="w-8 h-8" />
         <div className="flex flex-col content-center ml-1 leading-none">
           <div>UGRC API Client</div>
-          <Link to="/about" className="text-yellow-500 hover:text-yellow-300">
+          <Link to="/about" className="text-amber-500 hover:text-amber-300">
             v{version}
           </Link>
         </div>
       </div>
       <div className="text-right">
         <a
-          className="text-yellow-500 hover:text-yellow-300"
+          className="text-amber-500 hover:text-amber-300"
           href={`mailto:ugrc-developers@utah.gov?subject=UGRC API Client ${version} Feedback`}
           target="_blank"
           rel="noopener noreferrer"

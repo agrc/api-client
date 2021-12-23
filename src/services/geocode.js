@@ -1,11 +1,11 @@
 const { app, ipcMain } = require('electron');
 const fs = require('fs');
 const path = require('path');
-const got = require('got');
 const log = require('electron-log');
 import { parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
 import { getRecordCount } from './csv.js';
+import got from 'got';
 
 const SPACES = / +/;
 const INVALID_CHARS = /[^a-zA-Z0-9]/;
@@ -44,6 +44,8 @@ export const cancelGeocode = (status = 'cancelled') => {
   cancelled = status;
 };
 
+const timeout = { request: 5000 };
+
 export const checkApiKey = async (apiKey) => {
   log.info(`Checking API key: ${apiKey}`);
 
@@ -60,7 +62,7 @@ export const checkApiKey = async (apiKey) => {
         apiKey: apiKey,
       },
       prefixUrl: 'https://api.mapserv.utah.gov/api/v1/',
-      timeout: 5000,
+      timeout,
     }).json();
   } catch (error) {
     if (error?.response?.body) {
@@ -153,7 +155,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
             spatialReference: wkid,
           },
           prefixUrl: 'https://api.mapserv.utah.gov/api/v1/',
-          timeout: 5000,
+          timeout,
         }).json();
 
         lastRequest.response = {
@@ -169,7 +171,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
           response = { error: error.message };
         }
 
-        lastRequest.request.url = error?.request?.requestUrl;
+        lastRequest.request.url = error?.request?.requestUrl.toString();
         lastRequest.response = {
           status: error.response.statusCode,
           body: response?.error ?? response?.message,
