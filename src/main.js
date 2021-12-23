@@ -18,6 +18,9 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+const machineIdSync = require('node-machine-id').machineIdSync;
+const ua = require('universal-analytics');
+
 const createWindow = () => {
   const mainWindowState = windowStateKeeper({
     defaultWidth: 700,
@@ -55,6 +58,10 @@ const createWindow = () => {
   if (process.env.NODE_ENV === 'development') {
     mainWindow.webContents.openDevTools();
   }
+
+  const id = machineIdSync();
+  const visitor = ua('UA-11849964-68', id);
+  visitor.event('application-open', id, process.platform).send();
 
   ipcMain.handle('getUserConfirmation', (_, json) => {
     const { message, detail } = JSON.parse(json);
