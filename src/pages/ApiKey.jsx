@@ -109,7 +109,7 @@ export default function ApiKey() {
           {keyStatus === 'valid' ? (
             <ThumbUpIcon className="w-16 text-indigo-900" />
           ) : (
-            <ThumbDownIcon className="w-16 text-yellow-500" />
+            <ThumbDownIcon className="w-16 text-amber-500" />
           )}
         </div>
       </section>

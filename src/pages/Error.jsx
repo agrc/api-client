@@ -10,7 +10,7 @@ export default function Error({ error, children }) {
           not happen again for you or anyone else is to report the issue to us. It should only take a few moments. But
           first check our{' '}
           <a
-            className="text-yellow-500 hover:text-yellow-300"
+            className="text-amber-500 hover:text-amber-300"
             href="https://agrc-status.netlify.app"
             target="_blank"
             rel="noopener noreferrer"
@@ -38,7 +38,7 @@ export default function Error({ error, children }) {
         {children || (
           <p>
             You may now{' '}
-            <button className="font-bold text-yellow-500 hover:text-yellow-300" onClick={window.ugrc.relaunchApp}>
+            <button className="font-bold text-amber-500 hover:text-amber-300" onClick={window.ugrc.relaunchApp}>
               restart the application
             </button>{' '}
             and try geocoding again.

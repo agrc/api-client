@@ -1,16 +1,11 @@
 module.exports = {
-  mode: 'jit',
-  purge: ['./src/**/*.html', './src/**/*.{js,jsx}'],
-  darkMode: false, // or 'media' or 'class'
+  content: ['./src/**/*.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
       cursor: {
         grab: 'grab',
       },
     },
-  },
-  variants: {
-    extend: {},
   },
   plugins: [require('@tailwindcss/forms')],
 };

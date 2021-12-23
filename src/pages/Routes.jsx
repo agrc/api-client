@@ -11,11 +11,11 @@ const RouterErrorPage = ({ error }) => {
     <ErrorPage error={error}>
       <p>
         You may now{' '}
-        <Link className="font-bold text-yellow-500 hover:text-yellow-300" to="/?skip-forward=1" replace={true}>
+        <Link className="font-bold text-amber-500 hover:text-amber-300" to="/?skip-forward=1" replace={true}>
           go back
         </Link>{' '}
         to the previous page to check your settings to try again or{' '}
-        <button className="font-bold text-yellow-500 hover:text-yellow-300" onClick={window.ugrc.relaunchApp}>
+        <button className="font-bold text-amber-500 hover:text-amber-300" onClick={window.ugrc.relaunchApp}>
           restart the application
         </button>{' '}
         to see if that helps.

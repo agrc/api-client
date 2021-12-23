@@ -8,7 +8,7 @@ export default function Offline() {
         <p>
           This app requires an internet connection to function properly. Please check your network connection, modem,
           router, and power supply. You can also try{' '}
-          <button className="font-bold text-yellow-500 hover:text-yellow-300" onClick={window.ugrc.relaunchApp}>
+          <button className="font-bold text-amber-500 hover:text-amber-300" onClick={window.ugrc.relaunchApp}>
             restarting the application
           </button>{' '}
           to see if that helps.
