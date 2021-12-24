@@ -2,10 +2,12 @@ const { app, ipcMain } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const log = require('electron-log');
+const md5 = require('md5');
 import { parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
-import { getRecordCount } from './csv.js';
 import got from 'got';
+import { getRecordCount } from './csv.js';
+import { trackEvent } from './analytics.js';
 
 const SPACES = / +/;
 const INVALID_CHARS = /[^a-zA-Z0-9]/g;
@@ -103,6 +105,8 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
       body: null,
     },
   };
+
+  trackEvent({ category: 'geocode', label: `${totalRows}, ${md5(filePath)}` });
 
   for await (const record of parser) {
     if (cancelled) {
@@ -212,6 +216,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
 
     if (failures === fastFailLimit && fastFailLimit === rowsProcessed) {
       cancelGeocode('fail-fast');
+      trackEvent({ category: 'geocoding-cancelled', label: 'fast-fail' });
     }
 
     await coolYourJets();
@@ -236,7 +241,15 @@ ipcMain.handle('checkApiKey', (_, content) => {
 ipcMain.on('geocode', (event, content) => {
   return geocode(event, content);
 });
-ipcMain.on('cancelGeocode', () => {
+ipcMain.on('cancelGeocode', (_, content) => {
+  let reason = content;
+
+  if (content === 'back') {
+    reason = 'user-navigated';
+  }
+
+  trackEvent({ category: 'geocoding-cancelled', label: reason });
+
   return cancelGeocode();
 });
 ipcMain.on('ondragstart', (event) => {
