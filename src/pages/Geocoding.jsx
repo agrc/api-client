@@ -24,8 +24,8 @@ export default function Geocoding() {
     window.ugrc.startDrag('ugrc_geocode_results.csv');
   };
 
-  const cancel = () => {
-    window.ugrc.cancelGeocode();
+  const cancel = (reason) => {
+    window.ugrc.cancelGeocode(reason);
   };
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function Geocoding() {
     });
 
     return () => {
-      cancel();
+      cancel('back');
       window.ugrc.unsubscribeFromGeocodingUpdates();
     };
   }, [geocodeContext]);
@@ -75,7 +75,7 @@ export default function Geocoding() {
           <>
             <button
               type="button"
-              onClick={cancel}
+              onClick={() => cancel('early-cancellation')}
               disabled={stats.rowsProcessed > 0 && stats.totalRows === stats.rowsProcessed}
             >
               Cancel
