@@ -8,7 +8,7 @@ import { getRecordCount } from './csv.js';
 import got from 'got';
 
 const SPACES = / +/;
-const INVALID_CHARS = /[^a-zA-Z0-9]/;
+const INVALID_CHARS = /[^a-zA-Z0-9]/g;
 
 const cleanseStreet = (data) => {
   const replacement = ' ';
