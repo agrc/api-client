@@ -13,6 +13,8 @@ categories:
     labels:
       - 'chore'
       - 'style'
+  - title: '📖 Documentaion Improvements'
+    label: 'documentation'
 
 version-resolver:
   major:
