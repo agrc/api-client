@@ -224,7 +224,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
 
   stringifier.end();
 
-  event.reply('onGeocodingUpdate', {
+  const completionStats = {
     totalRows,
     rowsProcessed,
     failures,
@@ -232,7 +232,16 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
     activeMatchRate: (rowsProcessed - failures) / rowsProcessed,
     status: 'complete',
     lastRequest,
+  };
+
+  trackEvent({
+    category: 'stats',
+    label: `failures: ${completionStats.failures}, averageScore: ${completionStats.averageScore}, activeMatchRate: ${
+      completionStats.activeMatchRate
+    }, for ${md5(filePath)}`,
   });
+
+  event.reply('onGeocodingUpdate', completionStats);
 };
 
 ipcMain.handle('checkApiKey', (_, content) => {
