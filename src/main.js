@@ -5,7 +5,8 @@ require('./services/config');
 require('./services/csv');
 require('./services/geocode');
 require('./services/errors');
-require('./services/analytics');
+const { enforceMacOSAppLocation, is } = require('electron-util');
+
 
 require('update-electron-app')({
   updateInterval: '1 hour',
@@ -20,6 +21,8 @@ if (require('electron-squirrel-startup')) {
 }
 
 const createWindow = () => {
+  enforceMacOSAppLocation();
+
   const mainWindowState = windowStateKeeper({
     defaultWidth: 700,
     defaultHeight: 1000,
