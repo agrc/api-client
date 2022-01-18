@@ -87,6 +87,7 @@
     "electron-log": "^4.4.4",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.1",
+    "electron-unhandled": "^3.0.2",
     "electron-util": "^0.17.2",
     "electron-window-state": "^5.0.3",
     "file-loader": "^6.2.0",
