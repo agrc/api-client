@@ -75,7 +75,11 @@ export const checkApiKey = async (apiKey) => {
     }
   }
 
-  return response.status === 200;
+  const isValid = response.status === 200;
+
+  trackEvent({ category: 'api-key-check', label: isValid });
+
+  return isValid;
 };
 
 const output = 'ugrc_geocode_results.csv';
