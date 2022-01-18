@@ -35,6 +35,11 @@ export default function Data() {
       return;
     }
 
+    window.ugrc.trackEvent({
+      category: 'file-selection-type',
+      label: 'drag and drop',
+    });
+
     const file = files[0];
     const newSample = await window.ugrc.getSampleFromFile(file.path);
     const fields = Object.keys(newSample);
