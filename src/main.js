@@ -101,7 +101,6 @@ app.on('activate', () => {
 app.on('web-contents-created', (_, contents) => {
   const isSafeForExternalOpen = (urlString) => {
     const safeHosts = ['github.com', 'api.mapserv.utah.gov', 'developer.mapserv.utah.gov', 'agrc-status.netlify.app'];
-
     try {
       const url = new URL(urlString);
       if (url.protocol === 'mailto:') {
@@ -114,6 +113,8 @@ app.on('web-contents-created', (_, contents) => {
 
       return true;
     } catch (e) {
+      trackException(`non-safe url request: ${urlString}`, false);
+
       return false;
     }
   };
