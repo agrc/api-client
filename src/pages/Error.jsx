@@ -1,6 +1,8 @@
 import { Chrome } from '../components/PageElements';
 
 export default function Error({ error, children }) {
+  window.ugrc.trackException(error.toString());
+
   return (
     <article>
       <Chrome>
