@@ -111,6 +111,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
   };
 
   trackEvent({ category: 'geocode', label: `${totalRows}, ${md5(filePath)}` });
+  trackEvent({ category: 'wkid', label: wkid });
 
   for await (const record of parser) {
     if (cancelled) {
