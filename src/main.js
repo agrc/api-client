@@ -56,7 +56,7 @@ const createWindow = () => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  if (process.env.NODE_ENV === 'development') {
+  if (is.development) {
     mainWindow.webContents.openDevTools();
   }
 
