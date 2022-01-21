@@ -25,7 +25,7 @@ const chooseCommonFieldName = (fieldName, fieldsFromFile, commonFieldNames) => {
 export default function Data() {
   const { geocodeContext, geocodeDispatch } = useGeocodeContext();
 
-  const onDrop = async (files) => {
+  const onDrop = async (files, rejectFiles, event) => {
     if (!files) {
       geocodeDispatch({
         type: 'RESET',
@@ -37,7 +37,7 @@ export default function Data() {
 
     window.ugrc.trackEvent({
       category: 'file-selection-type',
-      label: 'drag and drop',
+      label: event.type === 'drop' ? 'drag-and-drop' : 'file-dialog',
     });
 
     const file = files[0];
