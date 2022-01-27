@@ -20,5 +20,4 @@ contextBridge.exposeInMainWorld('ugrc', {
   openEmail: (content) => ipcRenderer.send('openEmail', content),
   trackEvent: (content) => ipcRenderer.send('trackEvent', content),
   trackException: (content) => ipcRenderer.send('trackException', content),
-  throwError: (content) => ipcRenderer.send('throwError', content),
 });
