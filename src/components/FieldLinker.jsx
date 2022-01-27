@@ -11,9 +11,12 @@ const FieldLinker = () => {
         geocode the data. If the following values do not look like headings, then map the data representing the{' '}
         <code>address</code>, <code>city</code> and or <code>zip</code> field to the fields required for geocoding.
       </p>
-      <div className="flex justify-around my-6">
+      <div className="flex justify-around my-6 flex-wrap">
         {geocodeContext.data.fieldsFromFile.map((field) => (
-          <div className="w-1/6 text-center bg-indigo-100 border border-indigo-600 rounded shadow" key={field}>
+          <div
+            className="min-w-1/6 mx-1 my-2 px-3 text-center bg-indigo-100 border border-indigo-600 rounded shadow"
+            key={field}
+          >
             {field}
           </div>
         ))}
