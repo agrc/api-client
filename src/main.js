@@ -1,19 +1,12 @@
 const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
 const windowStateKeeper = require('electron-window-state');
 const path = require('path');
+require('./services/errors');
 require('./services/config');
 require('./services/csv');
 require('./services/geocode');
-require('./services/errors');
-const { trackException } = require('./services/analytics');
-const unhandled = require('electron-unhandled');
 const { enforceMacOSAppLocation, is } = require('electron-util');
-
-unhandled({
-  logger: (error) => {
-    trackException(error, true);
-  },
-});
+const { trackException } = require('./services/analytics');
 
 require('update-electron-app')({
   updateInterval: '1 hour',
