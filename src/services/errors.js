@@ -1,6 +1,14 @@
+const unhandled = require('electron-unhandled');
 const { app, ipcMain, shell } = require('electron');
 const { openNewGitHubIssue } = require('electron-util');
+const { trackException } = require('./analytics');
 import osName from 'os-name';
+
+unhandled({
+  logger: (error) => {
+    trackException(error, true);
+  },
+});
 
 ipcMain.on('relaunchApp', () => {
   app.relaunch();
