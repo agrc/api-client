@@ -116,7 +116,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
   for await (const record of parser) {
     if (cancelled) {
       log.warn('Geocoding stopping');
-      event.reply('onGeocodingUpdate', {
+      event.sender.send('onGeocodingUpdate', {
         totalRows,
         rowsProcessed,
         failures,
@@ -209,7 +209,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
 
     rowsProcessed++;
 
-    event.reply('onGeocodingUpdate', {
+    event.sender.send('onGeocodingUpdate', {
       totalRows,
       rowsProcessed,
       failures,
@@ -246,7 +246,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
     }, for ${md5(filePath)}`,
   });
 
-  event.reply('onGeocodingUpdate', completionStats);
+  event.sender.send('onGeocodingUpdate', completionStats);
 };
 
 ipcMain.handle('checkApiKey', (_, content) => {
