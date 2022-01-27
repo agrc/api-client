@@ -5,7 +5,7 @@ contextBridge.exposeInMainWorld('ugrc', {
   getRecordCount: (content) => ipcRenderer.invoke('getRecordCount', content),
   saveConfig: (content) => ipcRenderer.send('saveConfig', content),
   getConfigItem: (content) => ipcRenderer.invoke('getConfigItem', content),
-  subscribeToGeocodingUpdates: (event, arg) => ipcRenderer.on('onGeocodingUpdate', event, arg),
+  subscribeToGeocodingUpdates: (handler) => ipcRenderer.on('onGeocodingUpdate', handler),
   unsubscribeFromGeocodingUpdates: () => ipcRenderer.removeAllListeners('onGeocodingUpdate'),
   geocode: (content) => ipcRenderer.invoke('geocode', content),
   cancelGeocode: (content) => ipcRenderer.send('cancelGeocode', content),
