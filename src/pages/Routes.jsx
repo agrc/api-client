@@ -82,7 +82,7 @@ const Scrolling = ({ history }) => {
     return () => {
       remove();
     };
-  }, []);
+  }, [history]);
 
   return null;
 };
