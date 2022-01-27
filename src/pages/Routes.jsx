@@ -37,6 +37,14 @@ export default function Routes() {
   const online = useNavigatorStatus();
   const handleError = useErrorHandler();
 
+  useEffect(() => {
+    window.addEventListener('keyup', (event) => {
+      if (event.ctrlKey && event.key === '/') {
+        handleError(new Error('Test error'));
+      }
+    });
+  }, [handleError]);
+
   return (
     <GeocodeContextProvider>
       <Router
