@@ -5,6 +5,9 @@ const { trackException } = require('./analytics');
 import osName from 'os-name';
 
 unhandled({
+  reportButton: (error) => {
+    openIssue(error.message, error.stack);
+  },
   logger: (error) => {
     trackException(error, true);
   },
@@ -61,6 +64,10 @@ ipcMain.on('openEmail', (_, { message, stack }) => {
 });
 
 ipcMain.on('openIssue', (_, { message, stack }) => {
+  openIssue(message, stack);
+});
+
+const openIssue = (message, stack) => {
   openNewGitHubIssue({
     user: 'agrc',
     repo: 'api-client',
@@ -68,4 +75,4 @@ ipcMain.on('openIssue', (_, { message, stack }) => {
     title: 'App Crash Report',
     body: getBody(message, stack),
   });
-});
+};
