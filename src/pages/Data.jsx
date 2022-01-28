@@ -73,6 +73,14 @@ export default function Data() {
   const handleError = useErrorHandler();
 
   useEffect(() => {
+    window.addEventListener('keyup', (event) => {
+      if (event.ctrlKey && event.key === 'o') {
+        open();
+      }
+    });
+  }, [open]);
+
+  useEffect(() => {
     window.ugrc
       .getConfigItem('streetFields')
       .then((f) => (commonFieldNames.current.street = f))
