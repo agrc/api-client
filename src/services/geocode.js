@@ -255,7 +255,7 @@ ipcMain.handle('checkApiKey', (_, content) => {
 ipcMain.handle('geocode', (event, content) => {
   return geocode(event, content);
 });
-ipcMain.on('cancelGeocode', (_, content) => {
+ipcMain.handle('cancelGeocode', (_, content) => {
   let reason = content;
 
   if (content === 'back') {
@@ -266,7 +266,7 @@ ipcMain.on('cancelGeocode', (_, content) => {
 
   return cancelGeocode();
 });
-ipcMain.on('ondragstart', (event) => {
+ipcMain.handle('onDragStart', (event) => {
   event.sender.startDrag({
     file: path.join(app.getPath('userData'), output),
     icon: path.resolve(__dirname, 'assets', 'draganddrop.png'),

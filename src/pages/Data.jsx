@@ -100,10 +100,12 @@ export default function Data() {
 
     existingZoneFields.add(geocodeContext.data.zone.toLowerCase());
 
-    await window.ugrc.saveConfig({
-      streetFields: Array.from(existingStreetFields),
-      zoneFields: Array.from(existingZoneFields),
-    });
+    await window.ugrc
+      .saveConfig({
+        streetFields: Array.from(existingStreetFields),
+        zoneFields: Array.from(existingZoneFields),
+      })
+      .catch(handleError);
 
     history.push('/wkid');
   };
