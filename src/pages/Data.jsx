@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import { DocumentAddIcon, DocumentRemoveIcon } from '@heroicons/react/outline';
@@ -8,6 +8,7 @@ import FieldLinker from '../components/FieldLinker.jsx';
 import { useGeocodeContext } from '../components/GeocodeContext.js';
 import AddressParts from '../components/AddressParts.jsx';
 import SampleFieldData from '../components/SampleFieldData.jsx';
+import InvalidCsv, { CSV_PARSE_ERROR } from '../components/InvalidCsv.jsx';
 
 const acceptableFileTypes = ['.csv'];
 
@@ -25,8 +26,9 @@ const chooseCommonFieldName = (fieldName, fieldsFromFile, commonFieldNames) => {
 
 export default function Data() {
   const { geocodeContext, geocodeDispatch } = useGeocodeContext();
+  const [error, setError] = useState();
 
-  const onDrop = async (files, rejectFiles, event) => {
+  const onDrop = async (files, _, event) => {
     if (!files) {
       geocodeDispatch({
         type: 'RESET',
@@ -42,7 +44,24 @@ export default function Data() {
     });
 
     const file = files[0];
-    const newSample = await window.ugrc.getSampleFromFile(file.path).catch(handleError);
+    setError();
+    let newSample;
+    try {
+      newSample = await window.ugrc.getSampleFromFile(file.path);
+    } catch (e) {
+      const errorDetails = [];
+      if (e.message.includes(CSV_PARSE_ERROR)) {
+        e.message.replace(/\{(.*?)\}/g, (_, code) => {
+          errorDetails.push(code);
+        });
+
+        setError(errorDetails);
+
+        return;
+      }
+      handleError(e);
+    }
+
     const fields = Object.keys(newSample);
 
     geocodeDispatch({
@@ -78,7 +97,7 @@ export default function Data() {
         open();
       }
     });
-  }, [open]);
+  }, [open, geocodeDispatch]);
 
   useEffect(() => {
     window.ugrc
@@ -117,6 +136,7 @@ export default function Data() {
       </Link>
       <h2>Add your data</h2>
       <AddressParts />
+      {error && <InvalidCsv errorDetails={error} />}
       <div
         {...getRootProps()}
         className="flex items-center justify-center w-full mb-4 bg-gray-100 border border-indigo-800 rounded shadow h-28"
@@ -151,7 +171,6 @@ export default function Data() {
           />
         </>
       ) : null}
-
       {geocodeContext.data.street && geocodeContext.data.zone ? (
         <button className="mt-4" onClick={saveFieldPreferences} type="button">
           Next

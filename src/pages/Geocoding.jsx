@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, Prompt } from 'react-router-dom';
 import humanizeDuration from 'humanize-duration';
 import { DocumentTextIcon } from '@heroicons/react/outline';
@@ -26,9 +26,12 @@ export default function Geocoding() {
     window.ugrc.startDrag('ugrc_geocode_results.csv').catch(handleError);
   };
 
-  const cancel = (reason) => {
-    window.ugrc.cancelGeocode(reason).catch(handleError);
-  };
+  const cancel = useCallback(
+    (reason) => {
+      window.ugrc.cancelGeocode(reason).catch(handleError);
+    },
+    [handleError]
+  );
 
   useEffect(() => {
     window.ugrc.subscribeToGeocodingUpdates((_, data) => {
@@ -54,7 +57,7 @@ export default function Geocoding() {
       cancel('back');
       window.ugrc.unsubscribeFromGeocodingUpdates();
     };
-  }, [geocodeContext, handleError]);
+  }, [geocodeContext, handleError, cancel]);
 
   const progress = stats.rowsProcessed / stats.totalRows || 0;
   const elapsedTime = new Date().getTime() - startTime.current.getTime();
