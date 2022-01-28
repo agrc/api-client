@@ -32,6 +32,6 @@ ipcMain.handle('getConfigItem', (_, key) => {
   return store.get(key);
 });
 
-ipcMain.on('saveConfig', (_, content) => {
+ipcMain.handle('saveConfig', (_, content) => {
   store.set(content);
 });

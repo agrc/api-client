@@ -113,7 +113,7 @@ export default function Wkid() {
         <button
           className="mt-4"
           onClick={() => {
-            window.ugrc.saveConfig({ wkid: parseInt(wkid || customWkid) });
+            window.ugrc.saveConfig({ wkid: parseInt(wkid || customWkid) }).catch(handleError);
 
             history.push('/plan');
           }}

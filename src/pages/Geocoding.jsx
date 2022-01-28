@@ -23,11 +23,11 @@ export default function Geocoding() {
 
   const onDragStart = (event) => {
     event.preventDefault();
-    window.ugrc.startDrag('ugrc_geocode_results.csv');
+    window.ugrc.startDrag('ugrc_geocode_results.csv').catch(handleError);
   };
 
   const cancel = (reason) => {
-    window.ugrc.cancelGeocode(reason);
+    window.ugrc.cancelGeocode(reason).catch(handleError);
   };
 
   useEffect(() => {

@@ -99,8 +99,10 @@ export default function ApiKey() {
           />
           <button
             onClick={() => {
-              window.ugrc.saveConfig({ apiKey: geocodeContext.apiKey });
-              history.push('/data');
+              window.ugrc
+                .saveConfig({ apiKey: geocodeContext.apiKey })
+                .then(() => history.push('/data'))
+                .catch(handleError);
             }}
             type="button"
             disabled={keyStatus === 'invalid'}
