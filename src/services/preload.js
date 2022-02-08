@@ -1,8 +1,7 @@
 const { ipcRenderer, contextBridge } = require('electron');
 
 contextBridge.exposeInMainWorld('ugrc', {
-  getSampleFromFile: (content) => ipcRenderer.invoke('getSampleFromFile', content),
-  getRecordCount: (content) => ipcRenderer.invoke('getRecordCount', content),
+  validateWithStats: (content) => ipcRenderer.invoke('validateWithStats', content),
   saveConfig: (content) => ipcRenderer.invoke('saveConfig', content),
   getConfigItem: (content) => ipcRenderer.invoke('getConfigItem', content),
   geocode: (content) => ipcRenderer.invoke('geocode', content),

@@ -3,27 +3,20 @@ const fs = require('fs');
 import { parse } from 'csv-parse';
 import { CSV_PARSE_ERROR } from '../components/InvalidCsv.jsx';
 
-export const getDataSample = async (filePath) => {
-  const parser = parse({ columns: true, skipEmptyLines: true });
-
-  try {
-    const parsed = fs.createReadStream(filePath).pipe(parser);
-
-    //* read the first line to get the file structure
-    for await (const record of parsed) {
-      return record;
-    }
-  } catch (parseError) {
-    throw new Error(`${CSV_PARSE_ERROR}: {${parseError.code}} {${parseError.message}}`);
-  }
-};
-
-export const getRecordCount = (filePath) => {
+export const validateWithStats = (filePath) => {
   return new Promise((resolve, reject) => {
     const parser = parse({ columns: true }, function (parseError, data) {
-      reject(`${CSV_PARSE_ERROR}: {${parseError.code}} {${parseError.message}}`);
+      if (parseError) {
+        reject(`${CSV_PARSE_ERROR}: {${parseError.code}} {${parseError.message}}`);
 
-      resolve(data.length);
+        return;
+      }
+
+      if (data.length === 0) {
+        reject(new Error(`${CSV_PARSE_ERROR}: {INVALID_OR_EMPTY_FILE} {No records found in your file.}`));
+      }
+
+      resolve({ firstRecord: data[0], totalRecords: data.length });
     });
 
     try {
@@ -34,9 +27,6 @@ export const getRecordCount = (filePath) => {
   });
 };
 
-ipcMain.handle('getSampleFromFile', (_, content) => {
-  return getDataSample(content);
-});
-ipcMain.handle('getRecordCount', (_, content) => {
-  return getRecordCount(content);
+ipcMain.handle('validateWithStats', (_, content) => {
+  return validateWithStats(content);
 });
