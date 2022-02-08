@@ -24,6 +24,7 @@ const store = new Store({
     },
     wkid: {
       type: 'number',
+      default: 26912,
     },
   },
 });
