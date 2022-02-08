@@ -6,7 +6,7 @@ const md5 = require('md5');
 import { parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
 import got from 'got';
-import { getRecordCount } from './csv.js';
+import { validateWithStats } from './csv.js';
 import { trackEvent } from './analytics.js';
 
 const SPACES = / +/;
@@ -93,7 +93,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
   const stringifier = stringify({ columns: [...columns, 'x', 'y', 'score', 'match_address'], header: true });
   stringifier.pipe(writer);
 
-  let totalRows = await getRecordCount(filePath);
+  let totalRows = (await validateWithStats(filePath)).totalRecords;
   let rowsProcessed = 0;
   let totalScore = 0;
   let failures = 0;

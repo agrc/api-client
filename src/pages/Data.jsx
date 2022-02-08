@@ -45,9 +45,9 @@ export default function Data() {
 
     const file = files[0];
     setError();
-    let newSample;
+    let stats;
     try {
-      newSample = await window.ugrc.getSampleFromFile(file.path);
+      stats = await window.ugrc.validateWithStats(file.path);
     } catch (e) {
       const errorDetails = [];
       if (e.message.includes(CSV_PARSE_ERROR)) {
@@ -62,7 +62,7 @@ export default function Data() {
       handleError(e);
     }
 
-    const fields = Object.keys(newSample);
+    const fields = Object.keys(stats.firstRecord);
 
     geocodeDispatch({
       type: 'UPDATE_FILE',
@@ -71,7 +71,8 @@ export default function Data() {
         fieldsFromFile: fields,
         street: chooseCommonFieldName('street', fields, commonFieldNames.current),
         zone: chooseCommonFieldName('zone', fields, commonFieldNames.current),
-        sampleData: newSample,
+        sampleData: stats.firstRecord,
+        totalRecords: stats.totalRecords,
       },
     });
   };
