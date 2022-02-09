@@ -2,6 +2,7 @@ const { ipcRenderer, contextBridge } = require('electron');
 
 contextBridge.exposeInMainWorld('ugrc', {
   validateWithStats: (content) => ipcRenderer.invoke('validateWithStats', content),
+  getCsvColumns: (content) => ipcRenderer.invoke('getCsvColumns', content),
   saveConfig: (content) => ipcRenderer.invoke('saveConfig', content),
   getConfigItem: (content) => ipcRenderer.invoke('getConfigItem', content),
   geocode: (content) => ipcRenderer.invoke('geocode', content),
