@@ -62,11 +62,11 @@ export default function ApiKey() {
         Welcome to the UGRC API Client. This is the official client for geocoding with the UGRC API. To get started you
         will need a complimentary account and an API key.
       </p>
-      <h2 className="text-center -rotate-3">
+      <h2 className="-rotate-3 text-center">
         <span className="block">Ready?</span>
         <span className="block text-indigo-600">Let&apos;s go!</span>
       </h2>
-      <ol className="mb-4 ml-10 text-lg list-decimal">
+      <ol className="mb-4 ml-10 list-decimal text-lg">
         <li>
           Navigate to the{' '}
           <a href="https://developer.mapserv.utah.gov/AccountAccess" target="_blank" rel="noreferrer">
@@ -84,13 +84,13 @@ export default function ApiKey() {
         </li>
         <li>Copy and paste the newly created key into the box below</li>
       </ol>
-      <section className="flex flex-col justify-center p-6 pb-2 mt-10 border rounded shadow bg-gray-50">
+      <section className="mt-10 flex flex-col justify-center rounded border bg-gray-50 p-6 pb-2 shadow">
         <div className="flex items-center">
           <label className="inline" htmlFor="apiKey">
             API Key
           </label>
           <input
-            className="flex-grow h-12 max-w-lg ml-4 text-2xl border-0 border-t border-b border-l rounded-none rounded-l focus:ring-0"
+            className="ml-4 h-12 max-w-lg flex-grow rounded-none rounded-l border-0 border-t border-b border-l text-2xl focus:ring-0"
             type="text"
             id="apiKey"
             maxLength="19"
@@ -106,12 +106,12 @@ export default function ApiKey() {
             }}
             type="button"
             disabled={keyStatus === 'invalid'}
-            className="w-24 h-12 border-0 border-t border-b border-r rounded-none rounded-r"
+            className="h-12 w-24 rounded-none rounded-r border-0 border-t border-b border-r"
           >
             {keyStatus === 'validating' ? <Spinner /> : <>Next</>}
           </button>
         </div>
-        <div className="flex flex-col items-center justify-center mt-6">
+        <div className="mt-6 flex flex-col items-center justify-center">
           <div className="font-bold tracking-tight text-gray-600">Is my key ok?</div>
           {keyStatus === 'valid' ? (
             <ThumbUpIcon className="w-16 text-indigo-900" />

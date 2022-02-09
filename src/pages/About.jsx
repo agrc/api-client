@@ -23,7 +23,7 @@ export default function About() {
       <button type="back-button" onClick={() => history.goBack()}>
         &larr; Back
       </button>
-      <section className="relative z-10 grid items-stretch justify-around w-full grid-cols-2 mt-4 text-center border rounded-lg shadow-lg bg-white/95">
+      <section className="relative z-10 mt-4 grid w-full grid-cols-2 items-stretch justify-around rounded-lg border bg-white/95 text-center shadow-lg">
         <div className="flex-1 p-6">
           <h2 className="my-0 text-indigo-600">
             <a href={`${info.repo}/releases`} target="_blank" rel="noopener noreferrer">
@@ -55,7 +55,7 @@ export default function About() {
         </div>
       </section>
       <div
-        className="absolute inset-0 z-0 bg-fixed bg-center bg-no-repeat bg-contain bg-origin-content"
+        className="absolute inset-0 z-0 bg-contain bg-fixed bg-center bg-no-repeat bg-origin-content"
         style={{ backgroundImage: `url(${logo})` }}
       ></div>
     </article>
