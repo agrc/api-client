@@ -9,17 +9,17 @@ const numberFormat = new Intl.NumberFormat('en-US');
 const percentFormatter = new Intl.NumberFormat('en-US', { style: 'percent' });
 
 export default function Geocoding() {
+  const { geocodeContext } = useGeocodeContext();
+  const startTime = useRef(new Date());
+  const draggable = useRef(null);
   const [stats, setStats] = useState({
     rowsProcessed: 0,
-    totalRows: 0,
+    totalRows: geocodeContext.data.totalRecords,
     activeMatchRate: 0,
     averageScore: 0,
     status: 'idle',
     lastRequest: null,
   });
-  const startTime = useRef(new Date());
-  const { geocodeContext } = useGeocodeContext();
-  const draggable = useRef(null);
   const handleError = useErrorHandler();
 
   const onDragStart = (event) => {
