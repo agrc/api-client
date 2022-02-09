@@ -3,9 +3,9 @@ const fs = require('fs');
 import { parse } from 'csv-parse';
 import { CSV_PARSE_ERROR } from '../components/InvalidCsv.jsx';
 
-export const validateWithStats = (filePath) => {
+export const validateWithStats = (filePath, options) => {
   return new Promise((resolve, reject) => {
-    const parser = parse({ columns: true }, function (parseError, data) {
+    const parser = parse({ columns: true, skipEmptyLines: true, ...options }, function (parseError, data) {
       if (parseError) {
         reject(`${CSV_PARSE_ERROR}: {${parseError.code}} {${parseError.message}}`);
 
@@ -29,4 +29,8 @@ export const validateWithStats = (filePath) => {
 
 ipcMain.handle('validateWithStats', (_, content) => {
   return validateWithStats(content);
+});
+
+ipcMain.handle('getCsvColumns', (_, content) => {
+  return validateWithStats(content, { from: 0, to: 1 });
 });
