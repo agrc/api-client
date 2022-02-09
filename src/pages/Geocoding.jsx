@@ -5,6 +5,7 @@ import { DocumentTextIcon } from '@heroicons/react/outline';
 import { useErrorHandler } from 'react-error-boundary';
 import { useGeocodeContext } from '../components/GeocodeContext.js';
 
+const numberFormat = new Intl.NumberFormat('en-US');
 const percentFormatter = new Intl.NumberFormat('en-US', { style: 'percent' });
 
 export default function Geocoding() {
@@ -102,20 +103,20 @@ export default function Geocoding() {
       case 'complete': {
         return (
           <div
-            className="p-12 mx-auto text-center bg-gray-100 border rounded-lg shadow cursor-grab"
+            className="mx-auto cursor-grab rounded-lg border bg-gray-100 p-12 text-center shadow"
             ref={draggable}
             draggable={true}
             onDragStart={onDragStart}
           >
             <p>Drag and drop this file to save the results.</p>
-            <DocumentTextIcon className="w-32 mx-auto" />
+            <DocumentTextIcon className="mx-auto w-32" />
             <span className="mx-auto font-mono text-sm">ugrc_geocode_results.csv</span>
           </div>
         );
       }
       case 'cancelled': {
         return (
-          <section className="px-3 bg-red-100 border border-red-200 rounded shadow">
+          <section className="rounded border border-red-200 bg-red-100 px-3 shadow">
             <h3 className="text-center text-red-800 ">This job was cancelled</h3>
             <p>
               <Link to="/plan">Go back to the plan page</Link> to restart the process.
@@ -125,7 +126,7 @@ export default function Geocoding() {
       }
       case 'fail-fast': {
         return (
-          <section className="px-3 bg-red-100 border border-red-200 rounded shadow">
+          <section className="rounded border border-red-200 bg-red-100 px-3 shadow">
             <h3 className="text-center text-red-800">This job has fast failed</h3>
             <p>
               A fast failure occurs when the <span className="font-bold">first {stats.failures} records</span> do not
@@ -153,7 +154,7 @@ export default function Geocoding() {
               This is the Web API response for the last request (street: {stats.lastRequest?.request.street}, zone:{' '}
               {stats.lastRequest?.request.zone}) to help debug the issue
             </p>
-            <pre className="px-3 py-2 mx-6 text-white whitespace-normal bg-red-400 border-red-800 rounded shadow">
+            <pre className="mx-6 whitespace-normal rounded border-red-800 bg-red-400 px-3 py-2 text-white shadow">
               <div className="mb-2">{stats.lastRequest.request.url}</div>
               <div>
                 {stats.lastRequest?.response.status} -{' '}
@@ -177,42 +178,42 @@ export default function Geocoding() {
         &larr; Back
       </Link>
       <h2>Geocoding progress</h2>
-      <progress className="w-full h-16" value={progress}>
+      <progress className="h-16 w-full" value={progress}>
         {progress}%
       </progress>
       <section>
         <dl>
-          <div className="px-4 py-5 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="font-medium text-gray-500">Total Rows</dt>
-            <dd className="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">{stats.totalRows}</dd>
+            <dd className="mt-1 text-gray-900 sm:col-span-2 sm:mt-0">{numberFormat.format(stats.totalRows)}</dd>
           </div>
-          <div className="px-4 py-5 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="font-medium text-gray-500">Rows processed</dt>
-            <dd className="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">{stats.rowsProcessed}</dd>
+            <dd className="mt-1 text-gray-900 sm:col-span-2 sm:mt-0">{numberFormat.format(stats.rowsProcessed)}</dd>
           </div>
-          <div className="px-4 py-5 bg-gray-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="bg-gray-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="font-medium text-gray-500">Active match rate</dt>
-            <dd className="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
+            <dd className="mt-1 text-gray-900 sm:col-span-2 sm:mt-0">
               {percentFormatter.format(stats.activeMatchRate)}
             </dd>
           </div>
-          <div className="px-4 py-5 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="font-medium text-gray-500">Average match score</dt>
-            <dd className="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">{stats.averageScore || ''}</dd>
+            <dd className="mt-1 text-gray-900 sm:col-span-2 sm:mt-0">{stats.averageScore || ''}</dd>
           </div>
-          <div className="px-4 py-5 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="font-medium text-gray-500">Failures</dt>
-            <dd className="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">{stats.failures}</dd>
+            <dd className="mt-1 text-gray-900 sm:col-span-2 sm:mt-0">{numberFormat.format(stats.failures)}</dd>
           </div>
-          <div className="px-4 py-5 bg-gray-50 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="font-medium text-gray-500">Time elapsed</dt>
-            <dd className="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
+            <dd className="mt-1 text-gray-900 sm:col-span-2 sm:mt-0">
               {humanizeDuration(elapsedTime, { round: true })}
             </dd>
           </div>
-          <div className="px-4 py-5 bg-white sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="font-medium text-gray-500">Estimated time remaining</dt>
-            <dd className="mt-1 text-gray-900 sm:mt-0 sm:col-span-2">
+            <dd className="mt-1 text-gray-900 sm:col-span-2 sm:mt-0">
               {humanizeDuration(estimatedTimeRemaining, { round: true })}
             </dd>
           </div>
