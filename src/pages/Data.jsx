@@ -9,6 +9,7 @@ import { useGeocodeContext } from '../components/GeocodeContext.js';
 import AddressParts from '../components/AddressParts.jsx';
 import SampleFieldData from '../components/SampleFieldData.jsx';
 import InvalidCsv, { CSV_PARSE_ERROR } from '../components/InvalidCsv.jsx';
+import { Spinner } from '../components/PageElements';
 
 const acceptableFileTypes = ['.csv'];
 
@@ -27,6 +28,7 @@ const chooseCommonFieldName = (fieldName, fieldsFromFile, commonFieldNames) => {
 export default function Data() {
   const { geocodeContext, geocodeDispatch } = useGeocodeContext();
   const [error, setError] = useState();
+  const [validation, setValidation] = useState('idle');
 
   const onDrop = async (files, _, event) => {
     if (!files) {
@@ -47,7 +49,7 @@ export default function Data() {
     setError();
     let stats;
     try {
-      stats = await window.ugrc.validateWithStats(file.path);
+      stats = await window.ugrc.getCsvColumns(file.path);
     } catch (e) {
       const errorDetails = [];
       if (e.message.includes(CSV_PARSE_ERROR)) {
@@ -72,9 +74,38 @@ export default function Data() {
         street: chooseCommonFieldName('street', fields, commonFieldNames.current),
         zone: chooseCommonFieldName('zone', fields, commonFieldNames.current),
         sampleData: stats.firstRecord,
-        totalRecords: stats.totalRecords,
+        totalRecords: '-',
+        valid: null,
       },
     });
+
+    try {
+      setValidation('validating');
+      stats = await window.ugrc.validateWithStats(file.path);
+      geocodeDispatch({
+        type: 'UPDATE_FILE',
+        payload: {
+          totalRecords: stats.totalRecords,
+          valid: true,
+        },
+      });
+      setValidation('idle');
+    } catch (e) {
+      geocodeDispatch({ type: 'UPDATE_FILE', payload: { valid: false } });
+      setValidation('idle');
+
+      const errorDetails = [];
+      if (e.message.includes(CSV_PARSE_ERROR)) {
+        e.message.replace(/\{(.*?)\}/g, (_, code) => {
+          errorDetails.push(code);
+        });
+
+        setError(errorDetails);
+
+        return;
+      }
+      handleError(e);
+    }
   };
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
@@ -137,13 +168,14 @@ export default function Data() {
       </Link>
       <h2>Add your data</h2>
       <AddressParts />
+      {}
       {error && <InvalidCsv errorDetails={error} />}
       <div
         {...getRootProps()}
-        className="flex items-center justify-center w-full mb-4 bg-gray-100 border border-indigo-800 rounded shadow h-28"
+        className="mb-4 flex h-28 w-full items-center justify-center rounded border border-indigo-800 bg-gray-100 shadow"
       >
         <input {...getInputProps()} />
-        <DropzoneMessaging isDragActive={isDragActive} file={geocodeContext.data.file} />
+        <DropzoneMessaging isDragActive={isDragActive} file={geocodeContext.data.file} validation={validation} />
       </div>
       {geocodeContext.data.file ? (
         <button
@@ -153,12 +185,12 @@ export default function Data() {
             onDrop(null);
           }}
         >
-          <DocumentRemoveIcon className="self-center justify-between inline-block w-6 h-6 mr-2" />
+          <DocumentRemoveIcon className="mr-2 inline-block h-6 w-6 justify-between self-center" />
           Clear
         </button>
       ) : (
         <button className="flex flex-row" type="button" onClick={open}>
-          <DocumentAddIcon className="self-center justify-between inline-block w-6 h-6 mr-2" />
+          <DocumentAddIcon className="mr-2 inline-block h-6 w-6 justify-between self-center" />
           Choose File
         </button>
       )}
@@ -173,8 +205,15 @@ export default function Data() {
         </>
       ) : null}
       {geocodeContext.data.street && geocodeContext.data.zone ? (
-        <button className="mt-4" onClick={saveFieldPreferences} type="button">
-          Next
+        <button type="button" className="mt-4" onClick={saveFieldPreferences} disabled={!geocodeContext.data.valid}>
+          {validation === 'validating' ? (
+            <span className="flex">
+              <span className="mr-2">Checking CSV</span>
+              <Spinner />
+            </span>
+          ) : (
+            'Next'
+          )}
         </button>
       ) : null}
     </article>
