@@ -1,3 +1,4 @@
+import { data } from 'autoprefixer';
 import { createContext, useContext } from 'react';
 import { useImmerReducer } from 'use-immer';
 
@@ -10,6 +11,9 @@ const initialValues = {
     zone: '',
     file: null,
     fieldsFromFile: [],
+    sampleData: {},
+    totalRecords: 0,
+    valid: null,
   },
 };
 
@@ -19,12 +23,7 @@ const reducer = (draft, action) => {
       draft.apiKey = action.payload;
       break;
     case 'UPDATE_FILE':
-      draft.data.file = action.payload.file;
-      draft.data.fieldsFromFile = action.payload.fieldsFromFile;
-      draft.data.street = action.payload.street;
-      draft.data.zone = action.payload.zone;
-      draft.data.sampleData = action.payload.sampleData;
-      draft.data.totalRecords = action.payload.totalRecords;
+      draft.data = { ...draft.data, ...action.payload };
       break;
     case 'UPDATE_FIELDS':
       draft.data[action.meta] = action.payload;
