@@ -19,6 +19,7 @@ export default function Geocoding() {
     averageScore: 0,
     status: 'idle',
     lastRequest: null,
+    failures: 0,
   });
   const handleError = useErrorHandler();
 
@@ -49,6 +50,7 @@ export default function Geocoding() {
             apiKey: geocodeContext.apiKey,
             wkid,
             sampleData: geocodeContext.data.sampleData,
+            totalRows: geocodeContext.data.totalRecords,
           })
           .catch(handleError);
       })
