@@ -40,12 +40,12 @@ export default function Wkid() {
           setWkid(value);
         }}
       >
-        <section className="grid w-full grid-cols-3 mt-4 text-center justify-items-center">
+        <section className="mt-4 grid w-full grid-cols-3 justify-items-center text-center">
           <RadioGroup.Option value="26912">
             {({ checked }) => (
               <div
                 className={clsx(
-                  'cursor-pointer ring-4 rounded-full m-2 flex flex-col w-48 h-48 justify-center flex-1 p-6',
+                  'm-2 flex h-48 w-48 flex-1 cursor-pointer flex-col justify-center rounded-full p-6 ring-4',
                   {
                     'ring-gray-300': !checked,
                     'bg-gray-50 ring-pink-400': checked,
@@ -62,7 +62,7 @@ export default function Wkid() {
             {({ checked }) => (
               <div
                 className={clsx(
-                  'cursor-pointer ring-4 rounded-full m-2 flex flex-col w-48 h-48 justify-center flex-1 p-6',
+                  'm-2 flex h-48 w-48 flex-1 cursor-pointer flex-col justify-center rounded-full p-6 ring-4',
                   {
                     'ring-gray-300': !checked,
                     'bg-gray-50 ring-pink-400': checked,
@@ -79,7 +79,7 @@ export default function Wkid() {
             {({ checked }) => (
               <div
                 className={clsx(
-                  'cursor-pointer ring-4 rounded-full m-2 flex flex-col w-48 h-48 justify-center flex-1 p-6',
+                  'm-2 flex h-48 w-48 flex-1 cursor-pointer flex-col justify-center rounded-full p-6 ring-4',
                   {
                     'ring-gray-300': !checked,
                     'bg-gray-50 ring-pink-400': checked,
@@ -92,7 +92,7 @@ export default function Wkid() {
               </div>
             )}
           </RadioGroup.Option>
-          <div className="self-center flex-1 col-span-3 p-6">
+          <div className="col-span-3 flex-1 self-center p-6">
             <label htmlFor="customWkid">
               <input
                 type="number"

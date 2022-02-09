@@ -11,10 +11,10 @@ const FieldLinker = () => {
         geocode the data. If the following values do not look like headings, then map the data representing the{' '}
         <code>address</code>, <code>city</code> and or <code>zip</code> field to the fields required for geocoding.
       </p>
-      <div className="flex justify-around my-6 flex-wrap">
+      <div className="my-6 flex flex-wrap justify-around">
         {geocodeContext.data.fieldsFromFile.map((field) => (
           <div
-            className="min-w-1/6 mx-1 my-2 px-3 text-center bg-indigo-100 border border-indigo-600 rounded shadow"
+            className="mx-1 my-2 min-w-1/6 rounded border border-indigo-600 bg-indigo-100 px-3 text-center shadow"
             key={field}
           >
             {field}
@@ -23,7 +23,7 @@ const FieldLinker = () => {
       </div>
 
       <h3>Assign Fields</h3>
-      <form className="grid max-w-md gap-3 mx-auto grid-col-1">
+      <form className="grid-col-1 mx-auto grid max-w-md gap-3">
         <label htmlFor="street">Street Address Field</label>
         <select
           name="street"

@@ -2,7 +2,7 @@ export default function AddressParts() {
   return (
     <section className="mt-6">
       <p>The UGRC API requires 2 inputs to geocode. The first is a street address in the form of</p>
-      <section className="flex items-stretch justify-around w-full mb-10 text-center border divide-x-2 divide-gray-100 rounded-lg shadow-lg">
+      <section className="mb-10 flex w-full items-stretch justify-around divide-x-2 divide-gray-100 rounded-lg border text-center shadow-lg">
         <Label value="301" label="house number" />
         <Label value="South" label="prefix direction" />
         <Label value="Main" label="street name" />

@@ -15,10 +15,10 @@ export default function Footer() {
   }, [handleError]);
 
   return (
-    <section className="fixed inset-x-0 bottom-0 z-20 grid items-center grid-cols-2 px-3 py-2 mt-10 text-indigo-200 bg-indigo-900">
-      <div className="grid grid-flow-col auto-cols-max">
-        <img src={logo} alt="logo" className="w-8 h-8" />
-        <div className="flex flex-col content-center ml-1 leading-none">
+    <section className="fixed inset-x-0 bottom-0 z-20 mt-10 grid grid-cols-2 items-center bg-indigo-900 px-3 py-2 text-indigo-200">
+      <div className="grid auto-cols-max grid-flow-col">
+        <img src={logo} alt="logo" className="h-8 w-8" />
+        <div className="ml-1 flex flex-col content-center leading-none">
           <div>UGRC API Client</div>
           <Link to="/about" className="text-amber-500 hover:text-amber-300">
             v{version}
