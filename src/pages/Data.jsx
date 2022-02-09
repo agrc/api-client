@@ -115,6 +115,7 @@ export default function Data() {
     maxFiles: 1,
     accept: acceptableFileTypes.join(),
     onDrop,
+    useFsAccessApi: false,
   });
   const commonFieldNames = useRef({
     street: [],
