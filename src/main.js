@@ -7,6 +7,11 @@ require('./services/csv');
 require('./services/geocode');
 const { enforceMacOSAppLocation, is } = require('electron-util');
 const { trackException } = require('./services/analytics');
+const Sentry = require('@sentry/electron/main');
+
+Sentry.init({
+  dsn: 'https://02bfd36076c647c9a9a2f66a9c7465c4@o1150892.ingest.sentry.io/6225803',
+});
 
 require('update-electron-app')({
   updateInterval: '1 hour',
