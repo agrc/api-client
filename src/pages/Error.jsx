@@ -21,30 +21,41 @@ export default function Error({ error, children }) {
           </a>{' '}
           to see if it is already being worked on.
         </p>
-        <h2 className="mb-8 text-center">Report by</h2>
-        <section className="mb-8 grid grid-cols-2 gap-4 text-center">
-          <div className="flex flex-col items-center rounded border px-3 py-2">
-            <h3 className="mt-0">GitHub account</h3>
-            <button type="button" onClick={() => window.ugrc.openIssue({ message: error.message, stack: error.stack })}>
-              Let&apos;s go
-            </button>
-          </div>
-          <div className="flex flex-col items-center rounded border px-3 py-2">
-            <h3 className="mt-0">Email</h3>
-            <button type="button" onClick={() => window.ugrc.openEmail({ message: error.message, stack: error.stack })}>
-              Compose
-            </button>
-          </div>
-        </section>
-        <h2 className="mb-8 text-center text-indigo-600">Thank you so much!</h2>
-        {children || (
-          <p>
-            You may now{' '}
-            <button className="font-bold text-amber-500 hover:text-amber-300" onClick={window.ugrc.relaunchApp}>
-              restart the application
-            </button>{' '}
-            and try geocoding again.
-          </p>
+
+        {window.ugrc && (
+          <>
+            <h2 className="mb-8 text-center">Report by</h2>
+            <section className="mb-8 grid grid-cols-2 gap-4 text-center">
+              <div className="flex flex-col items-center rounded border px-3 py-2">
+                <h3 className="mt-0">GitHub account</h3>
+                <button
+                  type="button"
+                  onClick={() => window.ugrc.openIssue({ message: error.message, stack: error.stack })}
+                >
+                  Let&apos;s go
+                </button>
+              </div>
+              <div className="flex flex-col items-center rounded border px-3 py-2">
+                <h3 className="mt-0">Email</h3>
+                <button
+                  type="button"
+                  onClick={() => window.ugrc.openEmail({ message: error.message, stack: error.stack })}
+                >
+                  Compose
+                </button>
+              </div>
+            </section>
+            <h2 className="mb-8 text-center text-indigo-600">Thank you so much!</h2>
+            {children || (
+              <p>
+                You may now{' '}
+                <button className="font-bold text-amber-500 hover:text-amber-300" onClick={window.ugrc.relaunchApp}>
+                  restart the application
+                </button>{' '}
+                and try geocoding again.
+              </p>
+            )}
+          </>
         )}
         <details className="mt-6">
           <summary>
