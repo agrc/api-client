@@ -1,4 +1,5 @@
 const rules = require('./webpack.rules');
+const webpack = require('webpack');
 
 rules.push({
   test: /\.css$/,
@@ -6,8 +7,13 @@ rules.push({
 });
 
 module.exports = {
-  // Put your normal webpack config below here
   module: {
     rules,
   },
+  plugins: [
+    // ignore sentry main code since it requires node apis
+    new webpack.IgnorePlugin({
+      resourceRegExp: /@sentry\/electron\/main/,
+    }),
+  ],
 };

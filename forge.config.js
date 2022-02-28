@@ -100,6 +100,8 @@ const config = {
     [
       '@electron-forge/plugin-webpack',
       {
+        devContentSecurityPolicy:
+          "default-src 'self' 'unsafe-inline' data:; script-src 'self' 'unsafe-eval' 'unsafe-inline' data:; connect-src 'self' 'unsafe-inline' *.ingest.sentry.io data:;",
         mainConfig: './webpack.main.config.js',
         renderer: {
           config: './webpack.renderer.config.js',
