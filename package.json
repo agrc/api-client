@@ -82,7 +82,7 @@
   "dependencies": {
     "@headlessui/react": "^1.5.0",
     "@heroicons/react": "^1.0.5",
-    "@sentry/electron": "^3.0.0",
+    "@sentry/electron": "^3.0.2",
     "assert": "^2.0.0",
     "clsx": "^1.1.1",
     "crypto-browserify": "^3.12.0",

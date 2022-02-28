@@ -1,3 +1,4 @@
+require('./services/sentry');
 const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
 const windowStateKeeper = require('electron-window-state');
 const path = require('path');
@@ -7,11 +8,6 @@ require('./services/csv');
 require('./services/geocode');
 const { enforceMacOSAppLocation, is } = require('electron-util');
 const { trackException } = require('./services/analytics');
-const Sentry = require('@sentry/electron/main');
-
-Sentry.init({
-  dsn: 'https://02bfd36076c647c9a9a2f66a9c7465c4@o1150892.ingest.sentry.io/6225803',
-});
 
 require('update-electron-app')({
   updateInterval: '1 hour',
@@ -105,7 +101,13 @@ app.on('activate', () => {
 
 app.on('web-contents-created', (_, contents) => {
   const isSafeForExternalOpen = (urlString) => {
-    const safeHosts = ['github.com', 'api.mapserv.utah.gov', 'developer.mapserv.utah.gov', 'agrc-status.netlify.app'];
+    const safeHosts = [
+      'github.com',
+      'api.mapserv.utah.gov',
+      'developer.mapserv.utah.gov',
+      'agrc-status.netlify.app',
+      'o1150892.ingest.sentry.io',
+    ];
     try {
       const url = new URL(urlString);
       if (url.protocol === 'mailto:') {

@@ -1,7 +1,9 @@
 import { Chrome } from '../components/PageElements';
+import * as Sentry from '@sentry/electron/renderer';
 
 export default function Error({ error, children }) {
   window.ugrc.trackException(error.toString());
+  Sentry.captureException(error);
 
   return (
     <article>
