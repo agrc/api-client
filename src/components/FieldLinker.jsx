@@ -31,8 +31,10 @@ const FieldLinker = () => {
           value={geocodeContext.data.street}
         >
           <option>please select a field</option>
-          {geocodeContext.data.fieldsFromFile.map((field) => (
-            <option key={field}>{field}</option>
+          {geocodeContext.data.fieldsFromFile.map((field, index) => (
+            <option key={index + field} value={field}>
+              {field}
+            </option>
           ))}
         </select>
         <label htmlFor="zone">Zone Field</label>
@@ -42,8 +44,10 @@ const FieldLinker = () => {
           value={geocodeContext.data.zone}
         >
           <option>please select a field</option>
-          {geocodeContext.data.fieldsFromFile.map((field) => (
-            <option key={field}>{field}</option>
+          {geocodeContext.data.fieldsFromFile.map((field, index) => (
+            <option key={index + field} value={field}>
+              {field}
+            </option>
           ))}
         </select>
       </form>
