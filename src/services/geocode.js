@@ -46,7 +46,7 @@ export const cancelGeocode = (status = 'cancelled') => {
   cancelled = status;
 };
 
-const timeout = { request: 5000 };
+const timeout = { request: 10000 };
 
 export const checkApiKey = async (apiKey) => {
   log.info(`Checking API key: ${apiKey}`);
@@ -171,7 +171,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
           body: response.body,
         };
       } catch (error) {
-        log.error(`Error geocoding ${street} ${zone}: ${error}`);
+        log.error(`Error geocoding street [${street}] zone [${zone}]: ${error}`);
 
         try {
           response = JSON.parse(error.response.body);
