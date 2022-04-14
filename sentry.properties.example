@@ -1,5 +1,5 @@
 defaults.url=https://sentry.io/
 defaults.org=ugrc
 defaults.project=ugrc
-auth.token=024b4f043cfb4081ba30e9546101a54d96cab9d73c9b48f7b4408b1dd30beae8
+auth.token=<https://sentry.io/settings/account/api/auth-tokens/>
 cli.executable=../../.npm/_npx/a8388072043b4cbc/node_modules/@sentry/cli/bin/sentry-cli
