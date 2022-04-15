@@ -6,8 +6,8 @@ const md5 = require('md5');
 import { parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
 import got from 'got';
-import { validateWithStats } from './csv.js';
 import { trackEvent } from './analytics.js';
+// import '../../tests/mocks/server';
 
 const SPACES = / +/;
 const INVALID_CHARS = /[^a-zA-Z0-9]/g;
