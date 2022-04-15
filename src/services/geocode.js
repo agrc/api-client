@@ -181,7 +181,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
 
         lastRequest.request.url = error?.request?.requestUrl.toString();
         lastRequest.response = {
-          status: error.response.statusCode,
+          status: error.response?.statusCode ?? 'response is undefined', // response is undefined when got throws
           body: response?.error ?? response?.message,
         };
 
