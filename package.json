@@ -33,7 +33,8 @@
     "format:fix": "prettier --loglevel warn --write \"./**/*.{js,jsx,css,md,json}\" --ignore-path ./.gitignore",
     "fix": "npm run format:fix && npm run lint:fix",
     "lint": "eslint ./src --ext .jsx,.js --ignore-path ./.gitignore",
-    "lint:fix": "eslint ./src --ext .jsx,.js --quiet --fix --ignore-path ./.gitignore"
+    "lint:fix": "eslint ./src --ext .jsx,.js --quiet --fix --ignore-path ./.gitignore",
+    "upload-debug-symbols": "node sentry-symbols.js"
   },
   "main": ".webpack/main",
   "config": {
