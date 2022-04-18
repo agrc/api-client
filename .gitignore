@@ -91,3 +91,4 @@ ugrc-api-client*
 
 # Sentry
 sentry.properties
+.electron-symbols

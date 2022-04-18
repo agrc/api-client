@@ -44,3 +44,7 @@ An apple developer certificate is required to sign the application for distribut
 ## Deploying a new version
 
 GitHub Actions will create and update a draft release with every merged pull request. When a release is desired, publish the [draft release](https://github.com/agrc/api-client/releases). Another GitHub action will sign the binaries and upload them to the release assets. The API Clients will silently download the update and the installation will occur on the next restart of the app.
+
+### Uploading Debug Symbols to Sentry
+
+Each time Electron is upgraded, new debug symbols need to be uploaded to the Sentry servers. This can be done by creating a `sentry.properties` file and then running: `npm run upload-debug-symbols`.
