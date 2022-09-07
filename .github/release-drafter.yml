@@ -13,7 +13,7 @@ categories:
     labels:
       - 'chore'
       - 'style'
-  - title: '📖 Documentaion Improvements'
+  - title: '📖 Documentation Improvements'
     label: 'documentation'
 
 version-resolver:
