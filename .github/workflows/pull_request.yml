@@ -1,7 +1,9 @@
-name: Label pull requests
+name: Pull Request Events
+
 on:
   pull_request:
     types: [opened, synchronize]
+
 jobs:
   pr-labeler:
     runs-on: ubuntu-latest
