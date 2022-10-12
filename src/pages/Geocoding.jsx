@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, Prompt } from 'react-router-dom';
 import humanizeDuration from 'humanize-duration';
-import { DocumentTextIcon } from '@heroicons/react/outline';
+import { DocumentTextIcon } from '@heroicons/react/24/outline';
 import { useErrorHandler } from 'react-error-boundary';
 import { useGeocodeContext } from '../components/GeocodeContext.js';
 
