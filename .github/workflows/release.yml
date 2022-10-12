@@ -1,9 +1,12 @@
-name: deploy
+name: Release Events
+
 on:
   release:
     types: [published]
+
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   macos:
     name: Publish macOS app to release
@@ -12,10 +15,10 @@ jobs:
       name: prod
     steps:
       - name: Set up code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: lts/*
           cache: npm
@@ -51,10 +54,10 @@ jobs:
       name: prod
     steps:
       - name: Set up code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: lts/*
           cache: npm
