@@ -113,7 +113,9 @@ export default function Data() {
     noKeyboard: true,
     multiple: false,
     maxFiles: 1,
-    accept: acceptableFileTypes.join(),
+    accept: {
+      'text/csv': acceptableFileTypes,
+    },
     onDrop,
     useFsAccessApi: false,
   });
