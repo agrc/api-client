@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { KeyIcon } from '@heroicons/react/outline';
+import { KeyIcon } from '@heroicons/react/24/outline';
 import { useGeocodeContext } from './GeocodeContext';
 
 export default function QuickApiKey() {

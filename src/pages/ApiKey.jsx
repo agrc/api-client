@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ThumbUpIcon, ThumbDownIcon } from '@heroicons/react/outline';
+import { HandThumbUpIcon, HandThumbDownIcon } from '@heroicons/react/24/outline';
 import { useErrorHandler } from 'react-error-boundary';
 import { useGeocodeContext } from '../components/GeocodeContext';
 import { Spinner } from '../components/PageElements';
@@ -114,9 +114,9 @@ export default function ApiKey() {
         <div className="mt-6 flex flex-col items-center justify-center">
           <div className="font-bold tracking-tight text-gray-600">Is my key ok?</div>
           {keyStatus === 'valid' ? (
-            <ThumbUpIcon className="w-16 text-indigo-900" />
+            <HandThumbUpIcon className="w-16 text-indigo-900" />
           ) : (
-            <ThumbDownIcon className="w-16 text-amber-500" />
+            <HandThumbDownIcon className="w-16 text-amber-500" />
           )}
         </div>
       </section>

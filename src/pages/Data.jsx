@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
-import { DocumentAddIcon, DocumentRemoveIcon } from '@heroicons/react/outline';
+import { DocumentPlusIcon, DocumentMinusIcon } from '@heroicons/react/24/outline';
 import { useErrorHandler } from 'react-error-boundary';
 import DropzoneMessaging from '../components/DropzoneMessaging.jsx';
 import FieldLinker from '../components/FieldLinker.jsx';
@@ -186,12 +186,12 @@ export default function Data() {
             onDrop(null);
           }}
         >
-          <DocumentRemoveIcon className="mr-2 inline-block h-6 w-6 justify-between self-center" />
+          <DocumentMinusIcon className="mr-2 inline-block h-6 w-6 justify-between self-center" />
           Clear
         </button>
       ) : (
         <button className="flex flex-row" type="button" onClick={open}>
-          <DocumentAddIcon className="mr-2 inline-block h-6 w-6 justify-between self-center" />
+          <DocumentPlusIcon className="mr-2 inline-block h-6 w-6 justify-between self-center" />
           Choose File
         </button>
       )}
