@@ -99,7 +99,7 @@
     "file-loader": "^6.2.0",
     "got": "^12.5.2",
     "humanize-duration": "^3.27.3",
-    "immer": "^9.0.15",
+    "immer": "^9.0.16",
     "md5": "^2.3.0",
     "node-machine-id": "^1.1.12",
     "os-browserify": "^0.3.0",
