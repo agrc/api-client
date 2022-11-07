@@ -97,9 +97,9 @@ const config = {
     },
   ],
   plugins: [
-    [
-      '@electron-forge/plugin-webpack',
-      {
+    {
+      name: '@electron-forge/plugin-webpack',
+      config: {
         devContentSecurityPolicy:
           "default-src 'self' 'unsafe-inline' data:; script-src 'self' 'unsafe-eval' 'unsafe-inline' data:; connect-src 'self' 'unsafe-inline' *.ingest.sentry.io data:;",
         mainConfig: './webpack.main.config.js',
@@ -114,7 +114,7 @@ const config = {
           ],
         },
       },
-    ],
+    },
   ],
   buildIdentifier: 'prod',
 };
