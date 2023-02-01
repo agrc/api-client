@@ -88,7 +88,7 @@
     "assert": "^2.0.0",
     "clsx": "^1.2.1",
     "crypto-browserify": "^3.12.0",
-    "csv-parse": "^5.3.3",
+    "csv-parse": "^5.3.4",
     "csv-stringify": "^6.2.3",
     "electron-log": "^4.4.8",
     "electron-squirrel-startup": "^1.0.0",
