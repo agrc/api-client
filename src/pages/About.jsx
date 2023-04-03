@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useErrorHandler } from 'react-error-boundary';
+import { useErrorBoundary } from 'react-error-boundary';
 import logo from '../assets/logo.svg';
 
 export default function About() {
@@ -12,7 +12,7 @@ export default function About() {
     repo: 'https://github.com/agrc/api-client',
   });
   const history = useHistory();
-  const handleError = useErrorHandler();
+  const handleError = useErrorBoundary();
 
   useEffect(() => {
     window.ugrc.getAppInfo().then(setInfo).catch(handleError);

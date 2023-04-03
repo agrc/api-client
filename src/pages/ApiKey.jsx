@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { HandThumbUpIcon, HandThumbDownIcon } from '@heroicons/react/24/outline';
-import { useErrorHandler } from 'react-error-boundary';
+import { useErrorBoundary } from 'react-error-boundary';
 import { useGeocodeContext } from '../components/GeocodeContext';
 import { Spinner } from '../components/PageElements';
 
@@ -10,7 +10,7 @@ export default function ApiKey() {
   const history = useHistory();
   const [keyStatus, setKeyStatus] = useState('unknown');
   const [inputValue, setInputValue] = useState('');
-  const handleError = useErrorHandler();
+  const handleError = useErrorBoundary();
 
   useEffect(() => {
     window.ugrc
@@ -90,7 +90,7 @@ export default function ApiKey() {
             API Key
           </label>
           <input
-            className="ml-4 h-12 max-w-lg flex-grow rounded-none rounded-l border-0 border-t border-b border-l text-2xl focus:ring-0"
+            className="ml-4 h-12 max-w-lg flex-grow rounded-none rounded-l border-0 border-b border-l border-t text-2xl focus:ring-0"
             type="text"
             id="apiKey"
             maxLength="19"
@@ -106,7 +106,7 @@ export default function ApiKey() {
             }}
             type="button"
             disabled={keyStatus === 'invalid'}
-            className="h-12 w-24 rounded-none rounded-r border-0 border-t border-b border-r"
+            className="h-12 w-24 rounded-none rounded-r border-0 border-b border-r border-t"
           >
             {keyStatus === 'validating' ? <Spinner /> : <>Next</>}
           </button>

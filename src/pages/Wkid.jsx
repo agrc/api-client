@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { RadioGroup } from '@headlessui/react';
 import clsx from 'clsx';
-import { useErrorHandler } from 'react-error-boundary';
+import { useErrorBoundary } from 'react-error-boundary';
 
 export default function Wkid() {
   const [wkid, setWkid] = useState('');
   const [customWkid, setCustomWkid] = useState('');
   const history = useHistory();
-  const handleError = useErrorHandler();
+  const handleError = useErrorBoundary();
 
   useEffect(() => {
     window.ugrc
