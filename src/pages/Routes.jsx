@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Link, withRouter, MemoryRouter as Router, Route, Switch } from 'react-router-dom';
 import { useNavigatorStatus } from 'react-navigator-status';
-import { ErrorBoundary, useErrorHandler } from 'react-error-boundary';
+import { ErrorBoundary, useErrorBoundary } from 'react-error-boundary';
 import GeocodeContextProvider from '../components/GeocodeContext.js';
 import { ApiKey, Data, Plan, About, Geocoding, Wkid, Offline, ErrorPage } from '.';
 import { Chrome, Header, Footer } from '../components/PageElements';
@@ -35,7 +35,7 @@ const pages = [
 
 export default function Routes() {
   const online = useNavigatorStatus();
-  const handleError = useErrorHandler();
+  const handleError = useErrorBoundary();
 
   useEffect(() => {
     window.addEventListener('keyup', (event) => {

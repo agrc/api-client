@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import { DocumentPlusIcon, DocumentMinusIcon } from '@heroicons/react/24/outline';
-import { useErrorHandler } from 'react-error-boundary';
+import { useErrorBoundary } from 'react-error-boundary';
 import DropzoneMessaging from '../components/DropzoneMessaging.jsx';
 import FieldLinker from '../components/FieldLinker.jsx';
 import { useGeocodeContext } from '../components/GeocodeContext.js';
@@ -124,7 +124,7 @@ export default function Data() {
     zone: [],
   });
   const history = useHistory();
-  const handleError = useErrorHandler();
+  const handleError = useErrorBoundary();
 
   useEffect(() => {
     window.addEventListener('keyup', (event) => {

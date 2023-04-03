@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, Prompt } from 'react-router-dom';
 import humanizeDuration from 'humanize-duration';
 import { DocumentTextIcon } from '@heroicons/react/24/outline';
-import { useErrorHandler } from 'react-error-boundary';
+import { useErrorBoundary } from 'react-error-boundary';
 import { useGeocodeContext } from '../components/GeocodeContext.js';
 
 const numberFormat = new Intl.NumberFormat('en-US');
@@ -21,7 +21,7 @@ export default function Geocoding() {
     lastRequest: null,
     failures: 0,
   });
-  const handleError = useErrorHandler();
+  const handleError = useErrorBoundary();
 
   const onDragStart = (event) => {
     event.preventDefault();
