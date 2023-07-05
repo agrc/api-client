@@ -42,9 +42,9 @@ jobs:
         run: npm run publish
         env:
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
-          APPLE_BUNDLE_ID: ${{ secrets.APPLE_BUNDLE_ID }}
           APPLE_USER_ID: ${{ secrets.APPLE_USER_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   windows:

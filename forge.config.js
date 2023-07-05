@@ -25,9 +25,11 @@ const config = {
       'entitlements-inherit': 'build/entitlements.plist',
     },
     osxNotarize: {
+      tool: 'notarytool',
       appBundleId: process.env.APPLE_BUNDLE_ID,
       appleId: process.env.APPLE_USER_ID,
       appleIdPassword: process.env.APPLE_PASSWORD,
+      teamId: process.env.APPLE_TEAM_ID,
     },
   },
   makers: [
