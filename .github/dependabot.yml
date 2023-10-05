@@ -1,28 +1,18 @@
 version: 2
 updates:
-  - package-ecosystem: 'npm'
-    directory: '/'
+  - package-ecosystem: npm
+    directory: /
     schedule:
-      interval: 'monthly'
-    groups:
-      safe-production-dependencies:
-        dependency-type: 'production'
-        update-types: ['minor', 'patch']
-      safe-development-dependencies:
-        dependency-type: 'development'
-        update-types: ['minor', 'patch']
-      major-production-dependencies:
-        dependency-type: 'production'
-        update-types: ['major']
-      major-development-dependencies:
-        dependency-type: 'development'
-        update-types: ['major']
+      interval: monthly
+      groups:
+        safe-dependencies:
+          update-types: ['minor', 'patch']
+        major-dependencies:
+          update-types: ['major']
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: monthly
     groups:
-      production-dependencies:
+      ci-dependencies:
         dependency-type: 'production'
-      development-dependencies:
-        dependency-type: 'development'
