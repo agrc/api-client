@@ -15,7 +15,7 @@ jobs:
       name: prod
     steps:
       - name: Set up code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -54,7 +54,7 @@ jobs:
       name: prod
     steps:
       - name: Set up code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
