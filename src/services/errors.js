@@ -1,7 +1,6 @@
 const unhandled = require('electron-unhandled');
 const { app, ipcMain, shell } = require('electron');
-const { openNewGitHubIssue } = require('electron-util');
-const { trackException } = require('./analytics');
+import { openNewGitHubIssue } from 'electron-util/main';
 import osName from 'os-name';
 
 unhandled({
