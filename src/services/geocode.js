@@ -2,7 +2,6 @@ const { app, ipcMain } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const log = require('electron-log');
-const md5 = require('md5');
 import { parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
 import got from 'got';
