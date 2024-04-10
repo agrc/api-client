@@ -40,6 +40,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: 🐍 Set up python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: 💻 Set up app DMG
+        run: |
+          python3 -m pip install setuptools
+          npm install -g appdmg@0.6.6
+
       - name: Build, Package, & Release
         run: npm run publish
         env:
@@ -49,6 +59,7 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   windows:
     name: Publish windows app to release
     runs-on: windows-latest
