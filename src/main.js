@@ -6,10 +6,10 @@ require('./services/errors');
 require('./services/config');
 require('./services/csv');
 require('./services/geocode');
-const { enforceMacOSAppLocation, is } = require('electron-util');
-const { trackException } = require('./services/analytics');
+const { updateElectronApp } = require('update-electron-app');
+import { enforceMacOSAppLocation, isDev } from 'electron-util/main';
 
-require('update-electron-app')({
+updateElectronApp({
   updateInterval: '1 hour',
   logger: require('electron-log'),
   notifyUser: false,
