@@ -1,7 +1,6 @@
 require('./services/sentry');
 const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
 const windowStateKeeper = require('electron-window-state');
-const path = require('path');
 require('./services/errors');
 require('./services/config');
 require('./services/csv');
@@ -43,7 +42,7 @@ const createWindow = () => {
       color: 'rgba(0, 0, 0, 0)',
     },
     webPreferences: {
-      preload: path.join(__dirname, 'services', 'preload.js'),
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       sandbox: true,
       nodeIntegration: false,
       contextIsolation: true,
