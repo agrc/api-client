@@ -5,7 +5,6 @@ const log = require('electron-log');
 import { parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
 import got from 'got';
-import { trackEvent } from './analytics.js';
 // import '../../tests/mocks/server';
 
 const SPACES = / +/;
@@ -76,7 +75,7 @@ export const checkApiKey = async (apiKey) => {
 
   const isValid = response.status === 200;
 
-  trackEvent({ category: 'api-key-check', label: isValid });
+  console.log({ category: 'api-key-check', label: isValid });
 
   return isValid;
 };
@@ -107,9 +106,6 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
       body: null,
     },
   };
-
-  trackEvent({ category: 'geocode', label: `${totalRows}, ${md5(filePath)}` });
-  trackEvent({ category: 'wkid', label: wkid });
 
   for await (const record of parser) {
     if (cancelled) {
@@ -219,7 +215,6 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
 
     if (failures === fastFailLimit && fastFailLimit === rowsProcessed) {
       cancelGeocode('fail-fast');
-      trackEvent({ category: 'geocoding-cancelled', label: 'fast-fail' });
     }
 
     await coolYourJets();
@@ -237,13 +232,6 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
     lastRequest,
   };
 
-  trackEvent({
-    category: 'stats',
-    label: `failures: ${completionStats.failures}, averageScore: ${completionStats.averageScore}, activeMatchRate: ${
-      completionStats.activeMatchRate
-    }, for ${md5(filePath)}`,
-  });
-
   event.sender.send('onGeocodingUpdate', completionStats);
 };
 
@@ -253,15 +241,7 @@ ipcMain.handle('checkApiKey', (_, content) => {
 ipcMain.handle('geocode', (event, content) => {
   return geocode(event, content);
 });
-ipcMain.handle('cancelGeocode', (_, content) => {
-  let reason = content;
-
-  if (content === 'back') {
-    reason = 'user-navigated';
-  }
-
-  trackEvent({ category: 'geocoding-cancelled', label: reason });
-
+ipcMain.handle('cancelGeocode', () => {
   return cancelGeocode();
 });
 ipcMain.handle('onDragStart', (event) => {

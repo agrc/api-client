@@ -120,7 +120,7 @@ app.on('web-contents-created', (_, contents) => {
 
       return true;
     } catch (e) {
-      trackException(`non-safe url request: ${urlString}`, false);
+      console.error(`non-safe url request: ${urlString}`, false);
 
       return false;
     }

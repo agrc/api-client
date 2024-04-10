@@ -30,7 +30,7 @@ export default function Data() {
   const [error, setError] = useState();
   const [validation, setValidation] = useState('idle');
 
-  const onDrop = async (files, _, event) => {
+  const onDrop = async (files) => {
     if (!files) {
       geocodeDispatch({
         type: 'RESET',
@@ -39,11 +39,6 @@ export default function Data() {
 
       return;
     }
-
-    window.ugrc.trackEvent({
-      category: 'file-selection-type',
-      label: event.type === 'drop' ? 'drag-and-drop' : 'file-dialog',
-    });
 
     const file = files[0];
     setError();

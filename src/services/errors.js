@@ -8,7 +8,7 @@ unhandled({
     openIssue(error.message, error.stack);
   },
   logger: (error) => {
-    trackException(error, true);
+    console.error(error, true);
   },
 });
 

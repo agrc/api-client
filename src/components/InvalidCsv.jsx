@@ -19,16 +19,6 @@ export default function InvalidCsv({ errorDetails }) {
 
   if (Object.keys(errors).includes(code)) {
     message = errors[code];
-
-    window.ugrc.trackEvent({
-      category: 'invalid-file-type',
-      label: code,
-    });
-  } else {
-    window.ugrc.trackEvent({
-      category: 'unhandled-invalid-file-type',
-      label: code,
-    });
   }
 
   return (
