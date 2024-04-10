@@ -57,8 +57,8 @@ ipcMain.on('openEmail', (_, { message, stack }) => {
 
   setImmediate(() =>
     shell.openExternal(
-      `mailto:ugrc-developers@utah.gov?subject=API Client - App Crash Report&body=${body.replace(/\n/gm, '%0D%0A')}`
-    )
+      `mailto:ugrc-developers@utah.gov?subject=API Client - App Crash Report&body=${body.replace(/\n/gm, '%0D%0A')}`,
+    ),
   );
 });
 
