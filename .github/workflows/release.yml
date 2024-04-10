@@ -14,43 +14,43 @@ jobs:
     environment:
       name: prod
     steps:
-      - name: Set up code
+      - name: ⬇️ Set up code
         uses: actions/checkout@v4
         with:
           show-progress: false
 
-      - name: Set up Node.js
+      - name: ⎔ Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: npm
-
-      - name: Bump version
-        id: bump-version
-        run: |
-          TAG=$(gh release view --json tagName --jq ".tagName")
-          npm version $TAG --no-git-tag-version
-
-      - name: Set up signing certificates
-        uses: apple-actions/import-codesign-certs@v2
-        with:
-          p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
-          p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-
-      - name: Install dependencies
-        run: npm ci
 
       - name: 🐍 Set up python
         uses: actions/setup-python@v5
         with:
           python-version: 3.12
 
+      - name: 👊 Bump version
+        id: bump-version
+        run: |
+          TAG=$(gh release view --json tagName --jq ".tagName")
+          npm version $TAG --no-git-tag-version
+
+      - name: 🧑‍🎓 Set up signing certificates
+        uses: apple-actions/import-codesign-certs@v2
+        with:
+          p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
+          p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+
       - name: 💻 Set up app DMG
         run: |
           python3 -m pip install setuptools
           npm install -g appdmg@0.6.6
 
-      - name: Build, Package, & Release
+      - name: 📥 Install dependencies
+        run: npm ci
+
+      - name: 🚀 Build, Package, & Release
         run: npm run publish
         env:
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
