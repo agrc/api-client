@@ -57,7 +57,7 @@ export default function ApiKey() {
   };
 
   return (
-    <article>
+    <article className="text-zinc-700">
       <p>
         Welcome to the{' '}
         <a href="https://gis.utah.gov/products/sgid/address/api-client/" target="_blank" rel="noreferrer">
@@ -70,7 +70,7 @@ export default function ApiKey() {
         . To get started you will need a complimentary account and an API key.
       </p>
       <h2 className="-rotate-3 text-center">
-        <span className="block">Ready?</span>
+        <span className="block text-zinc-700">Ready?</span>
         <span className="block text-indigo-600">Let&apos;s go!</span>
       </h2>
       <ol className="mb-4 ml-10 list-decimal text-lg">

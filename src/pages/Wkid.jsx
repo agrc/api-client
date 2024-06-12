@@ -27,7 +27,7 @@ export default function Wkid() {
       <Link type="back-button" to="/data">
         &larr; Back
       </Link>
-      <h2>Choose your spatial reference</h2>
+      <h2 className="text-zinc-700">Choose your spatial reference</h2>
       <p className="mb-2 text-base">
         The way the coordinates are returned from the API can vary based on the spatial reference. They can be returned
         as meters, feet, or decimal degrees. Below are the three most used spatial references. If you require something
