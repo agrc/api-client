@@ -32,7 +32,7 @@ export default function Geocoding() {
     (reason) => {
       window.ugrc.cancelGeocode(reason).catch(handleError);
     },
-    [handleError]
+    [handleError],
   );
 
   useEffect(() => {
@@ -180,6 +180,7 @@ export default function Geocoding() {
         &larr; Back
       </Link>
       <h2>Geocoding progress</h2>
+      <div className="pb-6">{getElementsByStatus(stats.status)}</div>
       <progress className="h-16 w-full" value={progress}>
         {progress}%
       </progress>
@@ -220,7 +221,6 @@ export default function Geocoding() {
             </dd>
           </div>
         </dl>
-        {getElementsByStatus(stats.status)}
       </section>
     </article>
   );
