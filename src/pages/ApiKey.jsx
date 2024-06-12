@@ -59,8 +59,15 @@ export default function ApiKey() {
   return (
     <article>
       <p>
-        Welcome to the UGRC API Client. This is the official client for geocoding with the UGRC API. To get started you
-        will need a complimentary account and an API key.
+        Welcome to the{' '}
+        <a href="https://gis.utah.gov/products/sgid/address/api-client/" target="_blank" rel="noreferrer">
+          UGRC API Client
+        </a>
+        . This is the official client for geocoding with the{' '}
+        <a href="https://api.mapserv.utah.gov" target="_blank" rel="noreferrer">
+          UGRC API
+        </a>
+        . To get started you will need a complimentary account and an API key.
       </p>
       <h2 className="-rotate-3 text-center">
         <span className="block">Ready?</span>
@@ -72,17 +79,16 @@ export default function ApiKey() {
           <a href="https://developer.mapserv.utah.gov/AccountAccess" target="_blank" rel="noreferrer">
             Developer Console
           </a>{' '}
-          and create an account
+          and login with Utahid
         </li>
-        <li>Confirm your email address with the UGRC API</li>
         <li>
-          Create a{' '}
-          <a href="https://developer.mapserv.utah.gov/secure/GenerateKey" target="_blank" rel="noreferrer">
-            browser application key
+          Browse to the{' '}
+          <a href="https://developer.mapserv.utah.gov/self-service/keys" target="_blank" rel="noreferrer">
+            manage keys
           </a>{' '}
-          with the <code>URL Pattern</code> set to <code>api-client.ugrc.utah.gov</code>
+          page and locate your 🚀️ UGRC API Client key
         </li>
-        <li>Copy and paste the newly created key into the box below</li>
+        <li>Copy and paste the key into the box below</li>
       </ol>
       <section className="mt-10 flex flex-col justify-center rounded border bg-gray-50 p-6 pb-2 shadow">
         <div className="flex items-center">
