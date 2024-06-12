@@ -185,7 +185,7 @@ export default function Geocoding() {
       <Link type="back-button" to="/plan">
         &larr; Back
       </Link>
-      <h2>Geocoding progress</h2>
+      <h2 className="text-zinc-700">Geocoding progress</h2>
       <div className="pb-6">{getElementsByStatus(stats.status)}</div>
       <progress className="h-16 w-full" value={progress}>
         {progress}%
