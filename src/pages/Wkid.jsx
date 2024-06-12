@@ -49,7 +49,7 @@ export default function Wkid() {
                   {
                     'ring-gray-300': !checked,
                     'bg-gray-50 ring-pink-400': checked,
-                  }
+                  },
                 )}
               >
                 <h2 className="my-0 text-indigo-600">26912</h2>
@@ -66,7 +66,7 @@ export default function Wkid() {
                   {
                     'ring-gray-300': !checked,
                     'bg-gray-50 ring-pink-400': checked,
-                  }
+                  },
                 )}
               >
                 <h2 className="my-0 text-indigo-600">4326</h2>
@@ -83,7 +83,7 @@ export default function Wkid() {
                   {
                     'ring-gray-300': !checked,
                     'bg-gray-50 ring-pink-400': checked,
-                  }
+                  },
                 )}
               >
                 <h2 className="my-0 text-indigo-600">3857</h2>
