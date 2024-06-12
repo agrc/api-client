@@ -169,7 +169,7 @@ export default function Data() {
       <Link type="back-button" to="/?skip-forward=1">
         &larr; Back
       </Link>
-      <h2>Add your data</h2>
+      <h2 className="text-zinc-700">Add your data</h2>
       <AddressParts />
       {}
       {error && <InvalidCsv errorDetails={error} />}

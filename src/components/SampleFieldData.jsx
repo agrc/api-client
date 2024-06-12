@@ -1,7 +1,7 @@
 export default function SampleFieldData({ sample, street, zone }) {
   return (
     <section className="flex flex-col">
-      <h3>Sample Geocode Data</h3>
+      <h3 className="text-zinc-700">Sample Geocode Data</h3>
       <section className="flex w-min items-stretch justify-around divide-x-2 divide-gray-100 self-center rounded-lg border text-center shadow-lg">
         <Label label="Street address" value={sample[street]} />
         <Label label="Zone" value={sample[zone]} />
