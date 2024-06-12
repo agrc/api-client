@@ -5,13 +5,22 @@ import url from 'node:url';
 import log from 'electron-log/main';
 import { parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
-import got from 'got';
+import ky from 'ky';
 // import '../../tests/mocks/server';
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const SPACES = / +/;
 const INVALID_CHARS = /[^a-zA-Z0-9]/g;
+
+const client = ky.create({
+  prefixUrl: 'https://api.mapserv.utah.gov/api/v1/',
+  headers: {
+    'x-agrc-geocode-client': 'electron-api-client',
+    'x-agrc-geocode-client-version': app.getVersion(),
+    Referer: 'https://api-client.ugrc.utah.gov/',
+  },
+});
 
 const cleanseStreet = (data) => {
   const replacement = ' ';
@@ -47,26 +56,19 @@ export const cancelGeocode = (status = 'cancelled') => {
   cancelled = status;
 };
 
-const timeout = { request: 10000 };
-
 export const checkApiKey = async (apiKey) => {
   log.info(`Checking API key: ${apiKey}`);
 
   let response;
 
   try {
-    response = await got(`geocode/326 east south temple street/slc`, {
-      headers: {
-        'x-agrc-geocode-client': 'electron-api-client',
-        'x-agrc-geocode-client-version': app.getVersion(),
-        Referer: 'https://api-client.ugrc.utah.gov/',
-      },
-      searchParams: {
-        apiKey: apiKey,
-      },
-      prefixUrl: 'https://api.mapserv.utah.gov/api/v1/',
-      timeout,
-    }).json();
+    response = await client
+      .get(`geocode/326 east south temple street/slc`, {
+        searchParams: {
+          apiKey: apiKey,
+        },
+      })
+      .json();
   } catch (error) {
     if (error?.response?.body) {
       log.error(`Error checking api key: ${error.response.body}`);
@@ -150,19 +152,14 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
       };
 
       try {
-        response = await got(`geocode/${street}/${zone}`, {
-          headers: {
-            'x-agrc-geocode-client': 'electron-api-client',
-            'x-agrc-geocode-client-version': app.getVersion(),
-            Referer: 'https://api-client.ugrc.utah.gov/',
-          },
-          searchParams: {
-            apiKey: apiKey,
-            spatialReference: wkid,
-          },
-          prefixUrl: 'https://api.mapserv.utah.gov/api/v1/',
-          timeout,
-        }).json();
+        response = await client
+          .get(`geocode/${street}/${zone}`, {
+            searchParams: {
+              apiKey: apiKey,
+              spatialReference: wkid,
+            },
+          })
+          .json();
 
         lastRequest.response = {
           status: response.status,
@@ -172,14 +169,14 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
         log.error(`Error geocoding street [${street}] zone [${zone}]: ${error}`);
 
         try {
-          response = JSON.parse(error.response.body);
+          response = await error.response.json();
         } catch {
           response = { error: error.message };
         }
 
-        lastRequest.request.url = error?.request?.requestUrl.toString();
+        lastRequest.request.url = error?.request?.url.toString();
         lastRequest.response = {
-          status: error.response?.statusCode ?? 'response is undefined', // response is undefined when got throws
+          status: error.response?.status ?? 'response is undefined', // response is undefined when got throws
           body: response?.error ?? response?.message,
         };
 
