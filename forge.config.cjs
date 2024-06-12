@@ -1,11 +1,14 @@
-const path = require('path');
+const { FusesPlugin } = require('@electron-forge/plugin-fuses');
+const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 const packageJson = require('./package.json');
+const path = require('node:path');
 require('dotenv').config();
 
 const { version } = packageJson;
+
 const assets = path.resolve(__dirname, 'src', 'assets');
 
-const config = {
+module.exports = {
   packagerConfig: {
     name: 'UGRC API Client',
     executableName: 'ugrc-api-client',
@@ -32,6 +35,7 @@ const config = {
       teamId: process.env.APPLE_TEAM_ID,
     },
   },
+  rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
@@ -100,28 +104,41 @@ const config = {
   ],
   plugins: [
     {
-      name: '@electron-forge/plugin-webpack',
+      name: '@electron-forge/plugin-vite',
       config: {
         devContentSecurityPolicy:
           "default-src 'self' 'unsafe-inline' data:; script-src 'self' 'unsafe-eval' 'unsafe-inline' data:; connect-src 'self' 'unsafe-inline' *.ingest.sentry.io data:;",
-        mainConfig: './webpack.main.config.js',
-        renderer: {
-          config: './webpack.renderer.config.js',
-          entryPoints: [
-            {
-              html: './src/index.html',
-              js: './src/renderer.js',
-              name: 'main_window',
-              preload: {
-                js: './src/services/preload.js',
-              },
-            },
-          ],
-        },
+        // `build` can specify multiple entry builds, which can be Main process, Preload scripts, Worker process, etc.
+        // If you are familiar with Vite configuration, it will look really familiar.
+        build: [
+          {
+            // `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
+            entry: 'src/main.js',
+            config: 'vite.main.config.js',
+          },
+          {
+            entry: 'src/preload.js',
+            config: 'vite.preload.config.js',
+          },
+        ],
+        renderer: [
+          {
+            name: 'main_window',
+            config: 'vite.renderer.config.js',
+          },
+        ],
       },
     },
+    // Fuses are used to enable/disable various Electron functionality
+    // at package time, before code signing the application
+    new FusesPlugin({
+      version: FuseVersion.V1,
+      [FuseV1Options.RunAsNode]: false,
+      [FuseV1Options.EnableCookieEncryption]: true,
+      [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
+      [FuseV1Options.EnableNodeCliInspectArguments]: false,
+      [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: true,
+      [FuseV1Options.OnlyLoadAppFromAsar]: true,
+    }),
   ],
-  buildIdentifier: 'prod',
 };
-
-module.exports = config;

@@ -1,5 +1,5 @@
-const { ipcMain } = require('electron');
-const fs = require('fs');
+import { ipcMain } from 'electron';
+import fs from 'fs';
 import { parse } from 'csv-parse';
 import { CSV_PARSE_ERROR } from '../components/InvalidCsv.jsx';
 

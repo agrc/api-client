@@ -3,7 +3,7 @@ import { Link, Prompt } from 'react-router-dom';
 import humanizeDuration from 'humanize-duration';
 import { DocumentTextIcon } from '@heroicons/react/24/outline';
 import { useErrorBoundary } from 'react-error-boundary';
-import { useGeocodeContext } from '../components/GeocodeContext.js';
+import { useGeocodeContext } from '../components/GeocodeContext.jsx';
 
 const numberFormat = new Intl.NumberFormat('en-US');
 const percentFormatter = new Intl.NumberFormat('en-US', { style: 'percent' });
