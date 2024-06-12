@@ -1,6 +1,6 @@
 import { HandThumbUpIcon } from '@heroicons/react/24/outline';
-import { Spinner } from './PageElements';
-import { useGeocodeContext } from './GeocodeContext.js';
+import { Spinner } from './PageElements/index.js';
+import { useGeocodeContext } from './GeocodeContext.jsx';
 
 const DropzoneMessaging = ({ isDragActive, file, validation }) => {
   const { geocodeContext } = useGeocodeContext();

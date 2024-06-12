@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Link, withRouter, MemoryRouter as Router, Route, Switch } from 'react-router-dom';
 import { useNavigatorStatus } from 'react-navigator-status';
 import { ErrorBoundary, useErrorBoundary } from 'react-error-boundary';
-import GeocodeContextProvider from '../components/GeocodeContext.js';
+import GeocodeContextProvider from '../components/GeocodeContext.jsx';
 import { ApiKey, Data, Plan, About, Geocoding, Wkid, Offline, ErrorPage } from '.';
 import { Chrome, Header, Footer } from '../components/PageElements';
 

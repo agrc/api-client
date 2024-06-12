@@ -5,7 +5,7 @@ import { DocumentPlusIcon, DocumentMinusIcon } from '@heroicons/react/24/outline
 import { useErrorBoundary } from 'react-error-boundary';
 import DropzoneMessaging from '../components/DropzoneMessaging.jsx';
 import FieldLinker from '../components/FieldLinker.jsx';
-import { useGeocodeContext } from '../components/GeocodeContext.js';
+import { useGeocodeContext } from '../components/GeocodeContext.jsx';
 import AddressParts from '../components/AddressParts.jsx';
 import SampleFieldData from '../components/SampleFieldData.jsx';
 import InvalidCsv, { CSV_PARSE_ERROR } from '../components/InvalidCsv.jsx';

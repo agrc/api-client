@@ -1,5 +1,5 @@
-const { ipcMain } = require('electron');
-const Store = require('electron-store');
+import { ipcMain } from 'electron';
+import Store from 'electron-store';
 
 const store = new Store({
   schema: {

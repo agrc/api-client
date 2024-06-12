@@ -1,12 +1,15 @@
-const { app, ipcMain } = require('electron');
-const fs = require('fs');
-const path = require('path');
-const log = require('electron-log');
+import { app, ipcMain } from 'electron';
+import fs from 'node:fs';
+import path from 'node:path';
+import url from 'node:url';
+import log from 'electron-log/main';
 import { parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
 import got from 'got';
 // import '../../tests/mocks/server';
 
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const SPACES = / +/;
 const INVALID_CHARS = /[^a-zA-Z0-9]/g;
 

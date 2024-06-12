@@ -1,22 +1,28 @@
-require('./services/sentry');
-const { app, BrowserWindow, dialog, ipcMain, shell } = require('electron');
-const windowStateKeeper = require('electron-window-state');
-require('./services/errors');
-require('./services/config');
-require('./services/csv');
-require('./services/geocode');
-const { updateElectronApp } = require('update-electron-app');
+import path from 'node:path';
+import url from 'node:url';
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
+import windowStateKeeper from 'electron-window-state';
+import { updateElectronApp } from 'update-electron-app';
 import { enforceMacOSAppLocation, isDev } from 'electron-util/main';
+import logger from 'electron-log/main';
+import ElectronSquirrelStartup from 'electron-squirrel-startup';
+
+import './services/errors.js';
+import './services/config.js';
+import './services/csv.js';
+import './services/geocode.js';
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 updateElectronApp({
   updateInterval: '1 hour',
-  logger: require('electron-log'),
+  logger: logger,
   notifyUser: false,
 });
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
-  // eslint-disable-line global-require
+if (ElectronSquirrelStartup) {
   app.quit();
 }
 
@@ -24,15 +30,14 @@ const createWindow = () => {
   enforceMacOSAppLocation();
 
   const mainWindowState = windowStateKeeper({
-    defaultWidth: 700,
-    defaultHeight: 1000,
+    width: 700,
+    height: 1000,
     fullScreen: false,
   });
 
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: mainWindowState.width,
-    height: mainWindowState.height,
+    ...mainWindowState,
     x: mainWindowState.x,
     y: mainWindowState.y,
     minWidth: 525,
@@ -42,20 +47,24 @@ const createWindow = () => {
       color: 'rgba(0, 0, 0, 0)',
     },
     webPreferences: {
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+      preload: path.join(__dirname, 'preload.mjs'),
       sandbox: true,
       nodeIntegration: false,
       contextIsolation: true,
       autoHideMenuBar: true,
+      spellcheck: false,
     },
   });
 
   mainWindowState.manage(mainWindow);
 
   // and load the index.html of the app.
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+  } else {
+    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+  }
 
-  // Open the DevTools.
   if (isDev) {
     mainWindow.webContents.openDevTools();
   }
@@ -79,7 +88,17 @@ const createWindow = () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.whenReady().then(() => {
+  createWindow();
+
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -90,17 +109,12 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('activate', () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
-});
-
+// In this file you can include the rest of your app's specific main process
+// code. You can also put them in separate files and import them here.
 app.on('web-contents-created', (_, contents) => {
   const isSafeForExternalOpen = (urlString) => {
     const safeHosts = [
+      'gis.utah.gov',
       'github.com',
       'api.mapserv.utah.gov',
       'developer.mapserv.utah.gov',

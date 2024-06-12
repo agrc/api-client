@@ -1,6 +1,6 @@
-const unhandled = require('electron-unhandled');
-const { app, ipcMain, shell } = require('electron');
-import { openNewGitHubIssue } from 'electron-util/main';
+import { app, ipcMain, shell } from 'electron';
+import unhandled from 'electron-unhandled';
+import { openNewGitHubIssue } from 'electron-util';
 import osName from 'os-name';
 
 unhandled({
