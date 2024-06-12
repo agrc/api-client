@@ -1,8 +1,8 @@
 let Sentry;
 if (global.process) {
-  Sentry = require('@sentry/electron/main');
+  Sentry = import('@sentry/electron/main');
 } else {
-  Sentry = require('@sentry/electron/renderer');
+  Sentry = import('@sentry/electron/renderer');
 }
 
 Sentry.init({

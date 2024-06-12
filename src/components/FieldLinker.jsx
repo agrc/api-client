@@ -22,7 +22,7 @@ const FieldLinker = () => {
         ))}
       </div>
 
-      <h3>Assign Fields</h3>
+      <h3 className="text-zinc-700">Assign Fields</h3>
       <form className="grid-col-1 mx-auto grid max-w-md gap-3">
         <label htmlFor="street">Street Address Field</label>
         <select
