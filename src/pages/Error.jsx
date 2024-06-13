@@ -3,6 +3,10 @@ import * as Sentry from '@sentry/electron/renderer';
 
 export default function Error({ error, children }) {
   Sentry.captureException(error);
+  window.ugrc.trackEvent({
+    category: 'error',
+    label: 'unhandled error',
+  });
 
   return (
     <article>

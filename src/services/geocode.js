@@ -6,6 +6,7 @@ import log from 'electron-log/main';
 import { parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
 import ky from 'ky';
+import { trackEvent } from './analytics';
 // import '../../tests/mocks/server';
 
 const __filename = url.fileURLToPath(import.meta.url);
@@ -80,6 +81,7 @@ export const checkApiKey = async (apiKey) => {
 
   const isValid = response.status === 200;
 
+  trackEvent({ category: 'api-key-check', label: isValid });
   console.log({ category: 'api-key-check', label: isValid });
 
   return isValid;
@@ -111,6 +113,9 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
       body: null,
     },
   };
+
+  trackEvent({ category: 'geocode', label: `${totalRows}, ${md5(filePath)}` });
+  trackEvent({ category: 'wkid', label: wkid });
 
   for await (const record of parser) {
     if (cancelled) {
@@ -215,6 +220,7 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
 
     if (failures === fastFailLimit && fastFailLimit === rowsProcessed) {
       cancelGeocode('fail-fast');
+      trackEvent({ category: 'geocoding-cancelled', label: 'fast-fail' });
     }
 
     await coolYourJets();
