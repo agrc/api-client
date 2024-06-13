@@ -145,18 +145,24 @@ export default function Geocoding() {
                 has a thumbs up on the API page and create a new key if this is incorrect.
               </li>
               <li>
-                <strong>The Web API is having trouble.</strong>{' '}
+                <strong>The API is having trouble.</strong>{' '}
                 <a href="https://agrc-status.netlify.app" target="_blank" rel="noopener noreferrer">
                   Check our status page
                 </a>{' '}
                 for any reported outages.
               </li>
             </ol>
-            <p>
-              This is the Web API response for the last request (street: {stats.lastRequest?.request.street}, zone:{' '}
-              {stats.lastRequest?.request.zone}) to help debug the issue
-            </p>
-            <pre className="mx-6 whitespace-normal rounded border-red-800 bg-red-400 px-3 py-2 text-white shadow">
+            <div>
+              <p>This was the API response for the last request to help debug the issue</p>
+              <div className="text-base">
+                <span className="font-semibold">street: </span>
+                {stats.lastRequest?.request.street}
+              </div>
+              <div className="text-base">
+                <span className="font-semibold">zone:</span> {stats.lastRequest?.request.zone}
+              </div>
+            </div>
+            <pre className="mx-6 whitespace-normal truncate overflow-hidden rounded border-red-800 bg-red-400 px-3 py-2 text-white shadow">
               <div className="mb-2">{stats.lastRequest.request.url}</div>
               <div>
                 {stats.lastRequest?.response.status} -{' '}
