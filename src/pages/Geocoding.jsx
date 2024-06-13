@@ -162,7 +162,7 @@ export default function Geocoding() {
                 <span className="font-semibold">zone:</span> {stats.lastRequest?.request.zone}
               </div>
             </div>
-            <pre className="mx-6 whitespace-normal truncate overflow-hidden rounded border-red-800 bg-red-400 px-3 py-2 text-white shadow">
+            <pre className="mt-6 whitespace-normal break-all rounded border-red-800 bg-red-400 px-3 py-2 text-white shadow">
               <div className="mb-2">{stats.lastRequest.request.url}</div>
               <div>
                 {stats.lastRequest?.response.status} -{' '}
