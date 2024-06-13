@@ -11,7 +11,7 @@ const DropzoneMessaging = ({ isDragActive, file, validation }) => {
 
   if (file) {
     return (
-      <div className="flex flex-col items-center">
+      <div className="w-full px-6 text-center">
         {validation === 'validating' && (
           <p className="my-0 flex items-center rounded border border-gray-300 bg-gray-200 py-2 px-3 shadow">
             <span className="mr-2">Checking CSV for problems</span>
@@ -20,12 +20,10 @@ const DropzoneMessaging = ({ isDragActive, file, validation }) => {
             </span>
           </p>
         )}
-        <h2 className="my-1 truncate lowercase text-gray-400">
-          {file.name}
-          {geocodeContext.data.valid && (
-            <HandThumbUpIcon className="ml-2 inline-flex w-12 align-text-bottom text-indigo-900" />
-          )}
-        </h2>
+        <h2 className="my-1 truncate lowercase text-gray-400">{file.name}</h2>
+        {geocodeContext.data.valid && (
+          <HandThumbUpIcon className="mt-2 inline-flex w-12 align-text-bottom text-indigo-900" />
+        )}
       </div>
     );
   }
