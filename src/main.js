@@ -8,6 +8,7 @@ import logger from 'electron-log/main';
 import ElectronSquirrelStartup from 'electron-squirrel-startup';
 import * as Sentry from '@sentry/electron/main';
 
+import './services/analytics.js';
 import './services/errors.js';
 import './services/config.js';
 import './services/csv.js';
