@@ -6,6 +6,7 @@ import { updateElectronApp } from 'update-electron-app';
 import { enforceMacOSAppLocation, isDev } from 'electron-util/main';
 import logger from 'electron-log/main';
 import ElectronSquirrelStartup from 'electron-squirrel-startup';
+import * as Sentry from '@sentry/electron/main';
 
 import './services/errors.js';
 import './services/config.js';
@@ -14,6 +15,10 @@ import './services/geocode.js';
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+Sentry.init({
+  dsn: 'https://02bfd36076c647c9a9a2f66a9c7465c4@o1150892.ingest.sentry.io/6225803',
+});
 
 updateElectronApp({
   updateInterval: '1 hour',
