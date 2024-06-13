@@ -37,9 +37,9 @@ An apple developer certificate is required to sign the application for distribut
 
 1. Add the rest of the environment variables as secrets:
    - `APPLE_IDENTITY`: _the name of the developer id certificate name as it appears in keychain_
-   - `APPLE_TEAM_ID`: _the team id to notarize under_
-   - `APPLE_USER_ID`: _the username of your apple developer account_
-   - `APPLE_PASSWORD`: _the app-specific password (not your Apple ID password)_
+   - `APPLE_TEAM_ID`: _the team id to notarize under viewable on your [Apple Developer Account](https://developer.apple.com/account) "Membership details", page_
+   - `APPLE_USER_ID`: _the full email address of your [Apple Developer Account](https://developer.apple.com/account)_
+   - `APPLE_PASSWORD`: _the app-specific password (not your Apple ID password) created on https://appleid.apple.com/account/manage_
 
 ## Deploying a new version
 
