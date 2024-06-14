@@ -7,6 +7,7 @@ import { parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
 import ky from 'ky';
 import { trackEvent } from './analytics';
+import md5 from 'md5';
 // import '../../tests/mocks/server';
 
 const __filename = url.fileURLToPath(import.meta.url);
