@@ -32,6 +32,13 @@ if (ElectronSquirrelStartup) {
   app.quit();
 }
 
+let token = '';
+if (process.env.BUILD_IDENTIFIER === 'beta') {
+  token = '-beta';
+}
+
+const version = `${app.getVersion()}${token}`;
+
 const createWindow = () => {
   enforceMacOSAppLocation();
 
@@ -166,14 +173,14 @@ app.on('web-contents-created', (_, contents) => {
   });
 });
 
-ipcMain.handle('getAppVersion', () => {
-  return app.getVersion();
-});
+ipcMain.handle('isBeta', () => process.env.BUILD_IDENTIFIER === 'beta');
+
+ipcMain.handle('getAppVersion', () => version);
 
 ipcMain.handle('getAppInfo', () => {
   return {
-    applicationName: 'UGRC API Client',
-    applicationVersion: app.getVersion(),
+    applicationName: process.env.BUILD_IDENTIFIER === 'prod' ? 'UGRC API Client' : 'UGRC API Client (beta)',
+    applicationVersion: version,
     version: process.versions.electron,
     website: 'https://api.mapserv.utah.gov',
     repo: 'https://github.com/agrc/api-client',

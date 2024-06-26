@@ -61,6 +61,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GA4_ID: ${{ secrets.GA4_ID }}
           GA4_SECRET: ${{ secrets.GA4_SECRET }}
+          IS_BETA: ${{ github.event.release.prerelease == true }}
 
   windows:
     name: Publish windows app to release
@@ -94,3 +95,4 @@ jobs:
         env:
           WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IS_BETA: ${{ github.event.release.prerelease == true }}
