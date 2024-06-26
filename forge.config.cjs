@@ -50,7 +50,7 @@ module.exports = {
     {
       name: '@electron-forge/maker-squirrel',
       platforms: ['win32'],
-      arch: 'arm64',
+      arch: 'universal',
       config: {
         name: 'ugrc-api-client',
         authors: 'UGRC Developers',
@@ -68,11 +68,11 @@ module.exports = {
     {
       name: '@electron-forge/maker-zip',
       platforms: ['darwin'],
-      arch: 'arm64',
+      arch: 'universal',
     },
     {
       name: '@electron-forge/maker-dmg',
-      arch: 'arm64',
+      arch: 'universal',
       config: {
         title: '${productName} ${version}',
         window: {
