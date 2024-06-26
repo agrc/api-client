@@ -33,7 +33,7 @@ jobs:
       - name: 👊 Bump version
         id: bump-version
         run: |
-          TAG=$(gh release view --json tagName --jq ".tagName")
+          TAG=$(gh release list --limit 1 --json tagName --jq ".[] | .tagName")
           npm version $TAG --no-git-tag-version
 
       - name: 🧑‍🎓 Set up signing certificates
@@ -84,7 +84,7 @@ jobs:
         id: bump-version
         shell: bash
         run: |
-          TAG=$(gh release view --json tagName --jq ".tagName")
+          TAG=$(gh release list --limit 1 --json tagName --jq ".[] | .tagName")
           npm version $TAG --no-git-tag-version
 
       - name: Install dependencies
