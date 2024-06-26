@@ -28,7 +28,7 @@
   "scripts": {
     "start": "cross-env ELECTRON_ENABLE_LOGGING=1 electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make --arch=universal",
+    "make": "electron-forge make",
     "publish": "electron-forge publish",
     "format": "prettier --write src --ignore-path ./.gitignore",
     "format:fix": "prettier --loglevel warn --write \"./**/*.{js,jsx,css,md,json}\" --ignore-path ./.gitignore",

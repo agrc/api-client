@@ -33,7 +33,7 @@ if (ElectronSquirrelStartup) {
 }
 
 let token = '';
-if (process.env.BUILD_IDENTIFIER === 'beta') {
+if (import.meta.env.VITE_IS_BETA) {
   token = '-beta';
 }
 
@@ -173,13 +173,11 @@ app.on('web-contents-created', (_, contents) => {
   });
 });
 
-ipcMain.handle('isBeta', () => process.env.BUILD_IDENTIFIER === 'beta');
-
 ipcMain.handle('getAppVersion', () => version);
 
 ipcMain.handle('getAppInfo', () => {
   return {
-    applicationName: process.env.BUILD_IDENTIFIER === 'prod' ? 'UGRC API Client' : 'UGRC API Client (beta)',
+    applicationName: app.getName(), // this is pulling from packagejson, not great
     applicationVersion: version,
     version: process.versions.electron,
     website: 'https://api.mapserv.utah.gov',
