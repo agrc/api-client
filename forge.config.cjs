@@ -1,4 +1,7 @@
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
+const {
+  utils: { fromBuildIdentifier },
+} = require('@electron-forge/core');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 const packageJson = require('./package.json');
 const path = require('node:path');
@@ -9,12 +12,16 @@ const { version } = packageJson;
 const assets = path.resolve(__dirname, 'src', 'assets');
 
 module.exports = {
+  buildIdentifier: process.env.IS_BETA ? 'beta' : 'prod',
   packagerConfig: {
     name: 'UGRC API Client',
     executableName: 'ugrc-api-client',
     asar: true,
     icon: path.resolve(assets, 'logo.icns'),
-    appBundleId: process.env.APPLE_BUNDLE_ID,
+    appBundleId: fromBuildIdentifier({
+      beta: 'com.beta.electron.ugrc-api-client',
+      prod: 'com.electron.ugrc-api-client',
+    }),
     appCategoryType: 'public.app-category.developer-tools',
     win32metadata: {
       CompanyName: 'UGRC',
@@ -29,7 +36,10 @@ module.exports = {
     },
     osxNotarize: {
       tool: 'notarytool',
-      appBundleId: process.env.APPLE_BUNDLE_ID,
+      appBundleId: fromBuildIdentifier({
+        beta: 'com.beta.electron.ugrc-api-client',
+        prod: 'com.electron.ugrc-api-client',
+      }),
       appleId: process.env.APPLE_USER_ID,
       appleIdPassword: process.env.APPLE_PASSWORD,
       teamId: process.env.APPLE_TEAM_ID,
