@@ -111,7 +111,10 @@ module.exports = {
           name: 'api-client',
         },
         draft: true,
-        prerelease: false,
+        prerelease: fromBuildIdentifier({
+          beta: true,
+          prod: false,
+        }),
       },
     },
   ],
