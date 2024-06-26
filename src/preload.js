@@ -17,7 +17,6 @@ contextBridge.exposeInMainWorld('ugrc', {
   unsubscribeFromGeocodingUpdates: () => ipcRenderer.removeAllListeners('onGeocodingUpdate'),
 
   isMacOS: () => process.platform === 'darwin',
-  isBeta: () => ipcRenderer.invoke('isBeta'),
 
   relaunchApp: () => ipcRenderer.send('relaunchApp'),
   openIssue: (content) => ipcRenderer.send('openIssue', content),

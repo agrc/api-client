@@ -1,17 +1,8 @@
 import QuickApiKey from './QuickApiKey.jsx';
 import logo from '../assets/logo.svg';
-import { useEffect, useState } from 'react';
 
+const gradient = import.meta.env.VITE_IS_BETA ? 'from-amber-900 via-amber-400' : 'from-indigo-900 via-indigo-400';
 export default function Header() {
-  const [gradient, setGradient] = useState('from-indigo-900 via-indigo-400');
-  useEffect(() => {
-    (async () => {
-      if (await window.ugrc.isBeta()) {
-        setGradient('from-amber-900 via-amber-400');
-      }
-    })();
-  }, []);
-
   return (
     <section
       id="drag"

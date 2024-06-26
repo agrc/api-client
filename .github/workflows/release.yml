@@ -51,17 +51,16 @@ jobs:
         run: npm ci
 
       - name: 🚀 Build, Package, & Release
-        run: npm run publish
+        run: npm run publish -- --arch=universal
         env:
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
           APPLE_USER_ID: ${{ secrets.APPLE_USER_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GA4_ID: ${{ secrets.GA4_ID }}
           GA4_SECRET: ${{ secrets.GA4_SECRET }}
-          IS_BETA: ${{ github.event.release.prerelease == true }}
+          VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
 
   windows:
     name: Publish windows app to release
@@ -95,4 +94,4 @@ jobs:
         env:
           WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IS_BETA: ${{ github.event.release.prerelease == true }}
+          VITE_IS_BETA: ${{ github.event.release.prerelease == true }}

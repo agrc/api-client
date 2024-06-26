@@ -12,9 +12,12 @@ const { version } = packageJson;
 const assets = path.resolve(__dirname, 'src', 'assets');
 
 module.exports = {
-  buildIdentifier: process.env.IS_BETA ? 'beta' : 'prod',
+  buildIdentifier: process.env.VITE_IS_BETA ? 'beta' : 'prod',
   packagerConfig: {
-    name: 'UGRC API Client',
+    name: fromBuildIdentifier({
+      beta: 'UGRC API Client Beta',
+      prod: 'UGRC API Client',
+    }),
     executableName: 'ugrc-api-client',
     asar: true,
     icon: path.resolve(assets, 'logo.icns'),
@@ -50,7 +53,7 @@ module.exports = {
     {
       name: '@electron-forge/maker-squirrel',
       platforms: ['win32'],
-      arch: 'universal',
+      arch: 'all',
       config: {
         name: 'ugrc-api-client',
         authors: 'UGRC Developers',
@@ -67,12 +70,9 @@ module.exports = {
     },
     {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin'],
-      arch: 'universal',
     },
     {
       name: '@electron-forge/maker-dmg',
-      arch: 'universal',
       config: {
         title: '${productName} ${version}',
         window: {
