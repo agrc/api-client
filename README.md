@@ -1,6 +1,6 @@
 # UGRC API Client
 
-[![deploy](https://github.com/agrc/api-client/actions/workflows/deploy.yml/badge.svg)](https://github.com/agrc/api-client/actions/workflows/deploy.yml)
+[![Release Events](https://github.com/agrc/api-client/actions/workflows/release.yml/badge.svg)](https://github.com/agrc/api-client/actions/workflows/release.yml)
 
 <img src="https://github.com/agrc/api-client/blob/main/src/assets/logo.svg" width="125px" />
 
