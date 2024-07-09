@@ -33,7 +33,7 @@ if (ElectronSquirrelStartup) {
 }
 
 let token = '';
-if (import.meta.env.VITE_IS_BETA) {
+if (import.meta.env.VITE_IS_BETA === 'true') {
   token = '-beta';
 }
 

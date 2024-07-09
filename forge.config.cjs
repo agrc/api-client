@@ -12,7 +12,7 @@ const { version } = packageJson;
 const assets = path.resolve(__dirname, 'src', 'assets');
 
 module.exports = {
-  buildIdentifier: process.env.VITE_IS_BETA ? 'beta' : 'prod',
+  buildIdentifier: process.env.VITE_IS_BETA === 'true' ? 'beta' : 'prod',
   packagerConfig: {
     name: fromBuildIdentifier({
       beta: 'UGRC API Client Beta',
