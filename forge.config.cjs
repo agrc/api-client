@@ -5,7 +5,12 @@ const {
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 const packageJson = require('./package.json');
 const path = require('node:path');
-require('dotenv').config();
+const dotenv = require('dotenv');
+
+if (process.env.NODE_ENV !== 'production') {
+  // skip loading any local env files in production
+  dotenv.config();
+}
 
 const { version } = packageJson;
 
