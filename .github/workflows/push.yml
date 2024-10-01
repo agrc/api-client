@@ -3,28 +3,29 @@ name: Push Events
 on:
   push:
     branches:
+      - dev
       - main
-    paths:
-      - 'src/**'
-      - '.github/**/*.yml'
-      - '*.js'
-      - '*.json'
-  pull_request:
-    types: [opened, reopened, synchronize]
-  workflow_dispatch:
 
-permissions:
-  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  update-release-draft:
+  release-please:
+    name: Create release
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
-    runs-on: ubuntu-latest
+
     steps:
-      - name: Update release notes
-        uses: release-drafter/release-drafter@v6
-        id: release-drafter
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 🚀 Create Release
+        id: release-please
+        uses: agrc/release-composite-action@v1
+        with:
+          prerelease: ${{ github.ref_name == 'dev' }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          github-app-id: ${{ secrets.UGRC_RELEASE_BOT_APP_ID }}
+          github-app-key: ${{ secrets.UGRC_RELEASE_BOT_APP_KEY }}
+          github-app-name: ${{ secrets.UGRC_RELEASE_BOT_NAME }}
+          github-app-email: ${{ secrets.UGRC_RELEASE_BOT_EMAIL }}

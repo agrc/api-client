@@ -35,13 +35,16 @@
     "postcss",
     "relocator",
     "semibold",
+    "setuptools",
     "SGID",
     "stringifier",
     "tailwindcss",
     "trimable",
     "UGRC",
     "vercel",
+    "VITE",
     "Wkid",
+    "worknote",
     "zipcode"
   ]
 }
