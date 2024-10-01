@@ -1,7 +1,7 @@
 {
   "name": "ugrc-api-client",
   "productName": "ugrc-api-client",
-  "version": "1.7.5",
+  "version": "1.7.6",
   "description": "The official UGRC API client",
   "license": "MIT",
   "type": "module",
