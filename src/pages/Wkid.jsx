@@ -104,8 +104,8 @@ export default function Wkid() {
                 }}
                 placeholder="wkid"
               />
+              <span className="block text-base text-gray-400">other</span>
             </label>
-            <span className="block text-base text-gray-400">other</span>
           </div>
         </section>
       </RadioGroup>
