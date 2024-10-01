@@ -64,7 +64,7 @@
     "dotenv": "^16.4.5",
     "electron": "^32.1.2",
     "electron-download": "^4.1.1",
-    "eslint": "^8.52.0",
+    "eslint": "^9.11.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jsx-a11y": "^6.10.0",
     "eslint-plugin-prettier": "^5.2.1",
