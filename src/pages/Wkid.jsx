@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
-import { RadioGroup } from '@headlessui/react';
+import { RadioGroup, Radio } from '@headlessui/react';
 import clsx from 'clsx';
 import { useErrorBoundary } from 'react-error-boundary';
 
@@ -41,7 +41,7 @@ export default function Wkid() {
         }}
       >
         <section className="mt-4 grid w-full grid-cols-3 justify-items-center text-center">
-          <RadioGroup.Option value="26912">
+          <Radio value="26912">
             {({ checked }) => (
               <div
                 className={clsx(
@@ -57,8 +57,8 @@ export default function Wkid() {
                 <span className="block text-base text-gray-400">UTM Zone 12 North (state standard)</span>
               </div>
             )}
-          </RadioGroup.Option>
-          <RadioGroup.Option value="4326">
+          </Radio>
+          <Radio value="4326">
             {({ checked }) => (
               <div
                 className={clsx(
@@ -74,8 +74,8 @@ export default function Wkid() {
                 <span className="block text-base text-gray-400">WGS 84 (lat/lon)</span>
               </div>
             )}
-          </RadioGroup.Option>
-          <RadioGroup.Option value="3857">
+          </Radio>
+          <Radio value="3857">
             {({ checked }) => (
               <div
                 className={clsx(
@@ -91,7 +91,7 @@ export default function Wkid() {
                 <span className="block text-base text-gray-400">Web Mercator (web mapping)</span>
               </div>
             )}
-          </RadioGroup.Option>
+          </Radio>
           <div className="col-span-3 flex-1 self-center p-6">
             <label htmlFor="customWkid">
               <input
