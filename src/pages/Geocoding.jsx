@@ -45,7 +45,7 @@ export default function Geocoding() {
       .then((wkid) => {
         window.ugrc
           .geocode({
-            filePath: geocodeContext.data.file.path,
+            filePath: geocodeContext.data.file,
             fields: { street: geocodeContext.data.street, zone: geocodeContext.data.zone },
             apiKey: geocodeContext.apiKey,
             wkid,

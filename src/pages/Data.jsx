@@ -45,11 +45,12 @@ export default function Data() {
       label: event.type === 'drop' ? 'drag-and-drop' : 'file-dialog',
     });
 
-    const file = files[0];
+    const file = window.ugrc.webFilePath(files[0]);
+
     setError();
     let stats;
     try {
-      stats = await window.ugrc.getCsvColumns(file.path);
+      stats = await window.ugrc.getCsvColumns(file);
     } catch (e) {
       const errorDetails = [];
       if (e.message.includes(CSV_PARSE_ERROR)) {
@@ -81,7 +82,7 @@ export default function Data() {
 
     try {
       setValidation('validating');
-      stats = await window.ugrc.validateWithStats(file.path);
+      stats = await window.ugrc.validateWithStats(file);
       geocodeDispatch({
         type: 'UPDATE_FILE',
         payload: {

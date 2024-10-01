@@ -1,6 +1,8 @@
-import { ipcRenderer, contextBridge } from 'electron';
+import { ipcRenderer, contextBridge, webUtils } from 'electron';
 
 contextBridge.exposeInMainWorld('ugrc', {
+  webFilePath: (file) => webUtils.getPathForFile(file),
+
   validateWithStats: (content) => ipcRenderer.invoke('validateWithStats', content),
   getCsvColumns: (content) => ipcRenderer.invoke('getCsvColumns', content),
   saveConfig: (content) => ipcRenderer.invoke('saveConfig', content),
