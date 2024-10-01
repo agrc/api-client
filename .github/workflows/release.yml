@@ -3,13 +3,23 @@ name: Release Events
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run tests against'
+        type: environment
+        required: true
+
+permissions:
+  id-token: write
+  deployments: write
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  macos:
-    name: Publish macOS app to release
+  deploy-macos:
+    name: Publish macOS app
     runs-on: macos-latest
     environment:
       name: prod
@@ -62,34 +72,44 @@ jobs:
           GA4_SECRET: ${{ secrets.GA4_SECRET }}
           VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
 
+      - name: 🔔 Create deployment notification
+        uses: agrc/service-now-worknote-action@v1
+        with:
+          repo-token: ${{ github.token }}
+          username: ${{ secrets.SN_USERNAME }}
+          password: ${{ secrets.SN_PASSWORD }}
+          instance-name: ${{ secrets.SN_INSTANCE }}
+          table-name: ${{ secrets.SN_TABLE }}
+          system-id: ${{ secrets.SN_SYS_ID }}
+
   windows:
     name: Publish windows app to release
     runs-on: windows-latest
     environment:
       name: prod
     steps:
-      - name: Set up code
+      - name: ⬇️ Set up code
         uses: actions/checkout@v4
         with:
           show-progress: false
 
-      - name: Set up Node.js
+      - name: ⎔ Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: npm
 
-      - name: Bump version
+      - name: 👊 Bump version
         id: bump-version
         shell: bash
         run: |
           TAG=$(gh release list --limit 1 --json tagName --jq ".[] | .tagName")
           npm version $TAG --no-git-tag-version
 
-      - name: Install dependencies
+      - name: 📥 Install dependencies
         run: npm ci
 
-      - name: Build, Package, & Release
+      - name: 🚀 Build, Package, & Release
         run: npm run publish
         env:
           WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}

@@ -1,16 +1,35 @@
 name: Pull Request Events
 
-on:
-  pull_request:
-    types: [opened, synchronize]
+on: pull_request
+
+permissions:
+  contents: write
+  id-token: write
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  pr-labeler:
-    permissions:
-      contents: write
-      pull-requests: write
+  test-lint:
+    name: 🧶 Lint
     runs-on: ubuntu-latest
+
     steps:
-      - uses: TimonVS/pr-labeler-action@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: ⬇️ Set up code
+        uses: actions/checkout@v4
+        with:
+          show-progress: false
+
+      - name: ⎔ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: 📥 Download dependencies
+        run: npm ci
+
+      - name: 🧶 Lint
+        run: npm run lint
