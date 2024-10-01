@@ -66,16 +66,6 @@ jobs:
           GA4_SECRET: ${{ secrets.GA4_SECRET }}
           VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
 
-      - name: 🔔 Create deployment notification
-        uses: agrc/service-now-worknote-action@v1
-        with:
-          repo-token: ${{ github.token }}
-          username: ${{ secrets.SN_USERNAME }}
-          password: ${{ secrets.SN_PASSWORD }}
-          instance-name: ${{ secrets.SN_INSTANCE }}
-          table-name: ${{ secrets.SN_TABLE }}
-          system-id: ${{ secrets.SN_SYS_ID }}
-
   deploy-windows:
     name: Publish windows app
     runs-on: windows-latest
@@ -102,3 +92,27 @@ jobs:
           WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
+
+  change-management:
+    name: Change management
+    runs-on: ubuntu-latest
+    needs: [deploy-macos, deploy-windows]
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - name: 🔔 Create deployment notification
+        uses: agrc/service-now-worknote-action@v1
+        with:
+          repo-token: ${{ github.token }}
+          username: ${{ secrets.SN_USERNAME }}
+          password: ${{ secrets.SN_PASSWORD }}
+          instance-name: ${{ secrets.SN_INSTANCE }}
+          table-name: ${{ secrets.SN_TABLE }}
+          system-id: ${{ secrets.SN_SYS_ID }}
+
+      - name: 💬 Comment on issues in release
+        uses: agrc/release-issue-notifications-action@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
