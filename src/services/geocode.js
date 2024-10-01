@@ -47,8 +47,8 @@ const cleanseZone = (data) => {
 };
 
 const coolYourJets = () => {
-  const min = 150;
-  const max = 300;
+  const min = 50;
+  const max = 200;
 
   return new Promise((resolve) => setTimeout(resolve, Math.random() * (max - min) + min));
 };
