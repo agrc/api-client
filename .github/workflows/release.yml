@@ -40,12 +40,6 @@ jobs:
         with:
           python-version: 3.12
 
-      - name: 👊 Bump version
-        id: bump-version
-        run: |
-          TAG=$(gh release list --limit 1 --json tagName --jq ".[] | .tagName")
-          npm version $TAG --no-git-tag-version
-
       - name: 🧑‍🎓 Set up signing certificates
         uses: apple-actions/import-codesign-certs@v3
         with:
@@ -98,13 +92,6 @@ jobs:
         with:
           node-version: lts/*
           cache: npm
-
-      - name: 👊 Bump version
-        id: bump-version
-        shell: bash
-        run: |
-          TAG=$(gh release list --limit 1 --json tagName --jq ".[] | .tagName")
-          npm version $TAG --no-git-tag-version
 
       - name: 📥 Install dependencies
         run: npm ci
