@@ -42,7 +42,7 @@ export default function Data() {
 
     window.ugrc.trackEvent({
       category: 'file-selection-type',
-      label: event.type === 'drop' ? 'drag-and-drop' : 'file-dialog',
+      label: (event?.type ?? '') === 'drop' ? 'drag-and-drop' : 'file-dialog',
     });
 
     const file = window.ugrc.webFilePath(files[0]);
