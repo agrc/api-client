@@ -81,7 +81,7 @@
     "vite-plugin-static-copy": "^2.0.0"
   },
   "dependencies": {
-    "@headlessui/react": "^2.1.8",
+    "@headlessui/react": "^2.1.10",
     "@heroicons/react": "^2.1.5",
     "@sentry/electron": "^5.4.0",
     "@sentry/react": "^8.32.0",
