@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.8](https://github.com/agrc/api-client/compare/v1.7.7...v1.7.8) (2024-10-17)
+
+
+### Bug Fixes
+
+* fiddle with dependencies to fix windows  ([#282](https://github.com/agrc/api-client/issues/282)) ([902cdd8](https://github.com/agrc/api-client/commit/902cdd83032c4e62f5a3a512e6ac457f0eee7e58))
+
 ## [1.7.8-0](https://github.com/agrc/api-client/compare/v1.7.7...v1.7.8-0) (2024-10-17)
 
 
