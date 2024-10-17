@@ -1,7 +1,8 @@
 import QuickApiKey from './QuickApiKey.jsx';
 import logo from '../assets/logo.svg';
 
-const gradient = import.meta.env.VITE_IS_BETA === 'true' ? 'from-amber-900 via-amber-400' : 'from-indigo-900 via-indigo-400';
+const gradient =
+  import.meta.env.VITE_IS_BETA === 'true' ? 'from-amber-900 via-amber-400' : 'from-indigo-900 via-indigo-400';
 export default function Header() {
   return (
     <section
