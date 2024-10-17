@@ -1,13 +1,18 @@
 {
   "name": "ugrc-api-client",
-  "productName": "ugrc-api-client",
   "version": "1.7.8",
   "description": "The official UGRC API client",
-  "license": "MIT",
-  "type": "module",
-  "repository": "https://github.com/agrc/api-client",
+  "keywords": [
+    "utah",
+    "geocoding",
+    "ugrc",
+    "agrc",
+    "electron"
+  ],
   "homepage": "https://gis.utah.gov/products/sgid/address/api-client/",
   "bugs": "https://github.com/agrc/api-client/issues",
+  "repository": "https://github.com/agrc/api-client",
+  "license": "MIT",
   "contributors": [
     {
       "name": "Steve Gourley",
@@ -18,159 +23,77 @@
       "email": "stdavis@utah.gov"
     }
   ],
-  "keywords": [
-    "utah",
-    "geocoding",
-    "ugrc",
-    "agrc",
-    "electron"
-  ],
-  "scripts": {
-    "start": "cross-env ELECTRON_ENABLE_LOGGING=1 electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "format": "prettier --write src --ignore-path ./.gitignore",
-    "format:fix": "prettier --loglevel warn --write \"./**/*.{js,jsx,css,md,json}\" --ignore-path ./.gitignore",
-    "fix": "npm run format:fix && npm run lint:fix",
-    "lint": "eslint ./src --ext .jsx,.js --ignore-path ./.gitignore",
-    "lint:fix": "eslint ./src --ext .jsx,.js --quiet --fix --ignore-path ./.gitignore",
-    "upload-debug-symbols": "node sentry-symbols.js"
-  },
   "main": ".vite/build/main.js",
-  "config": {
-    "forge": "./forge.config.js"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.25.8",
-    "@babel/eslint-parser": "^7.25.8",
-    "@babel/preset-env": "^7.25.8",
-    "@babel/preset-react": "^7.25.7",
-    "@electron-forge/cli": "7.4.0",
-    "@electron-forge/maker-dmg": "7.4.0",
-    "@electron-forge/maker-squirrel": "7.4.0",
-    "@electron-forge/maker-zip": "7.4.0",
-    "@electron-forge/plugin-auto-unpack-natives": "7.4.0",
-    "@electron-forge/plugin-fuses": "7.4.0",
-    "@electron-forge/plugin-vite": "7.4.0",
-    "@electron-forge/publisher-github": "7.4.0",
-    "@electron/fuses": "^1.8.0",
-    "@sentry/cli": "^2.37.0",
-    "@tailwindcss/forms": "^0.5.9",
-    "@vitejs/plugin-react": "^4.3.2",
-    "autoprefixer": "^10.4.20",
-    "cross-env": "^7.0.3",
-    "css-loader": "^7.1.2",
-    "dotenv": "^16.4.5",
-    "electron": "^33.0.1",
-    "electron-download": "^4.1.1",
-    "eslint": "^8.52.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jsx-a11y": "^6.10.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-react": "^7.37.1",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "nock": "^13.5.5",
-    "postcss": "^8.4.47",
-    "postcss-loader": "^8.1.1",
-    "prettier": "^3.3.3",
-    "prettier-plugin-tailwindcss": "^0.6.8",
-    "tailwindcss": "^3.4.14",
-    "vite": "^5.4.9",
-    "vite-plugin-static-copy": "^2.0.0"
+  "scripts": {
+    "fix": "npm run format:fix && npm run lint:fix",
+    "format": "prettier --write src --ignore-path ./.gitignore",
+    "format:fix": "prettier --loglevel warn --write \"./**/*.{ts,tsx,js,jsx,css,md,json}\" --ignore-path ./.gitignore",
+    "lint": "eslint ./src --ext .ts,.tsx,.jsx,.js --ignore-path ./.gitignore",
+    "lint:fix": "eslint ./src --ext .ts,.tsx,.jsx,.js --quiet --fix --ignore-path ./.gitignore",
+    "make": "electron-forge make",
+    "package": "electron-forge package",
+    "publish": "electron-forge publish",
+    "start": "cross-env ELECTRON_ENABLE_LOGGING=1 electron-forge start",
+    "upload-debug-symbols": "node sentry-symbols.js"
   },
   "dependencies": {
     "@headlessui/react": "^2.1.10",
-    "@heroicons/react": "^2.1.5",
-    "@sentry/electron": "^5.4.0",
-    "@sentry/react": "^8.34.0",
-    "assert": "^2.1.0",
     "clsx": "^2.1.1",
-    "crypto-browserify": "^3.12.0",
     "csv-parse": "^5.5.6",
     "csv-stringify": "^6.5.1",
-    "electron-google-analytics4": "^1.2.0",
     "electron-log": "^5.2.0",
-    "electron-squirrel-startup": "^1.0.1",
     "electron-store": "^10.0.0",
     "electron-unhandled": "^5.0.0",
     "electron-util": "^0.18.1",
     "electron-window-state": "^5.0.3",
-    "file-loader": "^6.2.0",
     "humanize-duration": "^3.32.1",
-    "immer": "^10.1.1",
     "ky": "^1.7.2",
     "md5": "^2.3.0",
-    "node-machine-id": "^1.1.12",
-    "os-browserify": "^0.3.0",
     "os-name": "^6.0.0",
-    "path-browserify": "^1.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.9",
     "react-error-boundary": "^4.1.1",
     "react-navigator-status": "^0.1.2",
     "react-router-dom": "^5.3.4",
-    "stream-browserify": "^3.0.0",
     "update-electron-app": "^3.0.0",
-    "use-immer": "^0.10.0",
-    "util": "^0.12.5"
+    "use-immer": "^0.10.0"
   },
-  "eslintConfig": {
-    "parserOptions": {
-      "ecmaVersion": 2021,
-      "sourceType": "module",
-      "ecmaFeatures": {
-        "jsx": true
-      }
-    },
-    "settings": {
-      "react": {
-        "version": "detect"
-      }
-    },
-    "env": {
-      "browser": true,
-      "node": true,
-      "es6": true
-    },
-    "globals": {
-      "MAIN_WINDOW_VITE_DEV_SERVER_URL": "readonly",
-      "MAIN_WINDOW_VITE_NAME": "readonly"
-    },
-    "rules": {
-      "react/jsx-uses-react": "off",
-      "react/react-in-jsx-scope": "off",
-      "react/prop-types": "off",
-      "jsx-a11y/no-onchange": "off",
-      "prettier/prettier": "off"
-    },
-    "extends": [
-      "eslint:recommended",
-      "plugin:react/recommended",
-      "plugin:react-hooks/recommended",
-      "plugin:jsx-a11y/recommended",
-      "plugin:prettier/recommended",
-      "prettier"
-    ]
+  "devDependencies": {
+    "@electron-forge/cli": "^7.5.0",
+    "@electron-forge/maker-deb": "^7.5.0",
+    "@electron-forge/maker-dmg": "^7.5.0",
+    "@electron-forge/maker-rpm": "^7.5.0",
+    "@electron-forge/maker-squirrel": "^7.5.0",
+    "@electron-forge/maker-zip": "^7.5.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.5.0",
+    "@electron-forge/plugin-fuses": "^7.5.0",
+    "@electron-forge/plugin-vite": "^7.5.0",
+    "@electron-forge/publisher-github": "^7.5.0",
+    "@electron/fuses": "^1.8.0",
+    "@heroicons/react": "^2.1.5",
+    "@types/electron-squirrel-startup": "^1.0.2",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
+    "electron": "33.0.1",
+    "electron-squirrel-startup": "^1.0.1",
+    "eslint": "^8.57.1",
+    "eslint-plugin-import": "^2.31.0",
+    "postcss": "^8.4.47",
+    "prettier": "^3.3.3",
+    "prettier-plugin-organize-imports": "^4.1.0",
+    "prettier-plugin-packagejson": "^2.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.8",
+    "tailwindcss": "^3.4.14",
+    "ts-node": "^10.9.2",
+    "typescript": "~4.5.4",
+    "vite": "^5.4.9",
+    "vite-plugin-static-copy": "^0.17.1"
   },
-  "prettier": {
-    "singleQuote": true,
-    "printWidth": 120,
-    "semi": true
-  },
-  "browserslist": [
-    "electron >= 15.1.1"
-  ],
-  "babel": {
-    "env": {
-      "test": {
-        "presets": [
-          "@babel/preset-env",
-          "@babel/preset-react"
-        ]
-      }
-    }
-  }
+  "productName": "forge-vite-ts"
 }

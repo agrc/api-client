@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  [type='text'],
+  [type='email'],
+  [type='url'],
+  [type='password'],
+  [type='number'],
+  [type='date'],
+  [type='datetime-local'],
+  [type='month'],
+  [type='search'],
+  [type='tel'],
+  [type='time'],
+  [type='week'],
+  [multiple],
+  textarea,
+  select {
+    @apply mb-1 rounded border border-indigo-600 bg-white px-4 py-2 font-light uppercase text-indigo-700 caret-indigo-600 outline-none transition-all duration-150 ease-linear focus:outline-none;
+  }
+  [type='button'] {
+    @apply mb-1 flex justify-center rounded border border-indigo-900 bg-indigo-600 px-4 py-2 text-2xl font-extrabold uppercase tracking-tight text-white outline-none transition-all duration-150 ease-linear hover:border-indigo-600 hover:bg-violet-100 hover:text-indigo-500 focus:outline-none active:bg-indigo-600 disabled:opacity-20;
+  }
+  [type='back-button'] {
+    @apply relative z-10 mb-1 mt-6 rounded border border-indigo-700 bg-indigo-400 px-4 py-2 text-xl font-bold uppercase tracking-tight text-white shadow outline-none transition-all duration-150 ease-linear hover:border-indigo-400 hover:bg-violet-100 hover:text-indigo-500 focus:outline-none;
+  }
+  code {
+    @apply border bg-gray-100 px-2 font-light text-gray-700;
+  }
+  a {
+    @apply text-indigo-600 hover:text-indigo-900;
+  }
+  progress[value]::-webkit-progress-bar {
+    @apply rounded-full border bg-gray-50;
+  }
+  progress[value]::-webkit-progress-value {
+    @apply rounded-full bg-gradient-to-r from-indigo-900 via-indigo-400 to-pink-400;
+  }
+  h1 {
+    @apply select-none text-5xl font-black tracking-tight;
+  }
+  h2 {
+    @apply my-6 select-none text-4xl font-extrabold tracking-tight text-gray-900;
+  }
+  h3 {
+    @apply my-5 select-none text-3xl font-extrabold tracking-tight text-gray-800;
+  }
+  p,
+  summary,
+  li,
+  pre {
+    @apply mb-6 text-lg font-medium text-gray-800;
+  }
+  label {
+    @apply font-extrabold tracking-tight text-gray-600;
+  }
+  #drag {
+    @apply cursor-grab;
+    -webkit-app-region: drag;
+  }
+}

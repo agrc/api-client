@@ -1,14 +1,8 @@
-module.exports = {
-  content: ['./src/**/*.html', './src/**/*.{js,jsx}'],
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./src/**/*.{js,jsx,ts,tsx,html}'],
   theme: {
-    minWidth: {
-      '1/6': '5rem',
-    },
-    extend: {
-      cursor: {
-        grab: 'grab',
-      },
-    },
+    extend: {},
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [],
 };

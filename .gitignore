@@ -82,16 +82,11 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
-# Vite
-.vite/
-
 # Webpack
 .webpack/
 
+# Vite
+.vite/
+
 # Electron-Forge
 out/
-ugrc-api-client*
-
-# Sentry
-sentry.properties
-.electron-symbols

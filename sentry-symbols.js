@@ -12,7 +12,8 @@ try {
   process.exit(1);
 }
 
-const VERSION = /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/i;
+const VERSION =
+  /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/i;
 const SYMBOL_CACHE_FOLDER = '.electron-symbols';
 const package = require('./package.json');
 const sentryCli = new SentryCli('./sentry.properties');
@@ -26,9 +27,7 @@ async function main() {
 
   console.log('We are starting to download all possible electron symbols');
   console.log('We need it in order to symbolicate native crashes');
-  console.log(
-    'This step is only needed once whenever you update your electron version',
-  );
+  console.log('This step is only needed once whenever you update your electron version');
   console.log('Just call this script again it should do everything for you.');
 
   let zipPath = await downloadSymbols({
@@ -102,4 +101,4 @@ async function downloadSymbols(options) {
   });
 }
 
-main().catch(e => console.error(e));
+main().catch((e) => console.error(e));
