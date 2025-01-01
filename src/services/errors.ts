@@ -1,11 +1,14 @@
 import { app, ipcMain, shell } from 'electron';
 // import unhandled from 'electron-unhandled';
+// eslint-disable-next-line import/no-unresolved
 // import { openNewGitHubIssue } from 'electron-util';
 import osName from 'os-name';
 
+// Module format "cjs" does not support top-level await. Use the "es" or "system" output formats rather.
 // unhandled({
 //   reportButton: (error) => {
-//     openIssue(error.message, error.stack);
+//     console.log(error);
+//     // openIssue(error.message, error.stack);
 //   },
 //   logger: (error) => {
 //     console.error(error, true);
@@ -17,7 +20,7 @@ ipcMain.on('relaunchApp', () => {
   app.exit();
 });
 
-function getBody(message, stack) {
+function getBody(message: string, stack: string) {
   return `### What happened?
 
 
@@ -62,11 +65,11 @@ ipcMain.on('openEmail', (_, { message, stack }) => {
   );
 });
 
-ipcMain.on('openIssue', (_, { message, stack }) => {
-  // openIssue(message, stack);
-});
+// ipcMain.on('openIssue', (_, { message, stack }) => {
+//   openIssue(message, stack);
+// });
 
-// const openIssue = (message, stack) => {
+// const openIssue = (message: string, stack: string) => {
 //   openNewGitHubIssue({
 //     user: 'agrc',
 //     repo: 'api-client',
