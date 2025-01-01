@@ -1,21 +1,12 @@
 import { parse } from 'csv-parse';
 import { stringify } from 'csv-stringify';
-import { app, ipcMain, nativeImage } from 'electron';
-// import url from 'url';
+import { app, ipcMain } from 'electron';
 import log from 'electron-log/main';
 import fs from 'fs';
 import ky from 'ky';
 import path from 'path';
 // import { trackEvent } from './analytics';
-// import md5 from 'md5';
 // import '../../tests/mocks/server';
-// does this not work because we are not in a tsx file?
-import dragIconUrl from '../assets/draganddrop.png';
-
-const dragIcon = nativeImage.createFromPath(dragIconUrl);
-
-// const __filename = url.fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
 const SPACES = / +/;
 const INVALID_CHARS = /[^a-zA-Z0-9]/g;
 
@@ -28,7 +19,7 @@ const client = ky.create({
   },
 });
 
-const cleanseStreet = (data) => {
+const cleanseStreet = (data: string) => {
   const replacement = ' ';
 
   // & -> and
@@ -39,7 +30,7 @@ const cleanseStreet = (data) => {
   return street.trim();
 };
 
-const cleanseZone = (data) => {
+const cleanseZone = (data: number) => {
   let zone = data.toString().replace(INVALID_CHARS, ' ');
   zone = zone.replace(SPACES, ' ').trim();
 
@@ -57,12 +48,12 @@ const coolYourJets = () => {
   return new Promise((resolve) => setTimeout(resolve, Math.random() * (max - min) + min));
 };
 
-let cancelled;
+let cancelled: string;
 export const cancelGeocode = (status = 'cancelled') => {
   cancelled = status;
 };
 
-export const checkApiKey = async (apiKey) => {
+export const checkApiKey = async (apiKey: string) => {
   log.info(`Checking API key: ${apiKey}`);
 
   let response;

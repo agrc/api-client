@@ -1,6 +1,7 @@
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import logger from 'electron-log/main';
 import startup from 'electron-squirrel-startup';
+// eslint-disable-next-line import/no-unresolved
 import { enforceMacOSAppLocation, isDev } from 'electron-util/main';
 import windowStateKeeper from 'electron-window-state';
 import path from 'path';

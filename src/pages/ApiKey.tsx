@@ -32,7 +32,6 @@ export function ApiKey() {
         }
       })
       .catch(handleError);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history, handleError]);
 
   const onApiKeyChange = async (event) => {
