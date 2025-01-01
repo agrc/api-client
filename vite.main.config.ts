@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
+import { viteStaticCopy } from './vendor/vite-plugin-static-copy.cjs';
 
 // https://vitejs.dev/config
 export default defineConfig({
