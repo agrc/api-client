@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.7](https://github.com/agrc/api-client/compare/v1.7.6...v1.7.7) (2025-01-07)
+
+
+### Dependencies
+
+* fy25 q3 package updates ([9dea0a0](https://github.com/agrc/api-client/commit/9dea0a01a4f91546ed4302a25681368e548ffb7d))
+
 ## [1.7.6](https://github.com/agrc/api-client/compare/v1.7.8...v1.7.6) (2024-10-17)
 
 
