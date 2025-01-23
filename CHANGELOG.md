@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.7.8](https://github.com/agrc/api-client/compare/v1.7.7...v1.7.8) (2025-01-23)
+
+
+### Bug Fixes
+
+* pin dropzone to allow drag and drop ([006710a](https://github.com/agrc/api-client/commit/006710ad07aecc173fefec9cad8d2b8664a9f355))
+
+
+### Dependencies
+
+* update dependencies ([c5aec5c](https://github.com/agrc/api-client/commit/c5aec5c1f97e12de8cb1aaee64bc6b7a9d9eb704))
+
 ## [1.7.7](https://github.com/agrc/api-client/compare/v1.7.6...v1.7.7) (2025-01-07)
 
 
