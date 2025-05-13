@@ -95,7 +95,7 @@ export function ApiKey() {
             API Key
           </label>
           <input
-            className="ml-4 h-12 max-w-lg flex-grow rounded-none rounded-l border-0 border-b border-l border-t text-2xl focus:ring-0"
+            className="ml-4 h-12 max-w-lg grow rounded-none rounded-l border-0 border-b border-l border-t text-2xl focus:ring-0"
             type="text"
             id="apiKey"
             maxLength="19"
