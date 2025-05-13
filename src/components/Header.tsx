@@ -8,7 +8,7 @@ export function Header() {
     <section
       id="drag"
       className={
-        'fixed inset-x-0 top-0 z-20 mb-24 grid h-24 auto-cols-max grid-flow-col items-center border-b border-indigo-700 bg-gradient-to-r to-pink-400 px-3 py-4 shadow-xl ' +
+        'fixed inset-x-0 top-0 z-20 mb-24 grid h-24 auto-cols-max grid-flow-col items-center border-b border-indigo-700 bg-linear-to-r to-pink-400 px-3 py-4 shadow-xl ' +
         gradient
       }
     >
