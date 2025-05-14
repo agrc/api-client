@@ -22,7 +22,7 @@ export function InvalidCsv({ errorDetails }) {
   }
 
   return (
-    <div className="border-3 my-4 w-full rounded border border-amber-800 bg-amber-50 px-4 shadow">
+    <div className="my-4 w-full rounded border-3 border-amber-800 bg-amber-50 px-4 shadow">
       <h2 className="text-center text-amber-500">Woops, that CSV is not valid</h2>
       <p>The file you selected has some problems that you will need to correct before we can continue.</p>
       <p>We found {message}</p>

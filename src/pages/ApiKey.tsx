@@ -89,13 +89,13 @@ export function ApiKey() {
         </li>
         <li>Copy and paste the key into the box below</li>
       </ol>
-      <section className="mt-10 flex flex-col justify-center rounded border bg-gray-50 p-6 pb-2 shadow">
+      <section className="mt-10 flex flex-col justify-center rounded border border-gray-200 bg-gray-50 p-6 pb-2 shadow">
         <div className="flex items-center">
           <label className="inline" htmlFor="apiKey">
             API Key
           </label>
           <input
-            className="ml-4 h-12 max-w-lg grow rounded-none rounded-l border-0 border-b border-l border-t text-2xl focus:ring-0"
+            className="ml-4 h-12 max-w-lg grow rounded-none rounded-l border-0 border-t border-b border-l text-2xl focus:ring-0"
             type="text"
             id="apiKey"
             maxLength="19"
@@ -111,7 +111,7 @@ export function ApiKey() {
             }}
             type="button"
             disabled={keyStatus === 'invalid'}
-            className="h-12 w-24 rounded-none rounded-r border-0 border-b border-r border-t"
+            className="h-12 w-24 rounded-none rounded-r border-0 border-t border-r border-b"
           >
             {keyStatus === 'validating' ? <Spinner /> : <>Next</>}
           </button>

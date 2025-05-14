@@ -23,7 +23,7 @@ export function About() {
       <button type="back-button" onClick={() => history.goBack()}>
         &larr; Back
       </button>
-      <section className="relative z-10 mt-4 grid w-full grid-cols-2 items-stretch justify-around rounded-lg border bg-white/95 text-center shadow-lg">
+      <section className="relative z-10 mt-4 grid w-full grid-cols-2 items-stretch justify-around rounded-lg border border-gray-200 bg-white/95 text-center shadow-lg">
         <div className="flex-1 p-6">
           <h2 className="my-0 text-indigo-600">
             <a href={`${info.repo}/releases`} target="_blank" rel="noopener noreferrer">
