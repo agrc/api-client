@@ -1,5 +1,5 @@
-import { DocumentTextIcon } from '@heroicons/react/24/outline';
 import humanizeDuration from 'humanize-duration';
+import { FileTextIcon } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
 import { Link, Prompt } from 'react-router-dom';
@@ -111,7 +111,7 @@ export function Geocoding() {
             onDragStart={onDragStart}
           >
             <p>Drag and drop this file to save the results.</p>
-            <DocumentTextIcon className="mx-auto w-32" />
+            <FileTextIcon className="mx-auto size-32" />
             <span className="mx-auto font-mono text-sm">ugrc_geocode_results.csv</span>
           </div>
         );

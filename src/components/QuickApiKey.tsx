@@ -1,4 +1,4 @@
-import { KeyIcon } from '@heroicons/react/24/outline';
+import { KeySquareIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useGeocodeContext } from './GeocodeContext';
 
@@ -14,7 +14,7 @@ export function QuickApiKey() {
       <div
         className={`${divClass} flex border-b border-l border-indigo-700 bg-pink-200 px-3 py-2 text-sm text-indigo-900 shadow-sm`}
       >
-        <KeyIcon className="h-5 w-5" />
+        <KeySquareIcon className="size-5" />
         <Link to="/?skip-forward=1" className="mx-2 font-bold">
           {geocodeContext.apiKey}
         </Link>

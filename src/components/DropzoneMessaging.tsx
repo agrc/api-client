@@ -1,4 +1,4 @@
-import { HandThumbUpIcon } from '@heroicons/react/24/outline';
+import { ThumbsUpIcon } from 'lucide-react';
 import { useGeocodeContext } from './GeocodeContext';
 import { Spinner } from './PageElements';
 
@@ -22,7 +22,7 @@ export const DropzoneMessaging = ({ isDragActive, file, validation }) => {
         )}
         <h2 className="my-1 truncate text-gray-400 lowercase">{file.name}</h2>
         {geocodeContext.data.valid && (
-          <HandThumbUpIcon className="mt-2 inline-flex w-12 align-text-bottom text-indigo-900" />
+          <ThumbsUpIcon className="mt-2 inline-flex size-12 align-text-bottom text-indigo-900" />
         )}
       </div>
     );

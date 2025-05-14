@@ -1,4 +1,4 @@
-import { DocumentMinusIcon, DocumentPlusIcon } from '@heroicons/react/24/outline';
+import { FileMinus2Icon, FilePlus2Icon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useErrorBoundary } from 'react-error-boundary';
@@ -185,12 +185,12 @@ export function Data() {
             onDrop(null);
           }}
         >
-          <DocumentMinusIcon className="mr-2 inline-block h-6 w-6 justify-between self-center" />
+          <FileMinus2Icon className="mr-2 inline-block size-6 justify-between self-center" />
           Clear
         </button>
       ) : (
         <button className="flex flex-row" type="button" onClick={open}>
-          <DocumentPlusIcon className="mr-2 inline-block h-6 w-6 justify-between self-center" />
+          <FilePlus2Icon className="mr-2 inline-block size-6 justify-between self-center" />
           Choose File
         </button>
       )}

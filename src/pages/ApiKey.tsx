@@ -1,4 +1,4 @@
-import { HandThumbDownIcon, HandThumbUpIcon } from '@heroicons/react/24/outline';
+import { ThumbsDownIcon, ThumbsUpIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
 import { useHistory } from 'react-router-dom';
@@ -119,9 +119,9 @@ export function ApiKey() {
         <div className="mt-6 flex flex-col items-center justify-center">
           <div className="font-bold tracking-tight text-gray-600">Is my key ok?</div>
           {keyStatus === 'valid' ? (
-            <HandThumbUpIcon className="w-16 text-indigo-900" />
+            <ThumbsUpIcon className="size-16 text-indigo-900" />
           ) : (
-            <HandThumbDownIcon className="w-16 text-amber-500" />
+            <ThumbsDownIcon className="size-16 text-amber-500" />
           )}
         </div>
       </section>
