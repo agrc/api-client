@@ -1,4 +1,4 @@
-const nock = require('nock');
+import nock from 'nock';
 
 nock('https://api.mapserv.utah.gov')
   .persist()
@@ -7,10 +7,7 @@ nock('https://api.mapserv.utah.gov')
   .delay(1100)
   .reply(200, {
     result: {
-      location: {
-        x: 301681.8180985777,
-        y: 4168674.213765412,
-      },
+      location: { x: 301681.8180985777, y: 4168674.213765412 },
       score: 100,
       locator: 'Centerlines.StatewideRoads',
       matchAddress: '9083 W HIGHWAY 56, Cedar City',

@@ -1,10 +1,7 @@
 import { Chrome } from '../components/PageElements';
 
-export function Error({ error, children }) {
-  window.ugrc.trackEvent({
-    category: 'error',
-    label: 'unhandled error',
-  });
+export function Error({ error, children }: { error: Error; children?: React.ReactNode }) {
+  window.ugrc.trackEvent({ category: 'error', label: 'unhandled error' });
 
   return (
     <article>

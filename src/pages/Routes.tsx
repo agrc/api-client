@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
+import { JSX, useEffect } from 'react';
 import { ErrorBoundary, useErrorBoundary } from 'react-error-boundary';
 import { useNavigatorStatus } from 'react-navigator-status';
-import { Link, MemoryRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
+import { Link, Route, RouteComponentProps, MemoryRouter as Router, Switch, withRouter } from 'react-router-dom';
 import { About, ApiKey, Data, Error as ErrorPage, Geocoding, Offline, Plan, Wkid } from '.';
 import GeocodeContextProvider from '../components/GeocodeContext';
 import { Chrome, Footer, Header } from '../components/PageElements';
 
-const RouterErrorPage = ({ error }) => {
+const RouterErrorPage = ({ error }: { error: Error }) => {
   return (
     <ErrorPage error={error}>
       <p>
@@ -82,7 +82,7 @@ export default function Routes() {
   );
 }
 
-const Scrolling = ({ history }) => {
+function Scrolling({ history }: RouteComponentProps): JSX.Element | null {
   useEffect(() => {
     const remove = history.listen(() => {
       window.scrollTo(0, 0);
@@ -93,6 +93,6 @@ const Scrolling = ({ history }) => {
   }, [history]);
 
   return null;
-};
+}
 
 export const ScrollToTop = withRouter(Scrolling);

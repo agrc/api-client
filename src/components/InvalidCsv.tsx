@@ -12,13 +12,13 @@ const errors = {
 
 export const CSV_PARSE_ERROR = 'CSV_PARSE_ERROR';
 
-export function InvalidCsv({ errorDetails }) {
+export function InvalidCsv({ errorDetails }: { errorDetails: string[] }) {
   let message = 'something we have never seen before. Good luck and try again!';
 
   const [code, stack] = errorDetails;
 
   if (Object.keys(errors).includes(code)) {
-    message = errors[code];
+    message = errors[code as keyof typeof errors];
   }
 
   return (
