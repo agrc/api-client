@@ -1,7 +1,6 @@
 import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 import logger from 'electron-log/main';
 import startup from 'electron-squirrel-startup';
-// eslint-disable-next-line import/no-unresolved
 import { enforceMacOSAppLocation, isDev } from 'electron-util/main';
 import windowStateKeeper from 'electron-window-state';
 import path from 'path';
@@ -12,11 +11,7 @@ import './services/csv';
 import './services/errors';
 import './services/geocode';
 
-updateElectronApp({
-  updateInterval: '1 hour',
-  logger: logger,
-  notifyUser: false,
-});
+updateElectronApp({ updateInterval: '1 hour', logger: logger, notifyUser: false });
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (startup) {
@@ -33,11 +28,7 @@ const version = `${app.getVersion()}${token}`;
 const createWindow = () => {
   enforceMacOSAppLocation();
 
-  const mainWindowState = windowStateKeeper({
-    width: 700,
-    height: 1000,
-    fullScreen: false,
-  });
+  const mainWindowState = windowStateKeeper({ width: 700, height: 1000, fullScreen: false });
 
   const mainWindow = new BrowserWindow({
     ...mainWindowState,
@@ -46,9 +37,7 @@ const createWindow = () => {
     minWidth: 525,
     minHeight: 500,
     titleBarStyle: 'hidden',
-    titleBarOverlay: {
-      color: 'rgba(0, 0, 0, 0)',
-    },
+    titleBarOverlay: { color: 'rgba(0, 0, 0, 0)' },
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       sandbox: true,
@@ -119,7 +108,6 @@ app.on('web-contents-created', (_, contents) => {
       'api.mapserv.utah.gov',
       'developer.mapserv.utah.gov',
       'agrc-status.netlify.app',
-      'o1150892.ingest.sentry.io',
     ];
     try {
       const url = new URL(urlString);
@@ -133,7 +121,7 @@ app.on('web-contents-created', (_, contents) => {
 
       return true;
     } catch (e) {
-      console.error(`non-safe url request: ${urlString}`, false);
+      console.error(`non-safe url request: ${urlString}`, false, e);
 
       return false;
     }

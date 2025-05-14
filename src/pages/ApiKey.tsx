@@ -15,14 +15,14 @@ export function ApiKey() {
   useEffect(() => {
     window.ugrc
       .getConfigItem('apiKey')
-      .then((key) => {
+      .then((key: string | null) => {
         geocodeDispatch({ type: 'UPDATE_KEY', payload: key ?? '' });
 
         if (key && history.location.search !== '?skip-forward=1') {
           history.push('/data');
         } else {
           if (key) {
-            checkApiKey(key).then((isValid) => {
+            checkApiKey(key).then((isValid: boolean) => {
               setKeyStatus(isValid ? 'valid' : 'invalid');
               geocodeDispatch({ type: 'UPDATE_KEY', payload: isValid ? key : '' });
             });
@@ -32,9 +32,10 @@ export function ApiKey() {
         }
       })
       .catch(handleError);
-  }, [history, handleError]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [history, handleError, geocodeDispatch]);
 
-  const onApiKeyChange = async (event) => {
+  const onApiKeyChange = async (event: { target: { value: string } }) => {
     const apiKey = event.target.value;
     setInputValue(apiKey);
 
@@ -44,7 +45,7 @@ export function ApiKey() {
     geocodeDispatch({ type: 'UPDATE_KEY', payload: isValid ? apiKey : '' });
   };
 
-  const checkApiKey = (apiKey) => {
+  const checkApiKey = (apiKey: string) => {
     setKeyStatus('validating');
     if (apiKey.length > 19 || apiKey.length < 19) {
       setKeyStatus('invalid');
@@ -98,7 +99,7 @@ export function ApiKey() {
             className="ml-4 h-12 max-w-lg grow rounded-none rounded-l border-0 border-t border-b border-l text-2xl focus:ring-0"
             type="text"
             id="apiKey"
-            maxLength="19"
+            maxLength={19}
             value={inputValue}
             onChange={onApiKeyChange}
           />

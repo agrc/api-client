@@ -1,4 +1,12 @@
-export function SampleFieldData({ sample, street, zone }) {
+export function SampleFieldData({
+  sample,
+  street,
+  zone,
+}: {
+  sample: Record<string, string>;
+  street: string;
+  zone: string;
+}) {
   return (
     <section className="flex flex-col">
       <h3 className="text-zinc-700">Sample Geocode Data</h3>
@@ -10,7 +18,7 @@ export function SampleFieldData({ sample, street, zone }) {
   );
 }
 
-function Label({ label, value }) {
+function Label({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex-1 p-4">
       <h4 className="my-0 max-w-xs truncate whitespace-nowrap text-indigo-600">{value ?? '?'}</h4>

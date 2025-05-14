@@ -1,20 +1,20 @@
 import { createContext, useContext } from 'react';
 import { useImmerReducer } from 'use-immer';
 
-const GeocodeContext = createContext();
-
 const initialValues = {
   apiKey: '',
   data: {
     street: '',
     zone: '',
-    file: null,
-    fieldsFromFile: [],
+    file: null as File | null,
+    fieldsFromFile: [] as string[],
     sampleData: {},
     totalRecords: 0,
-    valid: null,
+    valid: null as boolean | null,
   },
 };
+
+const GeocodeContext = createContext(initialValues);
 
 const reducer = (draft, action) => {
   switch (action.type) {
@@ -35,7 +35,7 @@ const reducer = (draft, action) => {
   }
 };
 
-export default function GeocodeContextProvider({ children }) {
+export default function GeocodeContextProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useImmerReducer(reducer, initialValues);
 
   return (

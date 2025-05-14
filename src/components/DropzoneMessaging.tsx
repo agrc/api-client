@@ -2,7 +2,13 @@ import { ThumbsUpIcon } from 'lucide-react';
 import { useGeocodeContext } from './GeocodeContext';
 import { Spinner } from './PageElements';
 
-export const DropzoneMessaging = ({ isDragActive, file, validation }) => {
+interface DropzoneMessagingProps {
+  isDragActive: boolean;
+  file: File | null;
+  validation: 'validating' | 'valid' | 'invalid';
+}
+
+export const DropzoneMessaging = ({ isDragActive, file, validation }: DropzoneMessagingProps) => {
   const { geocodeContext } = useGeocodeContext();
 
   if (isDragActive) {

@@ -1,6 +1,5 @@
 import { app, ipcMain, shell } from 'electron';
 // import unhandled from 'electron-unhandled';
-// eslint-disable-next-line import/no-unresolved
 // import { openNewGitHubIssue } from 'electron-util';
 import osName from 'os-name';
 

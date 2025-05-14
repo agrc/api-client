@@ -1,4 +1,4 @@
-export function Spinner({ className = 'w-8 h-8' }) {
+export function Spinner({ className = 'w-8 h-8' }: { className?: string }) {
   return (
     <svg
       className={`${className} animate-spin fill-current`}

@@ -28,10 +28,7 @@ export function Data() {
 
   const onDrop = async (files, _, event) => {
     if (!files) {
-      geocodeDispatch({
-        type: 'RESET',
-        payload: 'data',
-      });
+      geocodeDispatch({ type: 'RESET', payload: 'data' });
 
       return;
     }
@@ -79,13 +76,7 @@ export function Data() {
     try {
       setValidation('validating');
       stats = await window.ugrc.validateWithStats(file);
-      geocodeDispatch({
-        type: 'UPDATE_FILE',
-        payload: {
-          totalRecords: stats.totalRecords,
-          valid: true,
-        },
-      });
+      geocodeDispatch({ type: 'UPDATE_FILE', payload: { totalRecords: stats.totalRecords, valid: true } });
       setValidation('idle');
     } catch (e) {
       geocodeDispatch({ type: 'UPDATE_FILE', payload: { valid: false } });
@@ -110,16 +101,11 @@ export function Data() {
     noKeyboard: true,
     multiple: false,
     maxFiles: 1,
-    accept: {
-      'text/csv': acceptableFileTypes,
-    },
+    accept: { 'text/csv': acceptableFileTypes },
     onDrop,
     useFsAccessApi: false,
   });
-  const commonFieldNames = useRef({
-    street: [],
-    zone: [],
-  });
+  const commonFieldNames = useRef({ street: [], zone: [] });
   const history = useHistory();
   const handleError = useErrorBoundary();
 
@@ -152,10 +138,7 @@ export function Data() {
     existingZoneFields.add(geocodeContext.data.zone.toLowerCase());
 
     await window.ugrc
-      .saveConfig({
-        streetFields: Array.from(existingStreetFields),
-        zoneFields: Array.from(existingZoneFields),
-      })
+      .saveConfig({ streetFields: Array.from(existingStreetFields), zoneFields: Array.from(existingZoneFields) })
       .catch(handleError);
 
     history.push('/wkid');
