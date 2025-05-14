@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.7.9-0](https://github.com/agrc/api-client/compare/v1.7.8...v1.7.9-0) (2025-05-14)
+
+
+### Dependencies
+
+* **ci:** update actions ([2291a18](https://github.com/agrc/api-client/commit/2291a18a27b6ce68a2db1404e1afc211f4375553))
+* fy25q4 dependency updates ([8137528](https://github.com/agrc/api-client/commit/8137528c2d42b0423bdf850504f14205c48ba3b0))
+* fy25q4 package updates ([6840d79](https://github.com/agrc/api-client/commit/6840d79f21a5d2c53105907b851cea94e4e0016c))
+
+
+### Styles
+
+* upgrade to tailwind4 ([81d2358](https://github.com/agrc/api-client/commit/81d2358aae0aec412cf5ef66376e9e83212d6c7e))
+
 ## [1.7.8](https://github.com/agrc/api-client/compare/v1.7.7...v1.7.8) (2025-01-23)
 
 
