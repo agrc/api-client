@@ -29,7 +29,7 @@ export function Error({ error, children }) {
           <>
             <h2 className="mb-8 text-center">Report by</h2>
             <section className="mb-8 grid grid-cols-2 gap-4 text-center">
-              <div className="flex flex-col items-center rounded border px-3 py-2">
+              <div className="flex flex-col items-center rounded border border-gray-200 px-3 py-2">
                 <h3 className="mt-0">GitHub account</h3>
                 <button
                   type="button"
@@ -38,7 +38,7 @@ export function Error({ error, children }) {
                   Let&apos;s go
                 </button>
               </div>
-              <div className="flex flex-col items-center rounded border px-3 py-2">
+              <div className="flex flex-col items-center rounded border border-gray-200 px-3 py-2">
                 <h3 className="mt-0">Email</h3>
                 <button
                   type="button"

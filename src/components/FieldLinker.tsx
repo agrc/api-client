@@ -14,7 +14,7 @@ export const FieldLinker = () => {
       <div className="my-6 flex flex-wrap justify-around">
         {geocodeContext.data.fieldsFromFile.map((field) => (
           <div
-            className="min-w-1/6 mx-1 my-2 rounded border border-indigo-600 bg-indigo-100 px-3 text-center shadow"
+            className="mx-1 my-2 min-w-1/6 rounded border border-indigo-600 bg-indigo-100 px-3 text-center shadow"
             key={field}
           >
             {field}

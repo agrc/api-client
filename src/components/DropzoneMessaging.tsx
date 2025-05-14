@@ -20,7 +20,7 @@ export const DropzoneMessaging = ({ isDragActive, file, validation }) => {
             </span>
           </p>
         )}
-        <h2 className="my-1 truncate lowercase text-gray-400">{file.name}</h2>
+        <h2 className="my-1 truncate text-gray-400 lowercase">{file.name}</h2>
         {geocodeContext.data.valid && (
           <HandThumbUpIcon className="mt-2 inline-flex w-12 align-text-bottom text-indigo-900" />
         )}
@@ -28,5 +28,5 @@ export const DropzoneMessaging = ({ isDragActive, file, validation }) => {
     );
   }
 
-  return <h2 className="self-center text-center uppercase text-gray-400">Drop the CSV file here</h2>;
+  return <h2 className="self-center text-center text-gray-400 uppercase">Drop the CSV file here</h2>;
 };
