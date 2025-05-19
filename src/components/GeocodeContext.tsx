@@ -14,7 +14,9 @@ const initialValues = {
   },
 };
 
-const GeocodeContext = createContext(initialValues);
+const GeocodeContext = createContext<
+  { geocodeContext: typeof initialValues; geocodeDispatch: React.Dispatch<unknown> } | undefined
+>(undefined);
 
 const reducer = (draft, action) => {
   switch (action.type) {
@@ -28,7 +30,7 @@ const reducer = (draft, action) => {
       draft.data[action.meta] = action.payload;
       break;
     case 'RESET':
-      draft[action.payload] = initialValues[action.payload];
+      draft.data = initialValues.data;
       break;
     default:
       throw new Error(`Action type: ${action.type} is an unknown reducer type. ${JSON.stringify(action)}`);
