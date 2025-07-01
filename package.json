@@ -54,7 +54,7 @@
     "react-dropzone": "^14.2.10",
     "react-error-boundary": "^6.0.0",
     "react-navigator-status": "^0.1.2",
-    "react-router-dom": "^5.3.4",
+    "react-router-dom": "^7.6.3",
     "update-electron-app": "^3.1.1",
     "use-immer": "^0.11.0"
   },
@@ -78,8 +78,8 @@
     "@ugrc/eslint-config": "^1.2.2",
     "chokidar": "^4.0.3",
     "cross-env": "^7.0.3",
-    "dotenv": "^16.5.0",
-    "electron": "^36.2.1",
+    "dotenv": "^17.0.0",
+    "electron": "^37.1.0",
     "electron-squirrel-startup": "^1.0.1",
     "eslint": "^9.27.0",
     "prettier": "^3.5.3",
@@ -89,7 +89,7 @@
     "tailwindcss": "^4.1.7",
     "ts-node": "^10.9.2",
     "typescript": "~5.8.3",
-    "vite": "^6.3.5"
+    "vite": "^7.0.0"
   },
   "productName": "ugrc-api-client"
 }
