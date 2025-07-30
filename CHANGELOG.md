@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.10](https://github.com/agrc/api-client/compare/v1.7.9...v1.7.10) (2025-07-30)
+
+
+### Dependencies
+
+* audit fix ([18aaf59](https://github.com/agrc/api-client/commit/18aaf59f46bf7316d8a65356ec6298cbbed70b96))
+
 ## [1.7.9](https://github.com/agrc/api-client/compare/v1.7.8...v1.7.9) (2025-05-19)
 
 
