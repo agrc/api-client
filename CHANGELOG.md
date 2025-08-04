@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.10-rc.2](https://github.com/agrc/api-client/compare/v1.7.10-1...v1.7.10-rc.2) (2025-08-04)
+
+
+### Bug Fixes
+
+* generate new release ([642c1aa](https://github.com/agrc/api-client/commit/642c1aa4a942fc598034d560282a2d795d343d11))
+
 ## [1.7.10-1](https://github.com/agrc/api-client/compare/v1.7.9...v1.7.10-1) (2025-08-04)
 
 
