@@ -30,7 +30,6 @@ An apple developer certificate is required to sign the application for distribut
 
 1. Create a `prod` and `dev` GitHub [repo environment](https://github.com/agrc/api-client/settings/environments).
 1. Store the password and the p12 certificate as GitHub Action secrets in the environment:
-
    - `gh secret set APPLE_CERTIFICATE -b$(base64 -i ~/certificate.p12) --env=prod`
    - `gh secret set APPLE_CERTIFICATE_PASSWORD -b<password> --env=prod`
    - `gh secret set WINDOWS_CERTIFICATE_PASSWORD -b<password> --env=prod`
