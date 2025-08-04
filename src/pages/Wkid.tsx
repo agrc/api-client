@@ -1,5 +1,5 @@
 import { Radio, RadioGroup } from '@headlessui/react';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useEffect, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
 import { Link, useNavigate } from 'react-router';
