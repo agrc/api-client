@@ -50,6 +50,18 @@ const createWindow = () => {
 
   mainWindowState.manage(mainWindow);
 
+  // Set Content Security Policy headers for additional security
+  mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': [
+          "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.mapserv.utah.gov https://developer.mapserv.utah.gov https://gis.utah.gov https://agrc-status.netlify.app; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';",
+        ],
+      },
+    });
+  });
+
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
