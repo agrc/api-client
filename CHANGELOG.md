@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.7.10-0](https://github.com/agrc/api-client/compare/v1.7.9...v1.7.10-0) (2025-08-04)
+
+
+### Bug Fixes
+
+* set content security policy ([7c9c9c7](https://github.com/agrc/api-client/commit/7c9c9c7a3fbbf872b2bb47ecc8765aecad9faba7))
+
+
+### Dependencies
+
+* audit fix ([18aaf59](https://github.com/agrc/api-client/commit/18aaf59f46bf7316d8a65356ec6298cbbed70b96))
+* bump npm dependencies ([53408fa](https://github.com/agrc/api-client/commit/53408fac18fd1bd5b7b037925006a82ade320674))
+
 ## [1.7.9](https://github.com/agrc/api-client/compare/v1.7.8...v1.7.9) (2025-05-19)
 
 
