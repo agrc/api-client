@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import logo from '../assets/logo.svg';
 
 export function About() {
@@ -11,7 +11,7 @@ export function About() {
     website: 'https://api.mapserv.utah.gov',
     repo: 'https://github.com/agrc/api-client',
   });
-  const history = useHistory();
+  const navigate = useNavigate();
   const handleError = useErrorBoundary();
 
   useEffect(() => {
@@ -19,8 +19,8 @@ export function About() {
   }, [handleError]);
 
   return (
-    <article>
-      <button type="back-button" onClick={() => history.goBack()}>
+    <article className="bg-center bg-no-repeat bg-origin-content" style={{ backgroundImage: `url(${logo})` }}>
+      <button type="button" onClick={() => navigate(-1)}>
         &larr; Back
       </button>
       <section className="relative z-10 mt-4 grid w-full grid-cols-2 items-stretch justify-around rounded-lg border border-gray-200 bg-white/95 text-center shadow-lg">
@@ -65,10 +65,6 @@ export function About() {
           <span className="block text-base font-normal text-gray-400">key management</span>
         </h2>
       </section>
-      <div
-        className="absolute inset-0 z-0 bg-contain bg-fixed bg-center bg-no-repeat bg-origin-content"
-        style={{ backgroundImage: `url(${logo})` }}
-      ></div>
     </article>
   );
 }

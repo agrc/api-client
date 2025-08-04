@@ -2,7 +2,7 @@ import humanizeDuration from 'humanize-duration';
 import { FileTextIcon } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
-import { Link, Prompt } from 'react-router-dom';
+import { Link, useBlocker } from 'react-router';
 import { useGeocodeContext } from '../components/GeocodeContext';
 
 const numberFormat = new Intl.NumberFormat('en-US');
@@ -22,6 +22,13 @@ export function Geocoding() {
     failures: 0,
   });
   const handleError = useErrorBoundary();
+
+  // Block navigation when geocoding is in progress
+  const blocker = useBlocker(
+    useCallback(() => {
+      return stats.status === 'running';
+    }, [stats.status]),
+  );
 
   const onDragStart = (event) => {
     event.preventDefault();
@@ -93,12 +100,6 @@ export function Geocoding() {
             >
               Cancel
             </button>
-            <Prompt
-              message={JSON.stringify({
-                detail: 'Navigating to a different page will cancel the current geocoding process.',
-                message: 'Are you sure you would like to navigate?',
-              })}
-            />
           </>
         );
       }
@@ -228,6 +229,31 @@ export function Geocoding() {
           </div>
         </dl>
       </section>
+
+      {/* Navigation blocking confirmation UI */}
+      {blocker.state === 'blocked' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-indigo-900/50 backdrop-blur-sm">
+          <div className="mx-4 max-w-md rounded border border-indigo-200 bg-white/95 p-6 shadow-xl">
+            <h3 className="mb-4 text-center text-xl font-medium text-indigo-900">Geocoding in Progress</h3>
+            <p className="mb-6 text-lg text-indigo-800">
+              Navigating to a different page will cancel the current geocoding process. Are you sure you would like to
+              navigate away?
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button type="button" onClick={() => blocker.reset()}>
+                Stay Here
+              </button>
+              <button
+                type="button"
+                onClick={() => blocker.proceed()}
+                className="border-red-900 bg-red-600 hover:border-red-600 hover:bg-red-100 hover:text-red-500"
+              >
+                Leave and Cancel Geocoding
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </article>
   );
 }

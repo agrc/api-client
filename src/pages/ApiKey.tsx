@@ -1,13 +1,14 @@
 import { ThumbsDownIcon, ThumbsUpIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 import { useGeocodeContext } from '../components/GeocodeContext';
 import { Spinner } from '../components/PageElements';
 
 export function ApiKey() {
   const { geocodeContext, geocodeDispatch } = useGeocodeContext();
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [keyStatus, setKeyStatus] = useState('unknown');
   const [inputValue, setInputValue] = useState('');
   const handleError = useErrorBoundary();
@@ -18,8 +19,8 @@ export function ApiKey() {
       .then((key: string | null) => {
         geocodeDispatch({ type: 'UPDATE_KEY', payload: key ?? '' });
 
-        if (key && history.location.search !== '?skip-forward=1') {
-          history.push('/data');
+        if (key && location.search !== '?skip-forward=1') {
+          navigate('/data');
         } else {
           if (key) {
             checkApiKey(key).then((isValid: boolean) => {
@@ -107,7 +108,7 @@ export function ApiKey() {
             onClick={() => {
               window.ugrc
                 .saveConfig({ apiKey: geocodeContext.apiKey })
-                .then(() => history.push('/data'))
+                .then(() => navigate('/data'))
                 .catch(handleError);
             }}
             type="button"

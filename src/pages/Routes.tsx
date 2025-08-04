@@ -1,7 +1,7 @@
 import { JSX, useEffect } from 'react';
 import { ErrorBoundary, useErrorBoundary } from 'react-error-boundary';
 import { useNavigatorStatus } from 'react-navigator-status';
-import { Link, Route, RouteComponentProps, MemoryRouter as Router, Switch, withRouter } from 'react-router-dom';
+import { createMemoryRouter, Link, Outlet, RouterProvider, useLocation } from 'react-router';
 import { About, ApiKey, Data, Error as ErrorPage, Geocoding, Offline, Plan, Wkid } from '.';
 import GeocodeContextProvider from '../components/GeocodeContext';
 import { Chrome, Footer, Header } from '../components/PageElements';
@@ -24,6 +24,41 @@ const RouterErrorPage = ({ error }: { error: Error }) => {
   );
 };
 
+function ScrollToTop(): JSX.Element | null {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  return null;
+}
+
+// Layout component that wraps all routes
+function Layout() {
+  const online = useNavigatorStatus();
+  const handleError = useErrorBoundary();
+
+  useEffect(() => {
+    window.addEventListener('keyup', (event) => {
+      if (event.ctrlKey && event.key === '/') {
+        handleError.showBoundary(new Error('Test error'));
+      }
+    });
+  }, [handleError]);
+
+  return (
+    <>
+      <Header />
+      <Chrome>
+        <ScrollToTop />
+        <ErrorBoundary FallbackComponent={RouterErrorPage}>{online ? <Outlet /> : <Offline />}</ErrorBoundary>
+      </Chrome>
+      <Footer />
+    </>
+  );
+}
+
 const pages = [
   { path: 'about', Component: About },
   { path: 'geocode', Component: Geocoding },
@@ -33,66 +68,26 @@ const pages = [
   { path: '', Component: ApiKey },
 ];
 
-export default function Routes() {
-  const online = useNavigatorStatus();
-  const handleError = useErrorBoundary();
+// Create the router configuration
+const router = createMemoryRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    children: pages.map(({ path, Component }) => ({
+      path: path === '' ? '' : `/${path}`,
+      element: (
+        <ErrorBoundary FallbackComponent={RouterErrorPage}>
+          <Component />
+        </ErrorBoundary>
+      ),
+    })),
+  },
+]);
 
-  useEffect(() => {
-    window.addEventListener('keyup', (event) => {
-      if (event.ctrlKey && event.key === '/') {
-        handleError(new Error('Test error'));
-      }
-    });
-  }, [handleError]);
-
+export default function AppRoutes() {
   return (
     <GeocodeContextProvider>
-      <Router
-        defaultRoute
-        getUserConfirmation={(message, callback) =>
-          window.ugrc.getUserConfirmation(message).then(callback).catch(handleError)
-        }
-      >
-        <Header />
-        <Chrome>
-          <ScrollToTop />
-          <ErrorBoundary FallbackComponent={RouterErrorPage}>
-            <Switch>
-              {online ? (
-                pages.map(({ path, Component }) => (
-                  <Route
-                    key={path}
-                    path={`/${path}`}
-                    component={() => (
-                      <ErrorBoundary FallbackComponent={RouterErrorPage}>
-                        <Component />
-                      </ErrorBoundary>
-                    )}
-                  />
-                ))
-              ) : (
-                <Route path="/" component={Offline} />
-              )}
-            </Switch>
-          </ErrorBoundary>
-        </Chrome>
-        <Footer />
-      </Router>
+      <RouterProvider router={router} />
     </GeocodeContextProvider>
   );
 }
-
-function Scrolling({ history }: RouteComponentProps): JSX.Element | null {
-  useEffect(() => {
-    const remove = history.listen(() => {
-      window.scrollTo(0, 0);
-    });
-    return () => {
-      remove();
-    };
-  }, [history]);
-
-  return null;
-}
-
-export const ScrollToTop = withRouter(Scrolling);
