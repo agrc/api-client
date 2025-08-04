@@ -13,6 +13,7 @@ export default [
       '**/dist',
       '**/package-lock.json',
       '**/.vscode',
+      '.webpack',
     ],
   },
 ];
