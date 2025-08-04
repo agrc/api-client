@@ -2,7 +2,7 @@ import { FileMinus2Icon, FilePlus2Icon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useErrorBoundary } from 'react-error-boundary';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { useGeocodeContext } from '../components/GeocodeContext';
 import { CSV_PARSE_ERROR, InvalidCsv } from '../components/InvalidCsv';
 import { AddressParts, DropzoneMessaging, FieldLinker, SampleFieldData, Spinner } from '../components/PageElements';
@@ -106,7 +106,7 @@ export function Data() {
     useFsAccessApi: false,
   });
   const commonFieldNames = useRef({ street: [], zone: [] });
-  const history = useHistory();
+  const navigate = useNavigate();
   const handleError = useErrorBoundary();
 
   useEffect(() => {
@@ -141,7 +141,7 @@ export function Data() {
       .saveConfig({ streetFields: Array.from(existingStreetFields), zoneFields: Array.from(existingZoneFields) })
       .catch(handleError);
 
-    history.push('/wkid');
+    navigate('/wkid');
   };
 
   return (

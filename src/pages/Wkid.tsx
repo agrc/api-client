@@ -2,12 +2,12 @@ import { Radio, RadioGroup } from '@headlessui/react';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 
 export function Wkid() {
   const [wkid, setWkid] = useState('');
   const [customWkid, setCustomWkid] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate();
   const handleError = useErrorBoundary();
 
   useEffect(() => {
@@ -46,10 +46,7 @@ export function Wkid() {
               <div
                 className={clsx(
                   'm-2 flex h-48 w-48 flex-1 cursor-pointer flex-col justify-center rounded-full p-6 ring-4',
-                  {
-                    'ring-gray-300': !checked,
-                    'bg-gray-50 ring-pink-400': checked,
-                  },
+                  { 'ring-gray-300': !checked, 'bg-gray-50 ring-pink-400': checked },
                 )}
               >
                 <h2 className="my-0 text-indigo-600">26912</h2>
@@ -63,10 +60,7 @@ export function Wkid() {
               <div
                 className={clsx(
                   'm-2 flex h-48 w-48 flex-1 cursor-pointer flex-col justify-center rounded-full p-6 ring-4',
-                  {
-                    'ring-gray-300': !checked,
-                    'bg-gray-50 ring-pink-400': checked,
-                  },
+                  { 'ring-gray-300': !checked, 'bg-gray-50 ring-pink-400': checked },
                 )}
               >
                 <h2 className="my-0 text-indigo-600">4326</h2>
@@ -80,10 +74,7 @@ export function Wkid() {
               <div
                 className={clsx(
                   'm-2 flex h-48 w-48 flex-1 cursor-pointer flex-col justify-center rounded-full p-6 ring-4',
-                  {
-                    'ring-gray-300': !checked,
-                    'bg-gray-50 ring-pink-400': checked,
-                  },
+                  { 'ring-gray-300': !checked, 'bg-gray-50 ring-pink-400': checked },
                 )}
               >
                 <h2 className="my-0 text-indigo-600">3857</h2>
@@ -115,7 +106,7 @@ export function Wkid() {
           onClick={() => {
             window.ugrc.saveConfig({ wkid: parseInt(wkid || customWkid) }).catch(handleError);
 
-            history.push('/plan');
+            navigate('/plan');
           }}
           type="button"
         >

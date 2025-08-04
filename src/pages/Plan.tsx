@@ -1,16 +1,16 @@
 import humanizeDuration from 'humanize-duration';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { useGeocodeContext } from '../components/GeocodeContext';
 
 const numberFormat = new Intl.NumberFormat('en-US');
 
 export function Plan() {
   const { geocodeContext } = useGeocodeContext();
-  const history = useHistory();
+  const navigate = useNavigate();
   const duration = (geocodeContext.data.totalRecords / 3) * 1000;
 
   const start = () => {
-    history.push('/geocode');
+    navigate('/geocode');
   };
 
   return (
