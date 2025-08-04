@@ -98,8 +98,6 @@ jobs:
     name: Change management
     needs: [deploy-macos, deploy-windows]
     runs-on: ubuntu-latest
-    environment:
-      name: prod
     permissions:
       contents: read
       pull-requests: write
