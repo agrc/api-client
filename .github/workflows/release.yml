@@ -26,18 +26,18 @@ jobs:
       name: prod
     steps:
       - name: ⬇️ Set up code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           show-progress: false
 
       - name: ⎔ Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: lts/*
           cache: npm
 
       - name: 🐍 Set up python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: 3.12
 
@@ -74,12 +74,12 @@ jobs:
       name: prod
     steps:
       - name: ⬇️ Set up code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           show-progress: false
 
       - name: ⎔ Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: lts/*
           cache: npm
