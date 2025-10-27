@@ -20,6 +20,25 @@ const fromBuildIdentifier = utils.fromBuildIdentifier;
 
 const { version } = packageJson;
 const assets = path.resolve(__dirname, 'src', 'assets');
+const windowsSign = {
+  certificateFile: './build/cert/windows.p7b',
+  signWithParams: [
+    '/tr',
+    'https://timestamp.sectigo.com', // Timestamp server
+    '/td',
+    'sha256',
+    '/fd',
+    'sha256',
+    '/v',
+    // HSM / CNG specific args
+    '/csp',
+    'Google Cloud KMS Provider',
+    '/kc',
+    process.env.GCP_KEY_PATH,
+    '/sha1',
+    process.env.CERTIFICATE_SHA1 || '',
+  ],
+};
 
 const config: ForgeConfig = {
   buildIdentifier: process.env.VITE_IS_BETA === 'true' ? 'beta' : 'prod',
@@ -42,6 +61,7 @@ const config: ForgeConfig = {
       CompanyName: 'UGRC',
       OriginalFilename: 'UGRC API Client',
     },
+    windowsSign: process.env.NODE_ENV !== 'production' ? {} : windowsSign,
     osxSign:
       process.env.NODE_ENV !== 'production'
         ? {}
@@ -71,11 +91,9 @@ const config: ForgeConfig = {
       noMsi: true,
       setupExe: `ugrc-api-client-${version}-win32-setup.exe`,
       setupIcon: path.resolve(assets, 'logo.ico'),
-      certificateFile: './build/cert/windows.p12',
-      certificatePassword: process.env.WINDOWS_CERTIFICATE_PASSWORD,
+      windowsSign,
     }),
     new MakerZIP({}, ['darwin']),
-    // @ts-expect-error expect missing appPath
     new MakerDMG({
       title: '${productName} ${version}',
       additionalDMGOptions: {
