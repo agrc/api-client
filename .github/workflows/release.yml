@@ -85,10 +85,25 @@ jobs:
       - name: 📥 Install dependencies
         run: npm ci
 
+      - name: 🏗️ Install Google Cloud KMS Provider
+        shell: pwsh
+        run: .\build\install-kms.ps1
+
+      - name: 🗝️ Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          access_token_scopes: 'openid, https://www.googleapis.com/auth/cloud-platform'
+          workload_identity_provider: ${{ secrets.IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+          create_credentials_file: true
+
       - name: 🚀 Build, Package, & Release
         run: npm run publish
         env:
-          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+          GCP_KEY_PATH: ${{ secrets.GCP_KEY_PATH }}
+          CERTIFICATE_SHA1: ${{ vars.CERTIFICATE_SHA1 }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
 
