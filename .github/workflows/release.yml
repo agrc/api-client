@@ -63,8 +63,6 @@ jobs:
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GA4_ID: ${{ secrets.GA4_ID }}
-          GA4_SECRET: ${{ secrets.GA4_SECRET }}
           VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
 
   deploy-windows:
