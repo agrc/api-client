@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-Downloads, verifies, and installs the Google Cloud KMS CNG Provider.
+Downloads, verifies, and installs the Google Cloud KMS CNG Provider, and imports the code signing certificate.
 
 .DESCRIPTION
 This script performs the following actions:
@@ -8,10 +8,11 @@ This script performs the following actions:
 2. Verifies the digital signature against Google's public key using OpenSSL
 3. Extracts the MSI installer from the ZIP
 4. Installs the MSI silently
-5. Cleans up temporary files
+5. Imports the code signing certificate (if present) into the Windows certificate store
+6. Cleans up temporary files
 
 .NOTES
-- Requires Administrator privileges for MSI installation
+- Requires Administrator privileges for MSI installation and certificate import
 - Requires openssl.exe to be available in PATH for signature verification
 - Update the $cngTag variable if a newer version is needed
 #>
@@ -27,12 +28,11 @@ if (-not $isAdmin) {
 # --- Configuration ---
 $cngTag = "cng-v1.3"
 $publicKeyPath = Join-Path $PSScriptRoot "cng-release-signing-key.pem"
+$certPath = Join-Path $PSScriptRoot "cert\windows.p7b"
 $tempDir = Join-Path $env:TEMP "KmsCngInstall"
 
 # --- Script Body ---
 Write-Host "Starting Google Cloud KMS CNG Provider installation..."
-Write-Host "Script directory: $PSScriptRoot"
-Write-Host "Public key path: $publicKeyPath"
 
 # Verify public key exists
 if (-not (Test-Path $publicKeyPath)) {
@@ -44,7 +44,7 @@ if (Test-Path $tempDir) {
     Write-Host "Removing existing temporary directory: $tempDir"
     Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
 }
-Write-Host "Creating temporary directory: $tempDir"
+
 New-Item -ItemType Directory -Force -Path $tempDir | Out-Null
 
 try {
@@ -55,7 +55,6 @@ try {
     # Try using gh CLI if available, otherwise fall back to Invoke-WebRequest
     $ghPath = Get-Command gh -ErrorAction SilentlyContinue
     if ($ghPath) {
-        Write-Host "Using GitHub CLI to download..."
         gh release download $cngTag -R "GoogleCloudPlatform/kms-integrations" -p "*amd64.zip"
     } else {
         Write-Host "GitHub CLI not found, using Invoke-WebRequest..."
@@ -68,10 +67,8 @@ try {
     if (-not $zipFile) {
         throw "Downloaded ZIP file not found"
     }
-    Write-Host "Download complete: $($zipFile.FullName)"
 
     # Extract the ZIP
-    Write-Host "Extracting archive..."
     Expand-Archive -Path $zipFile.FullName -DestinationPath $tempDir -Force
 
     # Find signature and MSI files
@@ -85,28 +82,19 @@ try {
         throw "MSI installer file not found in archive"
     }
 
-    Write-Host "Found signature: $($sigFile.FullName)"
-    Write-Host "Found MSI: $($msiFile.FullName)"
-
     # Verify digital signature
     Write-Host "Verifying digital signature against Google's public key..."
-    Write-Host "Public key file: $publicKeyPath"
-    Write-Host "Public key exists: $(Test-Path $publicKeyPath)"
 
     $opensslPath = Get-Command openssl -ErrorAction SilentlyContinue
     if ($opensslPath) {
-        Write-Host "OpenSSL path: $($opensslPath.Source)"
 
         # Use the exact command from Google's documentation
         # openssl dgst -sha384 -verify <public_key> -signature <sig_file> <file_to_verify>
-        Write-Host "Running verification..."
-
         try {
             $verifyOutput = & openssl dgst -sha384 -verify $publicKeyPath -signature $sigFile.FullName $msiFile.FullName 2>&1 | Out-String
             $verifyExitCode = $LASTEXITCODE
 
             Write-Host "Verification output: $verifyOutput"
-            Write-Host "Exit code: $verifyExitCode"
 
             # Check if verification succeeded
             if ($verifyExitCode -eq 0 -and $verifyOutput -match "Verified OK") {
@@ -115,8 +103,6 @@ try {
                 Write-Warning "Signature verification failed, but continuing installation."
                 Write-Warning "This may indicate an OpenSSL compatibility issue with EC keys."
                 Write-Warning "The download was performed over HTTPS from GitHub, providing transport security."
-                Write-Host "Exit Code: $verifyExitCode"
-                Write-Host "Output: $verifyOutput"
             }
 
             # Reset LASTEXITCODE so it doesn't affect the script's final exit code
@@ -133,7 +119,7 @@ try {
     }
 
     # Install the MSI
-    Write-Host "Installing MSI silently..."
+    Write-Host "Installing the Google Cloud KMS CNG Provider..."
     $msiArgs = @(
         "/i"
         "`"$($msiFile.FullName)`""
@@ -142,11 +128,11 @@ try {
         "/L*v"
         "`"$tempDir\install.log`""
     )
-    Write-Host "Executing: msiexec.exe $($msiArgs -join ' ')"
+
     $process = Start-Process msiexec.exe -ArgumentList $msiArgs -Wait -NoNewWindow -PassThru
 
     if ($process.ExitCode -eq 0) {
-        Write-Host "✓ MSI installer completed successfully (Exit Code 0)."
+      Write-Host "CNG Provider installation completed successfully."
     } elseif ($process.ExitCode -eq 3010) {
         Write-Warning "MSI installation requires a reboot (Exit Code 3010)."
     } elseif ($process.ExitCode -eq 1625) {
@@ -167,7 +153,28 @@ try {
         throw "MSI installation failed with exit code $($process.ExitCode)."
     }
 
-    Write-Host "Installation process finished successfully."
+    # Import code signing certificate if it exists
+    if (Test-Path $certPath) {
+        Write-Host "Importing code signing certificate..."
+        Write-Host "Certificate path: $certPath"
+
+        try {
+            # Import the certificate to the Current User's Personal store
+            $cert = Import-Certificate -FilePath $certPath -CertStoreLocation Cert:\CurrentUser\My -ErrorAction Stop
+            Write-Host "✓ Certificate imported successfully to CurrentUser\My"
+            Write-Host "  Subject: $($cert.Subject)"
+            Write-Host "  Thumbprint: $($cert.Thumbprint)"
+            Write-Host "  SHA1: $($cert.Thumbprint)"
+        } catch {
+            Write-Warning "Failed to import certificate: $($_.Exception.Message)"
+            Write-Host "You may need to import the certificate manually."
+        }
+    } else {
+        Write-Host "`nCode signing certificate not found at: $certPath"
+        Write-Host "Skipping certificate import."
+    }
+
+    Write-Host "`n✓ Installation process finished successfully."
 }
 catch {
     Write-Error "An error occurred during installation: $($_.Exception.Message)"

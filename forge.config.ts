@@ -21,7 +21,6 @@ const fromBuildIdentifier = utils.fromBuildIdentifier;
 const { version } = packageJson;
 const assets = path.resolve(__dirname, 'src', 'assets');
 const windowsSign = {
-  certificateFile: './build/cert/windows.p7b',
   signWithParams: [
     '/tr',
     'https://timestamp.sectigo.com', // Timestamp server
