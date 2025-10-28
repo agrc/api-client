@@ -118,9 +118,14 @@ try {
                 Write-Host "Exit Code: $verifyExitCode"
                 Write-Host "Output: $verifyOutput"
             }
+
+            # Reset LASTEXITCODE so it doesn't affect the script's final exit code
+            $global:LASTEXITCODE = 0
         } catch {
             Write-Warning "Signature verification encountered an error: $($_.Exception.Message)"
             Write-Warning "Continuing with installation (download was over HTTPS)."
+            # Reset LASTEXITCODE
+            $global:LASTEXITCODE = 0
         }
     } else {
         Write-Warning "OpenSSL not found in PATH. Skipping signature verification."
@@ -172,4 +177,5 @@ finally {
     Pop-Location
 }
 
-Write-Host "Script finished."
+# Ensure we exit with success code if we got here
+exit 0
