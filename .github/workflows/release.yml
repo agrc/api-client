@@ -58,6 +58,7 @@ jobs:
       - name: 🚀 Build, Package, & Release
         run: npm run publish -- --arch=universal
         env:
+          NODE_ENV: production
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
           APPLE_USER_ID: ${{ secrets.APPLE_USER_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
@@ -85,27 +86,279 @@ jobs:
       - name: 📥 Install dependencies
         run: npm ci
 
+      - name: 📦 Cache CNG Provider
+        id: cache-cng
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.TEMP }}\KmsCngInstall
+          key: cng-provider-v1.3-windows
+
       - name: 🏗️ Install Google Cloud KMS Provider
         shell: pwsh
         run: .\build\install-kms.ps1
+        env:
+          CACHE_HIT: ${{ steps.cache-cng.outputs.cache-hit }}
+
+      - name: Add signtool to PATH (from script)
+        shell: pwsh
+        run: .\build\add-signtool-path.ps1
 
       - name: 🗝️ Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v3
         with:
-          access_token_scopes: 'openid, https://www.googleapis.com/auth/cloud-platform'
+          access_token_scopes: 'openid, https://www.googleapis.com/auth/cloudkms, https://www.googleapis.com/auth/cloud-platform'
+          token_format: 'access_token'
           workload_identity_provider: ${{ secrets.IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
           create_credentials_file: true
 
-      - name: 🚀 Build, Package, & Release
-        run: npm run publish
+      - name: 📜 Import Code Signing Certificate
+        shell: pwsh
+        run: .\build\import-certificate.ps1 -CertSha1 ${{ vars.CERTIFICATE_SHA1 }}
+        env:
+          GCP_KEY_PATH: ${{ secrets.GCP_KEY_PATH }}
+        timeout-minutes: 2
+
+      - name: 🔐 KMS access preflight (getPublicKey)
+        shell: pwsh
+        env:
+          GCP_KEY_PATH: ${{ secrets.GCP_KEY_PATH }}
+          ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (-not $env:ACCESS_TOKEN) { Write-Error 'No access token available from auth step'; exit 1 }
+          if (-not $env:GCP_KEY_PATH) { Write-Error 'GCP_KEY_PATH is not set'; exit 1 }
+          # Normalize and validate key path; REST expects projects/.../cryptoKeyVersions/N
+          $path = $env:GCP_KEY_PATH
+          $path = $path -replace '^gkms://', ''
+          $path = $path.TrimStart('/')
+          $pattern = '^projects/[^/]+/locations/([^/]+)/keyRings/[^/]+/cryptoKeys/[^/]+/cryptoKeyVersions/\d+$'
+          $m = [regex]::Match($path, $pattern)
+          if (-not $m.Success) {
+            Write-Error 'GCP_KEY_PATH format is invalid. It must be projects/{project}/locations/{location}/keyRings/{keyRing}/cryptoKeys/{cryptoKey}/cryptoKeyVersions/{version}'; exit 1
+          }
+          $loc = $m.Groups[1].Value
+          $uri = "https://cloudkms.$loc.rep.googleapis.com/v1/$path/publicKey"
+          try {
+            $resp = Invoke-RestMethod -Method GET -Uri $uri -Headers @{ Authorization = "Bearer $($env:ACCESS_TOKEN)" }
+            if ($resp.pem) {
+              Write-Host "KMS getPublicKey ok. Algorithm: $($resp.algorithm)"
+              # Save PEM for later comparison
+              Set-Content -Path "$env:RUNNER_TEMP\\kms-pub.pem" -Value $resp.pem -Encoding ascii
+            } else {
+              Write-Warning "KMS getPublicKey returned without PEM; raw: $($resp | ConvertTo-Json -Compress)"
+            }
+          } catch {
+            # Try to extract a concise error message without echoing the path
+            $msg = $_.Exception.Message
+            try {
+              $respStream = $_.Exception.Response.GetResponseStream()
+              if ($respStream) {
+                $reader = New-Object System.IO.StreamReader($respStream)
+                $body = $reader.ReadToEnd()
+                $json = $null
+                try { $json = $body | ConvertFrom-Json } catch {}
+                if ($json.error.message) { $msg = $json.error.message }
+              }
+            } catch {}
+            Write-Error "KMS getPublicKey failed: $msg"; throw
+          }
+
+      - name: 🔎 Compare certificate vs KMS public key
+        shell: pwsh
+        env:
+          CERTIFICATE_SHA1: ${{ vars.CERTIFICATE_SHA1 }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $cert = Get-ChildItem Cert:\CurrentUser\My | Where-Object { $_.Thumbprint -eq $env:CERTIFICATE_SHA1 }
+          if (-not $cert) { Write-Error "Certificate $env:CERTIFICATE_SHA1 not found in store"; exit 1 }
+          $certFile = "$env:RUNNER_TEMP\\cert.cer"
+          Export-Certificate -Cert $cert -FilePath $certFile -Force | Out-Null
+
+          # Compute SPKI SHA256 for the certificate
+          $certHash = & openssl x509 -in $certFile -noout -pubkey 2>$null | openssl pkey -pubin -outform der 2>$null | openssl dgst -sha256 -r 2>$null
+          $certHash = ($certHash -split ' ' | Select-Object -First 1).Trim()
+
+          # Compute SPKI SHA256 for the KMS public key
+          $kmsPem = "$env:RUNNER_TEMP\\kms-pub.pem"
+          if (-not (Test-Path $kmsPem)) { Write-Error "KMS public key PEM not found from previous step"; exit 1 }
+          $kmsHash = & openssl pkey -pubin -in $kmsPem -outform der 2>$null | openssl dgst -sha256 -r 2>$null
+          $kmsHash = ($kmsHash -split ' ' | Select-Object -First 1).Trim()
+
+          if ($certHash -and $kmsHash -and ($certHash -ieq $kmsHash)) {
+            Write-Host "Public key match confirmed (SPKI SHA256)."
+          } else {
+            Write-Error "Public key mismatch: cert $certHash vs KMS $kmsHash. Ensure windows.cer matches the key in GCP_KEY_PATH."
+            exit 1
+          }
+
+      - name: 🔎 Verify certificate in user store
+        shell: pwsh
+        run: |
+          $thumb = '${{ vars.CERTIFICATE_SHA1 }}'
+          $found = certutil.exe -user -store my | Select-String -Pattern $thumb -CaseSensitive:$false
+          if (-not $found) {
+            Write-Error "Certificate $thumb not found in CurrentUser\\My store"
+            exit 1
+          }
+
+      - name: �️ Install Windows SDK (for /ksp)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Continue'
+          if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
+            Write-Warning 'Chocolatey not found; skipping SDK install attempt.'
+          } else {
+            $packages = @(
+              'windows-sdk-11-version-22h2-all',
+              'windows-sdk-10.1'
+            )
+            foreach ($pkg in $packages) {
+              Write-Host "Attempting to install $pkg via Chocolatey..."
+              choco install $pkg -y --no-progress --limit-output
+              if ($LASTEXITCODE -eq 0) { Write-Host "Package $pkg installed or already present."; break }
+            }
+            $global:LASTEXITCODE = 0
+          }
+
+      - name: Ensure signtool on PATH
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $roots = @(
+            'C:\Program Files (x86)\Windows Kits\10\bin',
+            'C:\Program Files (x86)\Windows Kits\10\App Certification Kit',
+            'C:\Program Files (x86)\Microsoft SDKs\Windows'
+          )
+          $tools = @()
+          foreach ($root in $roots) {
+            if (Test-Path $root) {
+              $tools += Get-ChildItem -Path $root -Recurse -Filter signtool.exe -ErrorAction SilentlyContinue
+            }
+          }
+          if (-not $tools) { Write-Warning 'No signtool.exe found in SDK roots'; }
+          # Prefer x64 and highest version directories
+          $tools = $tools | Sort-Object FullName
+          $selected = $null
+          foreach ($tool in $tools) {
+            try {
+              $help = & $tool.FullName -? 2>&1 | Out-String
+              if ($help -match '/ksp') { $selected = $tool; break }
+            } catch { }
+          }
+          if (-not $selected) {
+            Write-Warning 'No signtool.exe with /ksp support found. Falling back to default signtool in PATH and CSP mode.'
+            $fallback = Get-Command signtool.exe -ErrorAction SilentlyContinue
+            if (-not $fallback) { Write-Error 'signtool.exe not found at all'; exit 1 }
+            "WINDOWS_SIGN_USE_KSP=false" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            $dir = $fallback.Source | Split-Path -Parent
+            Write-Host "Using fallback signtool from: $dir"
+            $dir | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          } else {
+            $dir = $selected.DirectoryName
+            Write-Host "Using signtool with /ksp support from: $dir"
+            $dir | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+            "WINDOWS_SIGN_USE_KSP=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          }
+
+      - name: 🧪 Pre-publish diagnostics
+        shell: pwsh
         env:
           GCP_KEY_PATH: ${{ secrets.GCP_KEY_PATH }}
           CERTIFICATE_SHA1: ${{ vars.CERTIFICATE_SHA1 }}
+        run: |
+          $ErrorActionPreference = 'Continue'
+          Write-Host "Signtool path:"
+          try { & where signtool } catch { Write-Warning "signtool not found in PATH" }
+
+          # Signtool version details
+          $st = Get-Command signtool.exe -ErrorAction SilentlyContinue
+          if ($st) {
+            $ver = $st.FileVersionInfo.FileVersion
+            Write-Host "signtool version: $ver ($($st.Source))"
+          } else {
+            Write-Warning "signtool not found to retrieve version"
+          }
+
+          Write-Host "PATH:"
+          Write-Host $env:PATH
+
+          $kc = $env:GCP_KEY_PATH
+          $thumb = $env:CERTIFICATE_SHA1
+          $kcMasked = '<hidden>'
+
+          Write-Host "CSP: Google Cloud KMS Provider"
+          Write-Host "KC: $kcMasked"
+          Write-Host "SHA1: $thumb"
+
+          Write-Host "Cert details from CurrentUser\\My:"
+          Get-ChildItem Cert:\CurrentUser\My | Where-Object { $_.Thumbprint -eq $thumb } | Format-List Subject,Issuer,NotBefore,NotAfter,Thumbprint
+
+          # Warn if system-wide KMS config.yaml exists (can break provider behavior in CI)
+          $sysCfg = 'C:\Windows\KMSCNG\config.yaml'
+          if (Test-Path $sysCfg) {
+            Write-Warning "System KMS config file exists at $sysCfg and may be invalid. Skipping content output."
+          }
+
+          # List CSP/KSP providers and confirm Google Cloud KMS Provider presence
+          Write-Host "\nCSP/KSP providers (certutil -csplist):"
+          try {
+            certutil.exe -csplist
+            if ($LASTEXITCODE -ne 0) { Write-Warning "certutil -csplist exited with code $LASTEXITCODE"; $global:LASTEXITCODE = 0 }
+          } catch {
+            Write-Warning "Failed to list providers via certutil -csplist: $_"
+          }
+
+      - name: 🔍 Sanity check signing env
+        shell: pwsh
+        env:
+          GCP_KEY_PATH: ${{ secrets.GCP_KEY_PATH }}
+          CERTIFICATE_SHA1: ${{ vars.CERTIFICATE_SHA1 }}
+        run: |
+          $kc = $env:GCP_KEY_PATH
+          $thumb = $env:CERTIFICATE_SHA1
+          if (-not $kc) { Write-Error 'GCP_KEY_PATH is empty'; exit 1 }
+          if (-not $thumb) { Write-Error 'CERTIFICATE_SHA1 is empty'; exit 1 }
+          Write-Host "KMS key configured: yes"
+          Write-Host "CERTIFICATE_SHA1: $thumb"
+
+      - name: 🔏 Pre-sign test (sanity)
+        shell: pwsh
+        env:
+          NODE_ENV: production
+          GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
+          GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
+          CERTIFICATE_SHA1: ${{ vars.CERTIFICATE_SHA1 }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          dotnet --info | Out-Null
+          dotnet new console -n SignSanity -o .\SignSanity -f net8.0 --force | Out-Null
+          dotnet build .\SignSanity\SignSanity.csproj -c Release -v m | Out-Null
+          $exe = Get-ChildItem .\SignSanity\bin\Release\**\SignSanity.exe -ErrorAction Stop | Select-Object -First 1
+          if (-not $exe) { Write-Error "Failed to locate built test executable"; exit 1 }
+          Write-Host "Signing test executable: $($exe.FullName)"
+          $kc = $env:GCP_KEY_PATH
+          if ($kc -notmatch '^gkms://') { $kc = 'gkms://' + ($kc.TrimStart('/')) }
+          $useKsp = ($env:WINDOWS_SIGN_USE_KSP -eq 'true')
+          if ($useKsp) {
+            & signtool.exe sign /v /debug /fd SHA256 /tr http://timestamp.sectigo.com /td SHA256 /s my /ksp "Google Cloud KMS Provider" /kc "$kc" /sha1 "$env:CERTIFICATE_SHA1" $exe.FullName
+          } else {
+            & signtool.exe sign /v /debug /fd SHA256 /tr http://timestamp.sectigo.com /td SHA256 /s my /csp "Google Cloud KMS Provider" /kc "$kc" /sha1 "$env:CERTIFICATE_SHA1" $exe.FullName
+          }
+
+      - name: 🚀 Build, Package, & Release
+        run: npm run publish
+        env:
+          NODE_ENV: production
+          GCP_KEY_PATH: ${{ secrets.GCP_KEY_PATH }}
+          CERTIFICATE_SHA1: ${{ vars.CERTIFICATE_SHA1 }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+          WINDOWS_SIGN_USE_KSP: ${{ env.WINDOWS_SIGN_USE_KSP }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
+          # DEBUG disabled by default to avoid logging full arg lists containing /kc
 
   change-management:
     name: Change management

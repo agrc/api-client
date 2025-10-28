@@ -20,23 +20,32 @@ const fromBuildIdentifier = utils.fromBuildIdentifier;
 
 const { version } = packageJson;
 const assets = path.resolve(__dirname, 'src', 'assets');
+const kmsKeyPath = (() => {
+  const raw = process.env.GCP_KEY_PATH || '';
+  if (!raw) return '';
+  if (raw.startsWith('gkms://')) return raw;
+  return `gkms://${raw.replace(/^\/+/, '')}`;
+})();
+
+const useKsp = (process.env.WINDOWS_SIGN_USE_KSP || '').toLowerCase() === 'true';
+const providerSwitch = useKsp ? '/ksp' : '/csp';
 const windowsSign = {
-  certificateFile: './build/cert/windows.p7b',
-  signWithParams: [
-    '/tr',
-    'https://timestamp.sectigo.com', // Timestamp server
+  // Ensure the library uses SHA256 and RFC3161 timestamp server (avoids default /t and sha1)
+  certificateSha1: process.env.CERTIFICATE_SHA1,
+  digestAlgorithm: 'sha256',
+  rfcTimestampServer: 'http://timestamp.sectigo.com',
+  // Append KMS-specific args; also add verbosity and explicit store
+  additionalSignToolArgs: [
     '/td',
-    'sha256',
-    '/fd',
-    'sha256',
-    '/v',
-    // HSM / CNG specific args
-    '/csp',
+    'SHA256',
+    '/s',
+    'my',
+    providerSwitch,
     'Google Cloud KMS Provider',
     '/kc',
-    process.env.GCP_KEY_PATH,
-    '/sha1',
-    process.env.CERTIFICATE_SHA1 || '',
+    kmsKeyPath,
+    '/v',
+    '/debug',
   ],
 };
 
@@ -61,7 +70,9 @@ const config: ForgeConfig = {
       CompanyName: 'UGRC',
       OriginalFilename: 'UGRC API Client',
     },
-    windowsSign: process.env.NODE_ENV !== 'production' ? {} : windowsSign,
+    // Enable Windows signing only in production; cast to avoid dependency version typing drift
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    windowsSign: process.env.NODE_ENV !== 'production' ? undefined : (windowsSign as any),
     osxSign:
       process.env.NODE_ENV !== 'production'
         ? {}
@@ -91,7 +102,6 @@ const config: ForgeConfig = {
       noMsi: true,
       setupExe: `ugrc-api-client-${version}-win32-setup.exe`,
       setupIcon: path.resolve(assets, 'logo.ico'),
-      windowsSign,
     }),
     new MakerZIP({}, ['darwin']),
     new MakerDMG({
