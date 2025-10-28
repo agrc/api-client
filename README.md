@@ -16,6 +16,8 @@ Check out our [introductory blog post](https://gis.utah.gov/blog/2021-11-29-intr
 
 ### Certificates
 
+#### Apple Certificate
+
 An apple developer certificate is required to sign the application for distribution.
 
 1. Using keychain's certificate assistant, request a certificate from a certificate authority.
@@ -26,19 +28,39 @@ An apple developer certificate is required to sign the application for distribut
 1. Import the certificate to keychain and then export it as a p12 file for the deployment pipeline.
    - Store the password required for exporting for the GitHub Actions secrets.
 
+#### Windows Certificate
+
+1. In a GCP project, enable Cloud Key Management Service (KMS) API
+1. Create a keyring
+1. Create a key with HSM protection using an asymmetric signing purpose and a 4096 bit RSA PKCS#1 1v1.5 padding - SHA256 Digest
+1. Save the key resource path for later use in the GitHub pipeline
+1. Save the attestation by selection `Verify attestation` on the key version
+1. Use a tool like [py kms tool](https://github.com/icedevml/pykmstool/) to create a CSR file
+   `python3 pykmstool.py sign-csr --key-version-name projects/{project}/locations/us-central1/keyRings/default/cryptoKeys/default/cryptoKeyVersions/1 --x509-name "C=US,ST=Utah,L=Salt Lake City,O=State of Utah,OU=Technology Services,CN=Utah Geospatial Resource Center"`
+1. Ask devops to create an invitation to create a code signing cert with Sectigo
+1. Upload the request.csr file created by the tool
+1. base64 encode the attestation.zip file and paste the value into the attestation
+   `base64 -i attestation.zip | pbcopy
+1. Once the keys are validated by Sectigo, download the PKCS#7 file and place it in the `build/cert` folder
+1. Inspect the cert to find the SHA1 signature and save the value without spaces for later use in the GitHub pipeline
+   `security find-certificate -a -c "State of Utah" -p | openssl x509 -noout -fingerprint -sha1`
+
 ### Deployment pipeline set up
 
 1. Create a `prod` and `dev` GitHub [repo environment](https://github.com/agrc/api-client/settings/environments).
 1. Store the password and the p12 certificate as GitHub Action secrets in the environment:
+
    - `gh secret set APPLE_CERTIFICATE -b$(base64 -i ~/certificate.p12) --env=prod`
    - `gh secret set APPLE_CERTIFICATE_PASSWORD -b<password> --env=prod`
-   - `gh secret set WINDOWS_CERTIFICATE_PASSWORD -b<password> --env=prod`
+   - `gh secret set GCP_KEY_PATH -b<key-path> --env=prod`
+   - `gh secret set GCP_KEY_PATH -b<key-path> --env=prod`
+   - `gh variable set CERTIFICATE_SHA1 -b<sha1> --env=prod`
 
 1. Add the rest of the environment variables as secrets:
    - `APPLE_IDENTITY`: _the name of the developer id certificate name as it appears in keychain_
    - `APPLE_TEAM_ID`: _the team id to notarize under viewable on your [Apple Developer Account](https://developer.apple.com/account) "Membership details", page_
    - `APPLE_USER_ID`: _the full email address of your [Apple Developer Account](https://developer.apple.com/account)_
-   - `APPLE_PASSWORD`: _the app-specific password (not your Apple ID password) created on https://appleid.apple.com/account/manage_
+   - `APPLE_PASSWORD`: _the app-specific password (not your Apple ID password) created on [Apple Developer Account](https://appleid.apple.com/account/manage)_
 
 ## Deploying a new version
 
