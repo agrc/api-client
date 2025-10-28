@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.12](https://github.com/agrc/api-client/compare/v1.7.11...v1.7.12) (2025-10-28)
+
+
+### Bug Fixes
+
+* correct the cng provider install ([0fe5570](https://github.com/agrc/api-client/commit/0fe55703bf11e9a4943cf7dc8255577bf1c1bf96))
+
 ## [1.7.11](https://github.com/agrc/api-client/compare/v1.7.10...v1.7.11) (2025-10-28)
 
 
