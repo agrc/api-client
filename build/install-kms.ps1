@@ -98,7 +98,7 @@ try {
 
             # Check if verification succeeded
             if ($verifyExitCode -eq 0 -and $verifyOutput -match "Verified OK") {
-                Write-Host "✓ Signature verified successfully."
+                Write-Host "Signature verified successfully."
             } else {
                 Write-Warning "Signature verification failed, but continuing installation."
                 Write-Warning "This may indicate an OpenSSL compatibility issue with EC keys."
@@ -155,16 +155,59 @@ try {
 
     # Import code signing certificate if it exists
     if (Test-Path $certPath) {
-        Write-Host "Importing code signing certificate..."
+        Write-Host "`nImporting code signing certificate..."
         Write-Host "Certificate path: $certPath"
 
         try {
-            # Import the certificate to the Current User's Personal store
-            $cert = Import-Certificate -FilePath $certPath -CertStoreLocation Cert:\CurrentUser\My -ErrorAction Stop
-            Write-Host "✓ Certificate imported successfully to CurrentUser\My"
-            Write-Host "  Subject: $($cert.Subject)"
-            Write-Host "  Thumbprint: $($cert.Thumbprint)"
-            Write-Host "  SHA1: $($cert.Thumbprint)"
+            # Import all certificates from the PKCS#7 file to LocalMachine\My
+            # The .p7b file contains the full certificate chain
+            # This requires Administrator privileges
+            $certs = Import-Certificate -FilePath $certPath -CertStoreLocation Cert:\LocalMachine\My -ErrorAction Stop
+            Write-Host "✓ Certificate(s) imported successfully to LocalMachine\My"
+            Write-Host "  Total certificates imported: $($certs.Count)"
+
+            # Find the signing certificate (the one that matches CERTIFICATE_SHA1)
+            $signingCert = $null
+            if ($env:CERTIFICATE_SHA1) {
+                $targetThumbprint = $env:CERTIFICATE_SHA1.Replace(' ', '').ToUpper()
+                Write-Host "`nLooking for signing certificate with thumbprint: $targetThumbprint"
+
+                foreach ($cert in $certs) {
+                    Write-Host "  - $($cert.Subject.Split(',')[0]): $($cert.Thumbprint)"
+                    if ($cert.Thumbprint.ToUpper() -eq $targetThumbprint) {
+                        $signingCert = $cert
+                        Write-Host "    ✓ This is your signing certificate!"
+                    }
+                }
+
+                if ($signingCert) {
+                    Write-Host "`n✓ Signing certificate found and imported:"
+                    Write-Host "  Subject: $($signingCert.Subject)"
+                    Write-Host "  Thumbprint: $($signingCert.Thumbprint)"
+                    Write-Host "  Valid from: $($signingCert.NotBefore)"
+                    Write-Host "  Valid to: $($signingCert.NotAfter)"
+                } else {
+                    Write-Warning "Could not find certificate with thumbprint $targetThumbprint in the imported certificates"
+                    Write-Warning "Available thumbprints: $($certs.Thumbprint -join ', ')"
+                }
+            } else {
+                Write-Warning "CERTIFICATE_SHA1 environment variable not set, cannot verify which certificate is the signing certificate"
+                foreach ($cert in $certs) {
+                    Write-Host "  Imported: $($cert.Subject) - $($cert.Thumbprint)"
+                }
+            }
+
+            # Verify certificate can be found by thumbprint
+            if ($signingCert) {
+                Write-Host "`nVerifying certificate is accessible..."
+                $foundCert = Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Thumbprint -eq $signingCert.Thumbprint }
+                if ($foundCert) {
+                    Write-Host "✓ Certificate found in store and accessible"
+                    Write-Host "  Has private key: $($foundCert.HasPrivateKey)"
+                } else {
+                    Write-Warning "Certificate was imported but cannot be found by thumbprint"
+                }
+            }
         } catch {
             Write-Warning "Failed to import certificate: $($_.Exception.Message)"
             Write-Host "You may need to import the certificate manually."
