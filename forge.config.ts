@@ -20,24 +20,27 @@ const fromBuildIdentifier = utils.fromBuildIdentifier;
 
 const { version } = packageJson;
 const assets = path.resolve(__dirname, 'src', 'assets');
+const kmsKeyPath = (() => {
+  const ring = (process.env.GCP_KEYRING_PATH || '').trim();
+  const keyName = (process.env.GCP_KEY_NAME || '').trim();
+  if (!ring) {
+    throw new Error('GCP_KEYRING_PATH environment variable is not set');
+  }
+
+  return `${ring}/cryptoKeys/${keyName}/cryptoKeyVersions/1`;
+})();
+
+// Resolve the certificate path (use the actual folder `build/cert/windows.cer` in repo)
+const certPath = path.resolve(__dirname, 'build', 'cert', 'windows.cer');
+
 const windowsSign = {
-  certificateFile: './build/cert/windows.p7b',
-  signWithParams: [
-    '/tr',
-    'https://timestamp.sectigo.com', // Timestamp server
-    '/td',
-    'sha256',
-    '/fd',
-    'sha256',
-    '/v',
-    // HSM / CNG specific args
-    '/csp',
-    'Google Cloud KMS Provider',
-    '/kc',
-    process.env.GCP_KEY_PATH,
-    '/sha1',
-    process.env.CERTIFICATE_SHA1 || '',
-  ],
+  digestAlgorithm: 'sha256',
+  hashes: ['sha256'],
+  certificateFile: certPath,
+  timestampServer: 'http://timestamp.sectigo.com',
+  description: 'UGRC API Client',
+  website: 'https://gis.utah.gov/products/sgid/address/api-client/',
+  signWithParams: ['/v', '/csp', 'Google Cloud KMS Provider', '/kc', kmsKeyPath],
 };
 
 const config: ForgeConfig = {
@@ -61,7 +64,9 @@ const config: ForgeConfig = {
       CompanyName: 'UGRC',
       OriginalFilename: 'UGRC API Client',
     },
-    windowsSign: process.env.NODE_ENV !== 'production' ? {} : windowsSign,
+    // Enable Windows signing only in production; cast to avoid dependency version typing drift
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    windowsSign: process.env.NODE_ENV !== 'production' ? undefined : (windowsSign as any),
     osxSign:
       process.env.NODE_ENV !== 'production'
         ? {}
@@ -91,7 +96,15 @@ const config: ForgeConfig = {
       noMsi: true,
       setupExe: `ugrc-api-client-${version}-win32-setup.exe`,
       setupIcon: path.resolve(assets, 'logo.ico'),
-      windowsSign,
+      windowsSign: {
+        // @ts-expect-error matches enum value
+        hashes: ['sha256'],
+        certificateFile: certPath,
+        timestampServer: 'http://timestamp.sectigo.com',
+        description: 'UGRC API Client',
+        website: 'https://gis.utah.gov/products/sgid/address/api-client/',
+        signWithParams: ['/v', '/csp', 'Google Cloud KMS Provider', '/kc', kmsKeyPath],
+      },
     }),
     new MakerZIP({}, ['darwin']),
     new MakerDMG({

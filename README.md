@@ -32,7 +32,7 @@ An apple developer certificate is required to sign the application for distribut
 
 1. In a GCP project, enable Cloud Key Management Service (KMS) API
 1. Create a keyring
-1. Create a key with HSM protection using an asymmetric signing purpose and a 4096 bit RSA PKCS#1 1v1.5 padding - SHA256 Digest
+1. Create a key with HSM protection using an asymmetric signing purpose and a 4096 bit RSA PKCS#1 v1.5 padding - SHA256 Digest
 1. Save the key resource path for later use in the GitHub pipeline
 1. Save the attestation by selection `Verify attestation` on the key version
 1. Use a tool like [py kms tool](https://github.com/icedevml/pykmstool/) to create a CSR file
@@ -40,10 +40,12 @@ An apple developer certificate is required to sign the application for distribut
 1. Ask devops to create an invitation to create a code signing cert with Sectigo
 1. Upload the request.csr file created by the tool
 1. base64 encode the attestation.zip file and paste the value into the attestation
-   `base64 -i attestation.zip | pbcopy
+   `base64 -i attestation.zip | pbcopy`
 1. Once the keys are validated by Sectigo, download the PKCS#7 file and place it in the `build/cert` folder
 1. Inspect the cert to find the SHA1 signature and save the value without spaces for later use in the GitHub pipeline
    `security find-certificate -a -c "State of Utah" -p | openssl x509 -noout -fingerprint -sha1`
+
+**Note**: The `build/install-kms.ps1` script verifies the KMS CNG Provider installer using Google's public signing key stored in `build/cng-release-signing-key.pem`. This provides cryptographic verification of the downloaded installer.
 
 ### Deployment pipeline set up
 
@@ -52,15 +54,34 @@ An apple developer certificate is required to sign the application for distribut
 
    - `gh secret set APPLE_CERTIFICATE -b$(base64 -i ~/certificate.p12) --env=prod`
    - `gh secret set APPLE_CERTIFICATE_PASSWORD -b<password> --env=prod`
-   - `gh secret set GCP_KEY_PATH -b<key-path> --env=prod`
-   - `gh secret set GCP_KEY_PATH -b<key-path> --env=prod`
-   - `gh variable set CERTIFICATE_SHA1 -b<sha1> --env=prod`
+   - `gh secret set GCP_KEYRING_PATH -b<key-ring-or-key-version-path> --env=prod`
+   - `gh secret set GCP_KEY_NAME -b<key-alias> --env=prod`
 
 1. Add the rest of the environment variables as secrets:
+
    - `APPLE_IDENTITY`: _the name of the developer id certificate name as it appears in keychain_
    - `APPLE_TEAM_ID`: _the team id to notarize under viewable on your [Apple Developer Account](https://developer.apple.com/account) "Membership details", page_
    - `APPLE_USER_ID`: _the full email address of your [Apple Developer Account](https://developer.apple.com/account)_
    - `APPLE_PASSWORD`: _the app-specific password (not your Apple ID password) created on [Apple Developer Account](https://appleid.apple.com/account/manage)_
+
+   ### Example GCP values
+
+   - GCP_KEYRING_PATH examples:
+
+     - Full key version path (preferred for REST calls):
+       `projects/my-project/locations/cloud-region/keyRings/ring-name/cryptoKeys/key-name/cryptoKeyVersions/1`
+     - Key ring style (when using JSign -s with a keyRing path):
+       `projects/my-project/locations/cloud-region/keyRings/ring-name`
+
+   - GCP_KEY_NAME example (used as JSign alias -a):
+     - `key-name`
+
+   Set secrets with the `gh` CLI (example):
+
+   ```bash
+   gh secret set GCP_KEYRING_PATH -b"projects/my-project/locations/cloud-region/keyRings/ring-name/cryptoKeys/key-name/cryptoKeyVersions/1" --env=prod
+   gh secret set GCP_KEY_NAME -b"ring-name" --env=prod
+   ```
 
 ## Deploying a new version
 
