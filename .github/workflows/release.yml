@@ -58,6 +58,7 @@ jobs:
       - name: 🚀 Build, Package, & Release
         run: npm run publish -- --arch=universal
         env:
+          NODE_ENV: production
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
           APPLE_USER_ID: ${{ secrets.APPLE_USER_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
@@ -85,15 +86,25 @@ jobs:
       - name: 📥 Install dependencies
         run: npm ci
 
+      - name: 📦 Cache CNG Provider
+        id: cache-cng
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.TEMP }}\KmsCngInstall
+          key: cng-provider-v1.3-windows
+
       - name: 🏗️ Install Google Cloud KMS Provider
         shell: pwsh
         run: .\build\install-kms.ps1
+        env:
+          CACHE_HIT: ${{ steps.cache-cng.outputs.cache-hit }}
 
       - name: 🗝️ Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v3
         with:
-          access_token_scopes: 'openid, https://www.googleapis.com/auth/cloud-platform'
+          access_token_scopes: 'openid, https://www.googleapis.com/auth/cloudkms, https://www.googleapis.com/auth/cloud-platform'
+          token_format: 'access_token'
           workload_identity_provider: ${{ secrets.IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
           create_credentials_file: true
@@ -101,7 +112,9 @@ jobs:
       - name: 🚀 Build, Package, & Release
         run: npm run publish
         env:
-          GCP_KEY_PATH: ${{ secrets.GCP_KEY_PATH }}
+          NODE_ENV: production
+          GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
+          GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
           CERTIFICATE_SHA1: ${{ vars.CERTIFICATE_SHA1 }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
