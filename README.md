@@ -32,7 +32,7 @@ An apple developer certificate is required to sign the application for distribut
 
 1. In a GCP project, enable Cloud Key Management Service (KMS) API
 1. Create a keyring
-1. Create a key with HSM protection using an asymmetric signing purpose and a 4096 bit RSA PKCS#1 1v1.5 padding - SHA256 Digest
+1. Create a key with HSM protection using an asymmetric signing purpose and a 4096 bit RSA PKCS#1 v1.5 padding - SHA256 Digest
 1. Save the key resource path for later use in the GitHub pipeline
 1. Save the attestation by selection `Verify attestation` on the key version
 1. Use a tool like [py kms tool](https://github.com/icedevml/pykmstool/) to create a CSR file
@@ -40,10 +40,12 @@ An apple developer certificate is required to sign the application for distribut
 1. Ask devops to create an invitation to create a code signing cert with Sectigo
 1. Upload the request.csr file created by the tool
 1. base64 encode the attestation.zip file and paste the value into the attestation
-   `base64 -i attestation.zip | pbcopy
+   `base64 -i attestation.zip | pbcopy`
 1. Once the keys are validated by Sectigo, download the PKCS#7 file and place it in the `build/cert` folder
 1. Inspect the cert to find the SHA1 signature and save the value without spaces for later use in the GitHub pipeline
    `security find-certificate -a -c "State of Utah" -p | openssl x509 -noout -fingerprint -sha1`
+
+**Note**: The `build/install-kms.ps1` script verifies the KMS CNG Provider installer using Google's public signing key stored in `build/cng-release-signing-key.pem`. This provides cryptographic verification of the downloaded installer.
 
 ### Deployment pipeline set up
 
