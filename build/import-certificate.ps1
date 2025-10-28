@@ -3,12 +3,12 @@
 Imports the code signing certificate to the Windows certificate store.
 
 .DESCRIPTION
-This script imports the PKCS#7 (.p7b) certificate file containing the certificate chain
-to the LocalMachine\My certificate store, which is required for code signing.
+This script imports the certificate file (.cer) to the LocalMachine\My certificate store,
+which is required for code signing.
 
 .NOTES
 - Requires Administrator privileges for certificate import to LocalMachine
-- The certificate file should be a PKCS#7 format containing the full certificate chain
+- The certificate file should be in CER format
 #>
 
 # Check if running as Administrator
@@ -20,7 +20,7 @@ if (-not $isAdmin) {
 }
 
 # --- Configuration ---
-$certPath = Join-Path $PSScriptRoot "cert\windows.p7b"
+$certPath = Join-Path $PSScriptRoot "cert\windows.cer"
 
 # --- Script Body ---
 Write-Host "Starting code signing certificate import..."
@@ -33,68 +33,52 @@ if (-not (Test-Path $certPath)) {
 Write-Host "Certificate path: $certPath"
 
 try {
-    # Import all certificates from the PKCS#7 file to LocalMachine\My
-    # The .p7b file contains the full certificate chain
-    Write-Host "Importing certificates to LocalMachine\My..."
-    $certs = Import-Certificate -FilePath $certPath -CertStoreLocation Cert:\LocalMachine\My -ErrorAction Stop
-    Write-Host "✓ Certificate(s) imported successfully"
-    Write-Host "  Total certificates imported: $($certs.Count)"
+    # Import the certificate to LocalMachine\My
+    Write-Host "Importing certificate to LocalMachine\My..."
+    $cert = Import-Certificate -FilePath $certPath -CertStoreLocation Cert:\LocalMachine\My -ErrorAction Stop
+    Write-Host "✓ Certificate imported successfully"
 
-    # Find the signing certificate (the one that matches CERTIFICATE_SHA1)
-    $signingCert = $null
+    # Verify it matches the expected thumbprint
     if ($env:CERTIFICATE_SHA1) {
         $targetThumbprint = $env:CERTIFICATE_SHA1.Replace(' ', '').ToUpper()
-        Write-Host "`nLooking for signing certificate with thumbprint: $targetThumbprint"
+        Write-Host "`nVerifying certificate thumbprint..."
+        Write-Host "  Expected: $targetThumbprint"
+        Write-Host "  Imported: $($cert.Thumbprint)"
 
-        foreach ($cert in $certs) {
-            $subjectCN = ($cert.Subject -split ',')[0]
-            Write-Host "  - $subjectCN : $($cert.Thumbprint)"
-            if ($cert.Thumbprint.ToUpper() -eq $targetThumbprint) {
-                $signingCert = $cert
-                Write-Host "    ✓ This is your signing certificate!"
-            }
-        }
-
-        if ($signingCert) {
-            Write-Host "`n✓ Signing certificate found and imported:"
-            Write-Host "  Subject: $($signingCert.Subject)"
-            Write-Host "  Thumbprint: $($signingCert.Thumbprint)"
-            Write-Host "  Valid from: $($signingCert.NotBefore)"
-            Write-Host "  Valid to: $($signingCert.NotAfter)"
+        if ($cert.Thumbprint.ToUpper() -eq $targetThumbprint) {
+            Write-Host "✓ Thumbprint matches!"
         } else {
-            Write-Warning "Could not find certificate with thumbprint $targetThumbprint"
-            Write-Warning "Available thumbprints:"
-            foreach ($cert in $certs) {
-                Write-Warning "  - $($cert.Thumbprint)"
-            }
+            Write-Error "Certificate thumbprint mismatch!"
+            Write-Error "  Expected: $targetThumbprint"
+            Write-Error "  Got: $($cert.Thumbprint)"
             exit 1
         }
     } else {
-        Write-Warning "CERTIFICATE_SHA1 environment variable not set"
-        Write-Host "Imported certificates:"
-        foreach ($cert in $certs) {
-            Write-Host "  - $($cert.Subject) : $($cert.Thumbprint)"
-        }
+        Write-Warning "CERTIFICATE_SHA1 environment variable not set - skipping thumbprint verification"
     }
 
-    # Verify certificate can be found by thumbprint
-    if ($signingCert) {
-        Write-Host "`nVerifying certificate is accessible..."
-        $foundCert = Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Thumbprint -eq $signingCert.Thumbprint }
-        if ($foundCert) {
-            Write-Host "✓ Certificate found in store and accessible"
-            Write-Host "  Has private key: $($foundCert.HasPrivateKey)"
+    Write-Host "`n✓ Certificate details:"
+    Write-Host "  Subject: $($cert.Subject)"
+    Write-Host "  Thumbprint: $($cert.Thumbprint)"
+    Write-Host "  Valid from: $($cert.NotBefore)"
+    Write-Host "  Valid to: $($cert.NotAfter)"
 
-            if (-not $foundCert.HasPrivateKey) {
-                Write-Host ""
-                Write-Host "NOTE: Certificate does not have a private key reference."
-                Write-Host "This is expected - the private key is in Google Cloud KMS."
-                Write-Host "The KMS CNG Provider will provide access during signing."
-            }
-        } else {
-            Write-Error "Certificate was imported but cannot be found by thumbprint"
-            exit 1
+    # Verify certificate can be found by thumbprint
+    Write-Host "`nVerifying certificate is accessible..."
+    $foundCert = Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Thumbprint -eq $cert.Thumbprint }
+    if ($foundCert) {
+        Write-Host "✓ Certificate found in store and accessible"
+        Write-Host "  Has private key: $($foundCert.HasPrivateKey)"
+
+        if (-not $foundCert.HasPrivateKey) {
+            Write-Host ""
+            Write-Host "NOTE: Certificate does not have a private key reference."
+            Write-Host "This is expected - the private key is in Google Cloud KMS."
+            Write-Host "The KMS CNG Provider will provide access during signing."
         }
+    } else {
+        Write-Error "Certificate was imported but cannot be found by thumbprint"
+        exit 1
     }
 
     Write-Host "`n✓ Certificate import completed successfully"

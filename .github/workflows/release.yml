@@ -95,13 +95,6 @@ jobs:
         env:
           CERTIFICATE_SHA1: ${{ vars.CERTIFICATE_SHA1 }}
 
-      - name: ⚙️ Configure KMS Provider
-        shell: pwsh
-        run: .\build\setup-kms-config.ps1
-        env:
-          CERTIFICATE_SHA1: ${{ vars.CERTIFICATE_SHA1 }}
-          GCP_KEY_PATH: ${{ secrets.GCP_KEY_PATH }}
-
       - name: 🗝️ Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v3
@@ -110,6 +103,14 @@ jobs:
           workload_identity_provider: ${{ secrets.IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
           create_credentials_file: true
+
+      - name: ⚙️ Configure KMS Provider
+        shell: pwsh
+        run: .\build\setup-kms-config.ps1
+        env:
+          CERTIFICATE_SHA1: ${{ vars.CERTIFICATE_SHA1 }}
+          GCP_KEY_PATH: ${{ secrets.GCP_KEY_PATH }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
 
       - name: 🚀 Build, Package, & Release
         run: npm run publish

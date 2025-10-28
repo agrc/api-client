@@ -21,21 +21,12 @@ const fromBuildIdentifier = utils.fromBuildIdentifier;
 const { version } = packageJson;
 const assets = path.resolve(__dirname, 'src', 'assets');
 const windowsSign = {
+  certificateFile: './build/cert/windows.cer',
   signWithParams: [
-    '/tr',
-    'https://timestamp.sectigo.com', // Timestamp server
-    '/td',
-    'sha256',
-    '/fd',
-    'sha256',
-    '/v',
-    // HSM / CNG specific args
-    '/csp',
-    'Google Cloud KMS Provider',
-    '/kc',
-    process.env.GCP_KEY_PATH,
-    '/sha1',
-    process.env.CERTIFICATE_SHA1 || '',
+    '/csp "Google Cloud KMS Provider"',
+    `/kc "${process.env.GCP_KEY_PATH}"`,
+    '/fd SHA256',
+    '/tr http://timestamp.sectigo.com /td SHA256',
   ],
 };
 
@@ -90,7 +81,8 @@ const config: ForgeConfig = {
       noMsi: true,
       setupExe: `ugrc-api-client-${version}-win32-setup.exe`,
       setupIcon: path.resolve(assets, 'logo.ico'),
-      windowsSign,
+      certificateFile: './build/cert/windows.cer',
+      signWithParams: `/csp "Google Cloud KMS Provider" /kc "${process.env.GCP_KEY_PATH}" /fd SHA256 /tr http://timestamp.sectigo.com /td SHA256`,
     }),
     new MakerZIP({}, ['darwin']),
     new MakerDMG({
