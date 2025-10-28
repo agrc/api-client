@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-Downloads, verifies, and installs the Google Cloud KMS CNG Provider, and imports the code signing certificate.
+Downloads, verifies, and installs the Google Cloud KMS CNG Provider.
 
 .DESCRIPTION
 This script performs the following actions:
@@ -8,11 +8,10 @@ This script performs the following actions:
 2. Verifies the digital signature against Google's public key using OpenSSL
 3. Extracts the MSI installer from the ZIP
 4. Installs the MSI silently
-5. Imports the code signing certificate (if present) into the Windows certificate store
-6. Cleans up temporary files
+5. Cleans up temporary files
 
 .NOTES
-- Requires Administrator privileges for MSI installation and certificate import
+- Requires Administrator privileges for MSI installation
 - Requires openssl.exe to be available in PATH for signature verification
 - Update the $cngTag variable if a newer version is needed
 #>
@@ -28,7 +27,6 @@ if (-not $isAdmin) {
 # --- Configuration ---
 $cngTag = "cng-v1.3"
 $publicKeyPath = Join-Path $PSScriptRoot "cng-release-signing-key.pem"
-$certPath = Join-Path $PSScriptRoot "cert\windows.p7b"
 $tempDir = Join-Path $env:TEMP "KmsCngInstall"
 
 # --- Script Body ---
@@ -153,71 +151,7 @@ try {
         throw "MSI installation failed with exit code $($process.ExitCode)."
     }
 
-    # Import code signing certificate if it exists
-    if (Test-Path $certPath) {
-        Write-Host "`nImporting code signing certificate..."
-        Write-Host "Certificate path: $certPath"
-
-        try {
-            # Import all certificates from the PKCS#7 file to LocalMachine\My
-            # The .p7b file contains the full certificate chain
-            # This requires Administrator privileges
-            $certs = Import-Certificate -FilePath $certPath -CertStoreLocation Cert:\LocalMachine\My -ErrorAction Stop
-            Write-Host "✓ Certificate(s) imported successfully to LocalMachine\My"
-            Write-Host "  Total certificates imported: $($certs.Count)"
-
-            # Find the signing certificate (the one that matches CERTIFICATE_SHA1)
-            $signingCert = $null
-            if ($env:CERTIFICATE_SHA1) {
-                $targetThumbprint = $env:CERTIFICATE_SHA1.Replace(' ', '').ToUpper()
-                Write-Host "`nLooking for signing certificate with thumbprint: $targetThumbprint"
-
-                foreach ($cert in $certs) {
-                    Write-Host "  - $($cert.Subject.Split(',')[0]): $($cert.Thumbprint)"
-                    if ($cert.Thumbprint.ToUpper() -eq $targetThumbprint) {
-                        $signingCert = $cert
-                        Write-Host "    ✓ This is your signing certificate!"
-                    }
-                }
-
-                if ($signingCert) {
-                    Write-Host "`n✓ Signing certificate found and imported:"
-                    Write-Host "  Subject: $($signingCert.Subject)"
-                    Write-Host "  Thumbprint: $($signingCert.Thumbprint)"
-                    Write-Host "  Valid from: $($signingCert.NotBefore)"
-                    Write-Host "  Valid to: $($signingCert.NotAfter)"
-                } else {
-                    Write-Warning "Could not find certificate with thumbprint $targetThumbprint in the imported certificates"
-                    Write-Warning "Available thumbprints: $($certs.Thumbprint -join ', ')"
-                }
-            } else {
-                Write-Warning "CERTIFICATE_SHA1 environment variable not set, cannot verify which certificate is the signing certificate"
-                foreach ($cert in $certs) {
-                    Write-Host "  Imported: $($cert.Subject) - $($cert.Thumbprint)"
-                }
-            }
-
-            # Verify certificate can be found by thumbprint
-            if ($signingCert) {
-                Write-Host "`nVerifying certificate is accessible..."
-                $foundCert = Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Thumbprint -eq $signingCert.Thumbprint }
-                if ($foundCert) {
-                    Write-Host "✓ Certificate found in store and accessible"
-                    Write-Host "  Has private key: $($foundCert.HasPrivateKey)"
-                } else {
-                    Write-Warning "Certificate was imported but cannot be found by thumbprint"
-                }
-            }
-        } catch {
-            Write-Warning "Failed to import certificate: $($_.Exception.Message)"
-            Write-Host "You may need to import the certificate manually."
-        }
-    } else {
-        Write-Host "`nCode signing certificate not found at: $certPath"
-        Write-Host "Skipping certificate import."
-    }
-
-    Write-Host "`n✓ Installation process finished successfully."
+    Write-Host "`n✓ Google Cloud KMS CNG Provider installation completed successfully"
 }
 catch {
     Write-Error "An error occurred during installation: $($_.Exception.Message)"

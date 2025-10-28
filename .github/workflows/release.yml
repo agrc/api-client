@@ -89,6 +89,28 @@ jobs:
         shell: pwsh
         run: .\build\install-kms.ps1
 
+      - name: 📜 Import Code Signing Certificate
+        shell: pwsh
+        run: .\build\import-certificate.ps1
+        env:
+          CERTIFICATE_SHA1: ${{ vars.CERTIFICATE_SHA1 }}
+
+      - name: ⚙️ Configure KMS Provider
+        shell: pwsh
+        run: .\build\setup-kms-config.ps1
+        env:
+          CERTIFICATE_SHA1: ${{ vars.CERTIFICATE_SHA1 }}
+          GCP_KEY_PATH: ${{ secrets.GCP_KEY_PATH }}
+
+      - name: 🗝️ Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v3
+        with:
+          access_token_scopes: 'openid, https://www.googleapis.com/auth/cloud-platform'
+          workload_identity_provider: ${{ secrets.IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+          create_credentials_file: true
+
       - name: 🗝️ Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v3
