@@ -1,16 +1,13 @@
 # This script creates the KMS CNG Provider configuration file
-# that maps certificate thumbprints to GCP KMS keys
+# that maps GCP KMS keys for code signing
 
 param(
-    [Parameter(Mandatory=$false)]
-    [string]$CertThumbprint = $env:CERTIFICATE_SHA1,
-
     [Parameter(Mandatory=$false)]
     [string]$KmsKeyPath = $env:GCP_KEY_PATH
 )
 
-if (-not $CertThumbprint -or -not $KmsKeyPath) {
-    Write-Error "CERTIFICATE_SHA1 and GCP_KEY_PATH environment variables must be set"
+if (-not $KmsKeyPath) {
+    Write-Error "GCP_KEY_PATH environment variable must be set"
     exit 1
 }
 
