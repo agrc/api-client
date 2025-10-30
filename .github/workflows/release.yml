@@ -92,7 +92,7 @@ jobs:
         id: cache-cng
         uses: actions/cache@v4
         with:
-          path: ${{ env.TEMP }}\KmsCngInstall
+          path: C:\Users\runneradmin\AppData\Local\Temp\KmsCngInstall
           key: cng-provider-v1.3-windows
 
       - name: 🏗️ Install Google Cloud KMS Provider
