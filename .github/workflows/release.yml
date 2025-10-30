@@ -123,7 +123,6 @@ jobs:
           NODE_ENV: production
           GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
           GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
-          CERTIFICATE_SHA1: ${{ vars.CERTIFICATE_SHA1 }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
