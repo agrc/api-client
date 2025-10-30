@@ -63,6 +63,8 @@ jobs:
           APPLE_USER_ID: ${{ secrets.APPLE_USER_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
+          GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
 
@@ -98,6 +100,12 @@ jobs:
         run: .\build\install-kms.ps1
         env:
           CACHE_HIT: ${{ steps.cache-cng.outputs.cache-hit }}
+
+      - name: Install cert
+        shell: pwsh
+        run: |
+          certutil -user -addstore My ".\build\cert\windows.cer"
+          certutil -addstore My ".\build\cert\windows.cer"
 
       - name: 🗝️ Authenticate to Google Cloud
         id: auth

@@ -1,12 +1,5 @@
 # Changelog
 
-## [1.7.12](https://github.com/agrc/api-client/compare/v1.7.11...v1.7.12) (2025-10-28)
-
-
-### Bug Fixes
-
-* correct windows deployment ([2678d92](https://github.com/agrc/api-client/commit/2678d9211af4863fc919a53b7bb809bc13123f76))
-
 ## [1.7.10](https://github.com/agrc/api-client/compare/v1.7.9...v1.7.10) (2025-08-04)
 
 

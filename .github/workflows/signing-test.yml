@@ -2,14 +2,6 @@ name: Windows Signing Test
 
 on:
   workflow_dispatch:
-    inputs:
-      cert_sha1:
-        description: 'Certificate SHA1 thumbprint (optional; falls back to repo var)'
-        required: false
-      timeout_minutes:
-        description: 'Timeout for the job in minutes'
-        required: false
-        default: 15
 
 permissions:
   id-token: write
@@ -21,21 +13,44 @@ jobs:
     runs-on: windows-latest
     environment:
       name: prod
-    timeout-minutes: ${{ github.event.inputs.timeout_minutes }}
     steps:
-      - name: ⬇️ Checkout code
+      - name: ⬇️ Set up code
         uses: actions/checkout@v5
+        with:
+          show-progress: false
 
-      - name: 🧭 Add signtool to PATH and detect /ksp
+      - name: Create Google KMS CNG Config
         shell: pwsh
-        run: .\build\add-signtool-path.ps1
+        env:
+          GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
+          GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
+        run: |
+          # The provider requires this specific directory and file
+          New-Item -Path "C:\Windows\KMSCNG" -ItemType Directory -Force
 
-      - name: 📦 Install Google Cloud KMS Provider (best-effort)
+          $cryptoPath = "$env:GCP_KEYRING_PATH/cryptoKeys/$env:GCP_KEY_NAME/cryptoKeyVersions/1"
+
+          # This YAML content creates a "key container" named "gcloud-signing-key"
+          # and points it to your specific key version in KMS.
+          $yaml = @"
+          ---
+          resources:
+            - crypto_key_version: "projects/ut-dts-ugrc-code-sign-prod/locations/us-central1/keyRings/default/cryptoKeys/default/cryptoKeyVersions/1"
+          "@
+
+          Set-Content -Path "C:\Windows\KMSCNG\config.yaml" -Value $yaml
+          Write-Host "Created C:\Windows\KMSCNG\config.yaml"
+
+      - name: View KMSCNG providers
         shell: pwsh
-        run: .\build\install-kms.ps1
-        # Installation is best-effort for testing; skip cache here for simplicity
+        run: |
+          if (Test-Path 'C:\Windows\KMSCNG\config.yaml') {
+            Write-Host "path found"
+          } else {
+            Write-Warning "$path not found on runner"
+          }
 
-      - name: 🗝️ Authenticate to Google Cloud (OIDC)
+      - name: 🗝️ Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v3
         with:
@@ -45,100 +60,130 @@ jobs:
           service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
           create_credentials_file: true
 
-      - name: 📜 Import code signing certificate to CurrentUser\My
+      - name: 📦 Install Google Cloud KMS Provider (best-effort)
         shell: pwsh
+        run: .\build\install-kms.ps1
         env:
-          GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
-          GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
-          CERT_SHA1_INPUT: ${{ github.event.inputs.cert_sha1 }}
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $thumb = if ($env:CERT_SHA1_INPUT) { $env:CERT_SHA1_INPUT } else { '${{ vars.CERTIFICATE_SHA1 }}' }
-          if (-not $thumb) { Write-Error 'Certificate SHA1 not provided via input or repo var'; exit 1 }
-          Write-Host "Using certificate thumbprint: $thumb"
-          .\build\import-certificate.ps1 -CertSha1 $thumb
+          GH_TOKEN: ${{ github.token }}
 
-      - name: 🔐 KMS access preflight (getPublicKey)
+      - name: Install cert
         shell: pwsh
-        env:
-          ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
-          GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
-          GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
-        run: |
-          $ErrorActionPreference = 'Stop'
-          if (-not $env:ACCESS_TOKEN) { Write-Error 'No access token from auth step'; exit 1 }
-          if (-not $env:GCP_KEYRING_PATH) { Write-Error 'GCP_KEYRING_PATH secret is not set'; exit 1 }
-          $path = $env:GCP_KEYRING_PATH -replace '^gkms://', ''
-          $path = $path.TrimStart('/')
-          $pattern = '^projects/[^/]+/locations/([^/]+)/keyRings/[^/]+/cryptoKeys/[^/]+/cryptoKeyVersions/\d+$'
-          $m = [regex]::Match($path, $pattern)
-          if (-not $m.Success) { Write-Error 'GCP_KEYRING_PATH format invalid; expected projects/.../cryptoKeyVersions/N or provide a ring path and a key name.'; exit 1 }
-          $loc = $m.Groups[1].Value
-          $uri = "https://cloudkms.$loc.rep.googleapis.com/v1/$path/publicKey"
-          try {
-            $resp = Invoke-RestMethod -Method GET -Uri $uri -Headers @{ Authorization = "Bearer $($env:ACCESS_TOKEN)" }
-            if ($resp.pem) {
-              Write-Host "KMS getPublicKey ok. Algorithm: $($resp.algorithm)"
-              Set-Content -Path "$env:RUNNER_TEMP\kms-pub.pem" -Value $resp.pem -Encoding ascii
-            } else { Write-Error 'KMS getPublicKey returned no PEM'; exit 1 }
-          } catch {
-            Write-Error "KMS getPublicKey failed: $($_.Exception.Message)"; throw
-          }
+        run: certutil -user -addstore My ".\build\cert\windows.cer"
 
-      - name: 🔎 Compare certificate vs KMS public key (SPKI)
+      - name: Link key
         shell: pwsh
-        env:
-          CERT_SHA1_INPUT: ${{ github.event.inputs.cert_sha1 }}
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $thumb = if ($env:CERT_SHA1_INPUT) { $env:CERT_SHA1_INPUT } else { '${{ vars.CERTIFICATE_SHA1 }}' }
-          if (-not $thumb) { Write-Error 'Certificate SHA1 not available'; exit 1 }
-          $cert = Get-ChildItem Cert:\CurrentUser\My | Where-Object { $_.Thumbprint -eq $thumb }
-          if (-not $cert) { Write-Error "Certificate $thumb not found in CurrentUser\My"; exit 1 }
-          $certFile = "$env:RUNNER_TEMP\cert.cer"
-          Export-Certificate -Cert $cert -FilePath $certFile -Force | Out-Null
+        run: certutil -f -user -csp "Google Cloud KMS Provider" -repairstore My "AFF534DFD7F78D2C73932997B7DAD510D5A7821C"
+      # - name: ⬇️ Checkout code
+      #   uses: actions/checkout@v5
 
-          # Ensure openssl exists or try to install via choco
-          if (-not (Get-Command openssl -ErrorAction SilentlyContinue)) {
-            Write-Warning 'openssl not found in PATH; attempting choco install openssl.light (may require admin)'
-            if (Get-Command choco -ErrorAction SilentlyContinue) { choco install openssl.light -y --no-progress --limit-output } else { Write-Warning 'choco not available; cannot install openssl automatically' }
-          }
-          if (-not (Get-Command openssl -ErrorAction SilentlyContinue)) { Write-Warning 'openssl still not available; skipping SPKI compare'; exit 0 }
+      # - name: 🧭 Add signtool to PATH and detect /ksp
+      #   shell: pwsh
+      #   run: .\build\add-signtool-path.ps1
 
-          $certHash = & openssl x509 -in $certFile -noout -pubkey 2>$null | openssl pkey -pubin -outform der 2>$null | openssl dgst -sha256 -r 2>$null
-          $certHash = ($certHash -split ' ' | Select-Object -First 1).Trim()
-          $kmsPem = "$env:RUNNER_TEMP\kms-pub.pem"
-          if (-not (Test-Path $kmsPem)) { Write-Error 'KMS public PEM not found'; exit 1 }
-          $kmsHash = & openssl pkey -pubin -in $kmsPem -outform der 2>$null | openssl dgst -sha256 -r 2>$null
-          $kmsHash = ($kmsHash -split ' ' | Select-Object -First 1).Trim()
-          Write-Host "Cert SPKI: $certHash"
-          Write-Host "KMS SPKI : $kmsHash"
-          if ($certHash -and $kmsHash -and ($certHash -ieq $kmsHash)) { Write-Host 'Public key match confirmed (SPKI SHA256).' } else { Write-Error 'Public key mismatch between cert and KMS'; exit 1 }
+      # - name: 🗝️ Authenticate to Google Cloud (OIDC)
+      #   id: auth
+      #   uses: google-github-actions/auth@v3
+      #   with:
+      #     access_token_scopes: 'openid, https://www.googleapis.com/auth/cloudkms, https://www.googleapis.com/auth/cloud-platform'
+      #     token_format: 'access_token'
+      #     workload_identity_provider: ${{ secrets.IDENTITY_PROVIDER }}
+      #     service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+      #     create_credentials_file: true
 
-      - name: 🔏 Pre-sign sanity sign
-        shell: pwsh
-        env:
-          GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
-          GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
-          CERT_SHA1_INPUT: ${{ github.event.inputs.cert_sha1 }}
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
-        run: |
-          $ErrorActionPreference = 'Stop'
-          dotnet --info | Out-Null
-          dotnet new console -n SignSanity -o .\SignSanity -f net8.0 --force | Out-Null
-          dotnet build .\SignSanity\SignSanity.csproj -c Release -v m | Out-Null
-          $exe = Get-ChildItem .\SignSanity\bin\Release\**\SignSanity.exe -ErrorAction Stop | Select-Object -First 1
-          if (-not $exe) { Write-Error 'Failed to locate built test executable'; exit 1 }
-          Write-Host "Signing test executable: $($exe.FullName)"
-          $kc = $env:GCP_KEYRING_PATH
-          if ($kc -notmatch '^gkms://') { $kc = 'gkms://' + ($kc.TrimStart('/')) }
-          $thumb = if ($env:CERT_SHA1_INPUT) { $env:CERT_SHA1_INPUT } else { '${{ vars.CERTIFICATE_SHA1 }}' }
-          $useKsp = ($env:WINDOWS_SIGN_USE_KSP -eq 'true')
-          if ($useKsp) {
-            & signtool.exe sign /v /debug /fd SHA256 /tr http://timestamp.sectigo.com /td SHA256 /s my /ksp 'Google Cloud KMS Provider' /kc "$kc" /sha1 "$thumb" $exe.FullName
-          } else {
-            & signtool.exe sign /v /debug /fd SHA256 /tr http://timestamp.sectigo.com /td SHA256 /s my /csp 'Google Cloud KMS Provider' /kc "$kc" /sha1 "$thumb" $exe.FullName
-          }
+      # - name: 📜 Import code signing certificate to CurrentUser\My
+      #   shell: pwsh
+      #   env:
+      #     GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
+      #     GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
+      #     CERT_SHA1_INPUT: ${{ github.event.inputs.cert_sha1 }}
+      #   run: |
+      #     $ErrorActionPreference = 'Stop'
+      #     $thumb = if ($env:CERT_SHA1_INPUT) { $env:CERT_SHA1_INPUT } else { '${{ vars.CERTIFICATE_SHA1 }}' }
+      #     if (-not $thumb) { Write-Error 'Certificate SHA1 not provided via input or repo var'; exit 1 }
+      #     Write-Host "Using certificate thumbprint: $thumb"
+      #     .\build\import-certificate.ps1 -CertSha1 $thumb
 
-      - name: ✅ Done (signing test finished)
-        run: Write-Host 'Signing test job completed. Review logs for success/failure.'
+      # - name: 🔐 KMS access preflight (getPublicKey)
+      #   shell: pwsh
+      #   env:
+      #     ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+      #     GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
+      #     GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
+      #   run: |
+      #     $ErrorActionPreference = 'Stop'
+      #     if (-not $env:ACCESS_TOKEN) { Write-Error 'No access token from auth step'; exit 1 }
+      #     if (-not $env:GCP_KEYRING_PATH) { Write-Error 'GCP_KEYRING_PATH secret is not set'; exit 1 }
+      #     $path = $env:GCP_KEYRING_PATH -replace '^gkms://', ''
+      #     $path = $path.TrimStart('/')
+      #     $pattern = '^projects/[^/]+/locations/([^/]+)/keyRings/[^/]+/cryptoKeys/[^/]+/cryptoKeyVersions/\d+$'
+      #     $m = [regex]::Match($path, $pattern)
+      #     if (-not $m.Success) { Write-Error 'GCP_KEYRING_PATH format invalid; expected projects/.../cryptoKeyVersions/N or provide a ring path and a key name.'; exit 1 }
+      #     $loc = $m.Groups[1].Value
+      #     $uri = "https://cloudkms.$loc.rep.googleapis.com/v1/$path/publicKey"
+      #     try {
+      #       $resp = Invoke-RestMethod -Method GET -Uri $uri -Headers @{ Authorization = "Bearer $($env:ACCESS_TOKEN)" }
+      #       if ($resp.pem) {
+      #         Write-Host "KMS getPublicKey ok. Algorithm: $($resp.algorithm)"
+      #         Set-Content -Path "$env:RUNNER_TEMP\kms-pub.pem" -Value $resp.pem -Encoding ascii
+      #       } else { Write-Error 'KMS getPublicKey returned no PEM'; exit 1 }
+      #     } catch {
+      #       Write-Error "KMS getPublicKey failed: $($_.Exception.Message)"; throw
+      #     }
+
+      # - name: 🔎 Compare certificate vs KMS public key (SPKI)
+      #   shell: pwsh
+      #   env:
+      #     CERT_SHA1_INPUT: ${{ github.event.inputs.cert_sha1 }}
+      #   run: |
+      #     $ErrorActionPreference = 'Stop'
+      #     $thumb = if ($env:CERT_SHA1_INPUT) { $env:CERT_SHA1_INPUT } else { '${{ vars.CERTIFICATE_SHA1 }}' }
+      #     if (-not $thumb) { Write-Error 'Certificate SHA1 not available'; exit 1 }
+      #     $cert = Get-ChildItem Cert:\CurrentUser\My | Where-Object { $_.Thumbprint -eq $thumb }
+      #     if (-not $cert) { Write-Error "Certificate $thumb not found in CurrentUser\My"; exit 1 }
+      #     $certFile = "$env:RUNNER_TEMP\cert.cer"
+      #     Export-Certificate -Cert $cert -FilePath $certFile -Force | Out-Null
+
+      #     # Ensure openssl exists or try to install via choco
+      #     if (-not (Get-Command openssl -ErrorAction SilentlyContinue)) {
+      #       Write-Warning 'openssl not found in PATH; attempting choco install openssl.light (may require admin)'
+      #       if (Get-Command choco -ErrorAction SilentlyContinue) { choco install openssl.light -y --no-progress --limit-output } else { Write-Warning 'choco not available; cannot install openssl automatically' }
+      #     }
+      #     if (-not (Get-Command openssl -ErrorAction SilentlyContinue)) { Write-Warning 'openssl still not available; skipping SPKI compare'; exit 0 }
+
+      #     $certHash = & openssl x509 -in $certFile -noout -pubkey 2>$null | openssl pkey -pubin -outform der 2>$null | openssl dgst -sha256 -r 2>$null
+      #     $certHash = ($certHash -split ' ' | Select-Object -First 1).Trim()
+      #     $kmsPem = "$env:RUNNER_TEMP\kms-pub.pem"
+      #     if (-not (Test-Path $kmsPem)) { Write-Error 'KMS public PEM not found'; exit 1 }
+      #     $kmsHash = & openssl pkey -pubin -in $kmsPem -outform der 2>$null | openssl dgst -sha256 -r 2>$null
+      #     $kmsHash = ($kmsHash -split ' ' | Select-Object -First 1).Trim()
+      #     Write-Host "Cert SPKI: $certHash"
+      #     Write-Host "KMS SPKI : $kmsHash"
+      #     if ($certHash -and $kmsHash -and ($certHash -ieq $kmsHash)) { Write-Host 'Public key match confirmed (SPKI SHA256).' } else { Write-Error 'Public key mismatch between cert and KMS'; exit 1 }
+
+      # - name: 🔏 Pre-sign sanity sign
+      #   shell: pwsh
+      #   env:
+      #     GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
+      #     GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
+      #     CERT_SHA1_INPUT: ${{ github.event.inputs.cert_sha1 }}
+      #     GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+      #   run: |
+      #     $ErrorActionPreference = 'Stop'
+      #     dotnet --info | Out-Null
+      #     dotnet new console -n SignSanity -o .\SignSanity -f net8.0 --force | Out-Null
+      #     dotnet build .\SignSanity\SignSanity.csproj -c Release -v m | Out-Null
+      #     $exe = Get-ChildItem .\SignSanity\bin\Release\**\SignSanity.exe -ErrorAction Stop | Select-Object -First 1
+      #     if (-not $exe) { Write-Error 'Failed to locate built test executable'; exit 1 }
+      #     Write-Host "Signing test executable: $($exe.FullName)"
+      #     $kc = $env:GCP_KEYRING_PATH
+      #     if ($kc -notmatch '^gkms://') { $kc = 'gkms://' + ($kc.TrimStart('/')) }
+      #     $thumb = if ($env:CERT_SHA1_INPUT) { $env:CERT_SHA1_INPUT } else { '${{ vars.CERTIFICATE_SHA1 }}' }
+      #     $useKsp = ($env:WINDOWS_SIGN_USE_KSP -eq 'true')
+      #     if ($useKsp) {
+      #       & signtool.exe sign /v /debug /fd SHA256 /tr http://timestamp.sectigo.com /td SHA256 /s my /ksp 'Google Cloud KMS Provider' /kc "$kc" /sha1 "$thumb" $exe.FullName
+      #     } else {
+      #       & signtool.exe sign /v /debug /fd SHA256 /tr http://timestamp.sectigo.com /td SHA256 /s my /csp 'Google Cloud KMS Provider' /kc "$kc" /sha1 "$thumb" $exe.FullName
+      #     }
+
+      # - name: ✅ Done (signing test finished)
+      #   run: Write-Host 'Signing test job completed. Review logs for success/failure.'

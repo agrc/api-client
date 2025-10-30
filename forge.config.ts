@@ -34,24 +34,13 @@ const kmsKeyPath = (() => {
 const certPath = path.resolve(__dirname, 'build', 'cert', 'windows.cer');
 
 const windowsSign = {
-  // Ensure the library uses SHA256 and RFC3161 timestamp server (avoids default /t and sha1)
   digestAlgorithm: 'sha256',
-  rfcTimestampServer: 'http://timestamp.sectigo.com',
-  // Append KMS-specific args; also add verbosity and explicit store
-  additionalSignToolArgs: [
-    '/v',
-    '/debug',
-    '/fd',
-    'sha256',
-    '/t',
-    'http://timestamp.sectigo.com',
-    '/f',
-    certPath,
-    '/csp',
-    'Google Cloud KMS Provider',
-    '/kc',
-    kmsKeyPath,
-  ],
+  hashes: ['sha256'],
+  certificateFile: certPath,
+  timestampServer: 'http://timestamp.sectigo.com',
+  description: 'UGRC API Client',
+  website: 'https://gis.utah.gov/products/sgid/address/api-client/',
+  signWithParams: ['/v', '/csp', 'Google Cloud KMS Provider', '/kc', kmsKeyPath],
 };
 
 const config: ForgeConfig = {
@@ -107,6 +96,15 @@ const config: ForgeConfig = {
       noMsi: true,
       setupExe: `ugrc-api-client-${version}-win32-setup.exe`,
       setupIcon: path.resolve(assets, 'logo.ico'),
+      windowsSign: {
+        // @ts-expect-error matches enum value
+        hashes: ['sha256'],
+        certificateFile: certPath,
+        timestampServer: 'http://timestamp.sectigo.com',
+        description: 'UGRC API Client',
+        website: 'https://gis.utah.gov/products/sgid/address/api-client/',
+        signWithParams: ['/v', '/csp', 'Google Cloud KMS Provider', '/kc', kmsKeyPath],
+      },
     }),
     new MakerZIP({}, ['darwin']),
     new MakerDMG({
