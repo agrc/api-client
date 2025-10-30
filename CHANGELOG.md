@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.7.11](https://github.com/agrc/api-client/compare/v1.7.10...v1.7.11) (2025-10-30)
+
+
+### Features
+
+* reference GCP HSM key ([bc64d6b](https://github.com/agrc/api-client/commit/bc64d6ba532cd1536b9cad387588bb26c6d78b19))
+
+
+### Bug Fixes
+
+* sign windows app with GCP HSM key ([a1cc665](https://github.com/agrc/api-client/commit/a1cc66546105bcf147b478e0285448d225020312))
+* use google cloud kms to sign windows cert ([c766086](https://github.com/agrc/api-client/commit/c7660869c34510fba686db746e1d2e4df9dd2cc1))
+
+
+### Documentation
+
+* add windows certificate process ([b983128](https://github.com/agrc/api-client/commit/b983128f94e3c6e1595377fb2c6fa9ec5934224d))
+
 ## [1.7.10](https://github.com/agrc/api-client/compare/v1.7.9...v1.7.10) (2025-08-04)
 
 
