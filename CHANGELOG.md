@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.12](https://github.com/agrc/api-client/compare/v1.7.11...v1.7.12) (2025-11-05)
+
+
+### Dependencies
+
+* downgrade fuses to fix resolution issue ([e00b7f0](https://github.com/agrc/api-client/commit/e00b7f0c0f5327e9aa55f34ab4268eca834e56ee))
+
 ## [1.7.11](https://github.com/agrc/api-client/compare/v1.7.10...v1.7.11) (2025-10-30)
 
 
