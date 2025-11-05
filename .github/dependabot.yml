@@ -12,6 +12,9 @@ updates:
       major-dependencies:
         update-types:
           - major
+    commit-message:
+      prefix: deps
+      prefix-development: deps(dev)
     cooldown:
       default-days: 10
       semver-major-days: 60
