@@ -37,7 +37,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.9",
     "clsx": "^2.1.1",
-    "csv-parse": "^5.6.0",
+    "csv-parse": "^6.1.0",
     "csv-stringify": "^6.6.0",
     "electron-log": "^5.4.3",
     "electron-store": "^10.1.0",
@@ -69,16 +69,16 @@
     "@electron-forge/plugin-fuses": "^7.10.2",
     "@electron-forge/plugin-vite": "^7.10.2",
     "@electron-forge/publisher-github": "^7.10.2",
-    "@electron/fuses": "^1.8.0",
+    "@electron/fuses": "^2.0.0",
     "@tailwindcss/postcss": "^4.1.16",
     "@types/electron-squirrel-startup": "^1.0.2",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@ugrc/eslint-config": "^1.2.3",
     "chokidar": "^4.0.3",
-    "cross-env": "^7.0.3",
-    "dotenv": "^16.5.0",
-    "electron": "^36.2.1",
+    "cross-env": "^10.0.0",
+    "dotenv": "^17.2.2",
+    "electron": "^38.0.0",
     "electron-squirrel-startup": "^1.0.1",
     "eslint": "^9.32.0",
     "prettier": "^3.6.2",
@@ -88,7 +88,7 @@
     "tailwindcss": "^4.1.11",
     "ts-node": "^10.9.2",
     "typescript": "~5.9.3",
-    "vite": "^6.3.5"
+    "vite": "^7.1.4"
   },
   "productName": "ugrc-api-client"
 }
