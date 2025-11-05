@@ -21,8 +21,13 @@ const fromBuildIdentifier = utils.fromBuildIdentifier;
 const { version } = packageJson;
 const assets = path.resolve(__dirname, 'src', 'assets');
 const kmsKeyPath = (() => {
+  if (process.env.NODE_ENV !== 'production') {
+    return '';
+  }
+
   const ring = (process.env.GCP_KEYRING_PATH || '').trim();
   const keyName = (process.env.GCP_KEY_NAME || '').trim();
+
   if (!ring) {
     throw new Error('GCP_KEYRING_PATH environment variable is not set');
   }
