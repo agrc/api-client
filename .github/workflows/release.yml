@@ -26,7 +26,7 @@ jobs:
       name: prod
     steps:
       - name: ⬇️ Set up code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           show-progress: false
 
@@ -42,7 +42,7 @@ jobs:
           python-version: 3.12
 
       - name: 🧑‍🎓 Set up signing certificates
-        uses: apple-actions/import-codesign-certs@v5
+        uses: apple-actions/import-codesign-certs@v6
         with:
           p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
           p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
@@ -75,7 +75,7 @@ jobs:
       name: prod
     steps:
       - name: ⬇️ Set up code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           show-progress: false
 
@@ -90,7 +90,7 @@ jobs:
 
       - name: 📦 Cache CNG Provider
         id: cache-cng
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: C:\Users\runneradmin\AppData\Local\Temp\KmsCngInstall
           key: cng-provider-v1.3-windows
