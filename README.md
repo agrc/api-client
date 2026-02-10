@@ -51,23 +51,19 @@ An apple developer certificate is required to sign the application for distribut
 
 1. Create a `prod` and `dev` GitHub [repo environment](https://github.com/agrc/api-client/settings/environments).
 1. Store the password and the p12 certificate as GitHub Action secrets in the environment:
-
    - `gh secret set APPLE_CERTIFICATE -b$(base64 -i ~/certificate.p12) --env=prod`
    - `gh secret set APPLE_CERTIFICATE_PASSWORD -b<password> --env=prod`
    - `gh secret set GCP_KEYRING_PATH -b<key-ring-or-key-version-path> --env=prod`
    - `gh secret set GCP_KEY_NAME -b<key-alias> --env=prod`
 
 1. Add the rest of the environment variables as secrets:
-
    - `APPLE_IDENTITY`: _the name of the developer id certificate name as it appears in keychain_
    - `APPLE_TEAM_ID`: _the team id to notarize under viewable on your [Apple Developer Account](https://developer.apple.com/account) "Membership details", page_
    - `APPLE_USER_ID`: _the full email address of your [Apple Developer Account](https://developer.apple.com/account)_
    - `APPLE_PASSWORD`: _the app-specific password (not your Apple ID password) created on [Apple Developer Account](https://appleid.apple.com/account/manage)_
 
    ### Example GCP values
-
    - GCP_KEYRING_PATH examples:
-
      - Full key version path (preferred for REST calls):
        `projects/my-project/locations/cloud-region/keyRings/ring-name/cryptoKeys/key-name/cryptoKeyVersions/1`
      - Key ring style (when using JSign -s with a keyRing path):

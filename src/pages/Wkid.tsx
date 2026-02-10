@@ -51,7 +51,7 @@ export function Wkid() {
               >
                 <h2 className="my-0 text-indigo-600">26912</h2>
                 <span className="block text-xs tracking-tighter text-indigo-900">(425602.11, 4513491.02)</span>
-                <span className="block text-base text-gray-400">UTM Zone 12 North (state standard)</span>
+                <span className="block text-base text-gray-600">UTM Zone 12 North (state standard)</span>
               </div>
             )}
           </Radio>
@@ -65,7 +65,7 @@ export function Wkid() {
               >
                 <h2 className="my-0 text-indigo-600">4326</h2>
                 <span className="block text-xs tracking-tighter text-indigo-900">(-111.88, 40.76)</span>
-                <span className="block text-base text-gray-400">WGS 84 (lat/lon)</span>
+                <span className="block text-base text-gray-600">WGS 84 (lat/lon)</span>
               </div>
             )}
           </Radio>
@@ -79,7 +79,7 @@ export function Wkid() {
               >
                 <h2 className="my-0 text-indigo-600">3857</h2>
                 <span className="block text-xs tracking-tighter text-indigo-900">(-12454597.87, 4978333.39)</span>
-                <span className="block text-base text-gray-400">Web Mercator (web mapping)</span>
+                <span className="block text-base text-gray-600">Web Mercator (web mapping)</span>
               </div>
             )}
           </Radio>
@@ -87,6 +87,7 @@ export function Wkid() {
             <label htmlFor="customWkid">
               <input
                 type="number"
+                id="customWkid"
                 name="customWkid"
                 value={customWkid}
                 onChange={(event) => {

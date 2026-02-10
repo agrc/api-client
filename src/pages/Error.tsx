@@ -67,17 +67,17 @@ export function Error({ error, children }: { error: Error; children?: React.Reac
           {error && error.message ? (
             <>
               <label htmlFor="message">Error message:</label>
-              <pre id="message" className="overflow-auto text-base text-gray-400">{`${error.message}`}</pre>
+              <pre id="message" className="overflow-auto text-base text-gray-600">{`${error.message}`}</pre>
             </>
           ) : null}
           {error && error.stack ? (
             <>
               <label htmlFor="stack">Stack trace:</label>
-              <pre id="stack" className="overflow-auto text-base text-gray-400">{`${error.stack}`}</pre>
+              <pre id="stack" className="overflow-auto text-base text-gray-600">{`${error.stack}`}</pre>
             </>
           ) : null}
           {error && !error.message && !error.stack ? (
-            <pre className="overflow-auto text-base text-gray-400">{error.toString()}</pre>
+            <pre className="overflow-auto text-base text-gray-600">{error.toString()}</pre>
           ) : null}
         </details>
       </Chrome>

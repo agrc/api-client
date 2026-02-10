@@ -29,7 +29,7 @@ export function InvalidCsv({ errorDetails }: { errorDetails: string[] }) {
       {stack && (
         <>
           <label htmlFor="stack">Stack trace:</label>
-          <pre id="stack" className="overflow-auto text-base text-gray-400">
+          <pre id="stack" className="overflow-auto text-base text-gray-600">
             {stack}
           </pre>
         </>

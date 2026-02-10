@@ -30,17 +30,17 @@ export function About() {
               {info.applicationVersion}
             </a>
           </h2>
-          <span className="block text-base text-gray-400">app version</span>
+          <span className="block text-base text-gray-600">app version</span>
         </div>
         <div className="flex-1 p-6">
           <h2 className="my-0 text-indigo-600">{info.version}</h2>
-          <span className="block text-base text-gray-400">electron version</span>
+          <span className="block text-base text-gray-600">electron version</span>
         </div>
         <h2 className="col-span-2 my-4 text-center text-indigo-900">
           <a href="https://gis.utah.gov/products/sgid/address/api-client/" target="_blank" rel="noopener noreferrer">
             {info.applicationName}
           </a>
-          <span className="block text-base font-normal text-gray-400">product page</span>
+          <span className="block text-base font-normal text-gray-600">product page</span>
         </h2>
         <div className="flex-1 p-6">
           <h2 className="my-0 text-indigo-600">
@@ -48,7 +48,7 @@ export function About() {
               github
             </a>
           </h2>
-          <span className="block text-base text-gray-400">repository</span>
+          <span className="block text-base text-gray-600">repository</span>
         </div>
         <div className="flex-1 p-6">
           <h2 className="my-0 text-indigo-600">
@@ -56,13 +56,13 @@ export function About() {
               api explorer
             </a>
           </h2>
-          <span className="block text-base text-gray-400">documentation</span>
+          <span className="block text-base text-gray-600">documentation</span>
         </div>
         <h2 className="col-span-2 my-4 text-center text-indigo-900">
           <a href="https://developer.mapserv.utah.gov/" target="_blank" rel="noopener noreferrer">
             self service
           </a>
-          <span className="block text-base font-normal text-gray-400">key management</span>
+          <span className="block text-base font-normal text-gray-600">key management</span>
         </h2>
       </section>
     </article>

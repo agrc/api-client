@@ -34,5 +34,5 @@ export const DropzoneMessaging = ({ isDragActive, file, validation }: DropzoneMe
     );
   }
 
-  return <h2 className="self-center text-center text-gray-400 uppercase">Drop the CSV file here</h2>;
+  return <h2 className="self-center text-center text-gray-600 uppercase">Drop the CSV file here</h2>;
 };

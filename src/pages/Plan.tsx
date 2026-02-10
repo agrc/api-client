@@ -22,11 +22,11 @@ export function Plan() {
       <section className="mb-10 flex w-full items-stretch justify-around divide-x-2 divide-gray-100 rounded-lg border border-gray-200 text-center shadow-lg">
         <div className="flex-1 p-6">
           <h2 className="my-0 text-indigo-600">{numberFormat.format(geocodeContext.data.totalRecords)}</h2>
-          <span className="block text-base text-gray-400">addresses</span>
+          <span className="block text-base text-gray-600">addresses</span>
         </div>
         <div className="flex-1 p-6">
           <h2 className="my-0 text-indigo-600">{humanizeDuration(duration, { round: true })}</h2>
-          <span className="block text-base text-gray-400">to complete</span>
+          <span className="block text-base text-gray-600">to complete</span>
         </div>
       </section>
       <h3 className="truncate px-4 text-center text-zinc-700">{geocodeContext.data.file.name}</h3>

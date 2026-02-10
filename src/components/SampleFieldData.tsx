@@ -22,7 +22,7 @@ function Label({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex-1 p-4">
       <h4 className="my-0 max-w-xs truncate whitespace-nowrap text-indigo-600">{value ?? '?'}</h4>
-      <span className="block text-base whitespace-nowrap text-gray-400">{label}</span>
+      <span className="block text-base whitespace-nowrap text-gray-600">{label}</span>
     </div>
   );
 }

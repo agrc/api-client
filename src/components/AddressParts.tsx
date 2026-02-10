@@ -20,7 +20,7 @@ function Label({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex-1 p-4">
       <h2 className="mb-0 text-indigo-600">{value}</h2>
-      <span className="block text-base text-gray-400">{label}</span>
+      <span className="block text-base text-gray-600">{label}</span>
     </div>
   );
 }
