@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.7.13](https://github.com/agrc/api-client/compare/v1.7.12...v1.7.13) (2026-02-10)
+
+
+### Features
+
+* add 3rd party licenses ([1d2ef6c](https://github.com/agrc/api-client/commit/1d2ef6cd4240cb1a8ce4f889cac473ad86feec3c))
+
+
+### Dependencies
+
+* bump the safe-dependencies group with 15 updates ([e3758c4](https://github.com/agrc/api-client/commit/e3758c461a8443337b009932abeb5be4f049b595))
+* **dev:** bump electron ([5fa96ea](https://github.com/agrc/api-client/commit/5fa96ead36be0d2e426ccc55649fb825b8ab1f32))
+* fy26 q3 dependency updates ([e39bb85](https://github.com/agrc/api-client/commit/e39bb85af6214b183c83914a93b625396e5754fb))
+
+
+### Documentation
+
+* add copilot attribution ([b59027c](https://github.com/agrc/api-client/commit/b59027c9ee22ef05b53388caeaa119d494326409))
+
+
+### Styles
+
+* update contrast and add focus styles ([fb2d52c](https://github.com/agrc/api-client/commit/fb2d52cc896e3e921bdc00d1cdffde6b5a94f057))
+
 ## [1.7.12](https://github.com/agrc/api-client/compare/v1.7.11...v1.7.12) (2025-11-05)
 
 
