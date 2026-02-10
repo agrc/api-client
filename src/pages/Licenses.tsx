@@ -5,14 +5,14 @@ import { useNavigate } from 'react-router';
 export function Licenses() {
   const [licenses, setLicenses] = useState<string>();
   const navigate = useNavigate();
-  const handleError = useErrorBoundary();
+  const { showBoundary } = useErrorBoundary();
 
   useEffect(() => {
     window.ugrc
       .getLicenses()
       .then((data) => setLicenses(data))
-      .catch(handleError);
-  }, [handleError]);
+      .catch(showBoundary);
+  }, [showBoundary]);
 
   return (
     <article>

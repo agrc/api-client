@@ -1,7 +1,10 @@
+import type { FallbackProps } from 'react-error-boundary';
 import { Chrome } from '../components/PageElements';
 
-export function Error({ error, children }: { error: Error; children?: React.ReactNode }) {
+export function Error({ error }: FallbackProps) {
   window.ugrc.trackEvent({ category: 'error', label: 'unhandled error' });
+
+  const errorObj = error as Error;
 
   return (
     <article>
@@ -30,7 +33,7 @@ export function Error({ error, children }: { error: Error; children?: React.Reac
                 <h3 className="mt-0">GitHub account</h3>
                 <button
                   type="button"
-                  onClick={() => window.ugrc.openIssue({ message: error.message, stack: error.stack })}
+                  onClick={() => window.ugrc.openIssue({ message: errorObj.message, stack: errorObj.stack })}
                 >
                   Let&apos;s go
                 </button>
@@ -39,22 +42,20 @@ export function Error({ error, children }: { error: Error; children?: React.Reac
                 <h3 className="mt-0">Email</h3>
                 <button
                   type="button"
-                  onClick={() => window.ugrc.openEmail({ message: error.message, stack: error.stack })}
+                  onClick={() => window.ugrc.openEmail({ message: errorObj.message, stack: errorObj.stack })}
                 >
                   Compose
                 </button>
               </div>
             </section>
             <h2 className="mb-8 text-center text-indigo-600">Thank you so much!</h2>
-            {children || (
-              <p>
-                You may now{' '}
-                <button className="font-bold text-amber-500 hover:text-amber-300" onClick={window.ugrc.relaunchApp}>
-                  restart the application
-                </button>{' '}
-                and try geocoding again.
-              </p>
-            )}
+            <p>
+              You may now{' '}
+              <button className="font-bold text-amber-500 hover:text-amber-300" onClick={window.ugrc.relaunchApp}>
+                restart the application
+              </button>{' '}
+              and try geocoding again.
+            </p>
           </>
         )}
         <details className="mt-6">
@@ -64,20 +65,20 @@ export function Error({ error, children }: { error: Error; children?: React.Reac
             </span>{' '}
             Technical Details
           </summary>
-          {error && error.message ? (
+          {errorObj && errorObj.message ? (
             <>
               <label htmlFor="message">Error message:</label>
-              <pre id="message" className="overflow-auto text-base text-gray-600">{`${error.message}`}</pre>
+              <pre id="message" className="overflow-auto text-base text-gray-600">{`${errorObj.message}`}</pre>
             </>
           ) : null}
-          {error && error.stack ? (
+          {errorObj && errorObj.stack ? (
             <>
               <label htmlFor="stack">Stack trace:</label>
-              <pre id="stack" className="overflow-auto text-base text-gray-600">{`${error.stack}`}</pre>
+              <pre id="stack" className="overflow-auto text-base text-gray-600">{`${errorObj.stack}`}</pre>
             </>
           ) : null}
-          {error && !error.message && !error.stack ? (
-            <pre className="overflow-auto text-base text-gray-600">{error.toString()}</pre>
+          {errorObj && !errorObj.message && !errorObj.stack ? (
+            <pre className="overflow-auto text-base text-gray-600">{String(errorObj)}</pre>
           ) : null}
         </details>
       </Chrome>

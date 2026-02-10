@@ -23,10 +23,10 @@ const chooseCommonFieldName = (fieldName, fieldsFromFile, commonFieldNames) => {
 
 export function Data() {
   const { geocodeContext, geocodeDispatch } = useGeocodeContext();
-  const [error, setError] = useState();
-  const [validation, setValidation] = useState('idle');
+  const [error, setError] = useState<string[] | undefined>();
+  const [validation, setValidation] = useState<'validating' | 'valid' | 'invalid' | 'idle'>('idle');
 
-  const onDrop = async (files, _, event) => {
+  const onDrop = async (files: File[] | null, _: unknown, event: { type?: string } | unknown) => {
     if (!files) {
       geocodeDispatch({ type: 'RESET', payload: 'data' });
 
@@ -35,13 +35,13 @@ export function Data() {
 
     window.ugrc.trackEvent({
       category: 'file-selection-type',
-      label: (event?.type ?? '') === 'drop' ? 'drag-and-drop' : 'file-dialog',
+      label: ((event as { type?: string })?.type ?? '') === 'drop' ? 'drag-and-drop' : 'file-dialog',
     });
 
     const file = window.ugrc.webFilePath(files[0]);
 
-    setError();
-    let stats;
+    setError(undefined);
+    let stats: { firstRecord: Record<string, unknown>; totalRecords: number } | undefined;
     try {
       stats = await window.ugrc.getCsvColumns(file);
     } catch (e) {
@@ -55,8 +55,11 @@ export function Data() {
 
         return;
       }
-      handleError(e);
+      showBoundary(e);
+      return;
     }
+
+    if (!stats) return;
 
     const fields = Object.keys(stats.firstRecord);
 
@@ -92,7 +95,7 @@ export function Data() {
 
         return;
       }
-      handleError(e);
+      showBoundary(e);
     }
   };
 
@@ -105,9 +108,9 @@ export function Data() {
     onDrop,
     useFsAccessApi: false,
   });
-  const commonFieldNames = useRef({ street: [], zone: [] });
+  const commonFieldNames = useRef({ street: [] as string[], zone: [] as string[] });
   const navigate = useNavigate();
-  const handleError = useErrorBoundary();
+  const { showBoundary } = useErrorBoundary();
 
   useEffect(() => {
     window.addEventListener('keyup', (event) => {
@@ -120,26 +123,30 @@ export function Data() {
   useEffect(() => {
     window.ugrc
       .getConfigItem('streetFields')
-      .then((f) => (commonFieldNames.current.street = f))
-      .catch(handleError);
+      .then((f) => (commonFieldNames.current.street = f as string[]))
+      .catch((err) => showBoundary(err));
     window.ugrc
       .getConfigItem('zoneFields')
-      .then((f) => (commonFieldNames.current.zone = f))
-      .catch(handleError);
-  }, [handleError]);
+      .then((f) => (commonFieldNames.current.zone = f as string[]))
+      .catch((err) => showBoundary(err));
+  }, [showBoundary]);
 
   const saveFieldPreferences = async () => {
-    const existingStreetFields = new Set(await window.ugrc.getConfigItem('streetFields').catch(handleError));
+    const existingStreetFields = new Set<string>(
+      (await window.ugrc.getConfigItem('streetFields').catch(() => [])) as string[],
+    );
 
     existingStreetFields.add(geocodeContext.data.street.toLowerCase());
 
-    const existingZoneFields = new Set(await window.ugrc.getConfigItem('zoneFields').catch(handleError));
+    const existingZoneFields = new Set<string>(
+      (await window.ugrc.getConfigItem('zoneFields').catch(() => [])) as string[],
+    );
 
     existingZoneFields.add(geocodeContext.data.zone.toLowerCase());
 
     await window.ugrc
       .saveConfig({ streetFields: Array.from(existingStreetFields), zoneFields: Array.from(existingZoneFields) })
-      .catch(handleError);
+      .catch((err) => showBoundary(err));
 
     navigate('/wkid');
   };
@@ -165,7 +172,7 @@ export function Data() {
           className="flex flex-row"
           type="button"
           onClick={() => {
-            onDrop(null);
+            onDrop(null, null, null);
           }}
         >
           <FileMinus2Icon className="mr-2 inline-block size-6 justify-between self-center" />

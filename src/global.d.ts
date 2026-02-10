@@ -8,16 +8,29 @@ interface AppInfo {
   applicationName: string;
   applicationVersion: string;
   version: string;
-  electronVersion: string;
   website: string;
   repo: string;
+}
+
+declare module '*.svg' {
+  const content: string;
+  export default content;
+}
+
+declare module 'humanize-duration' {
+  function humanizeDuration(ms: number, options?: unknown): string;
+  export default humanizeDuration;
+}
+
+interface ImportMeta {
+  readonly env: Record<string, unknown>;
 }
 
 interface Window {
   ugrc: {
     webFilePath: (file: File) => string;
-    validateWithStats: (content: string) => Promise<{ isValid: boolean; stats: unknown }>;
-    getCsvColumns: (content: string) => Promise<string[]>;
+    validateWithStats: (content: string) => Promise<{ firstRecord: Record<string, unknown>; totalRecords: number }>;
+    getCsvColumns: (content: string) => Promise<{ firstRecord: Record<string, unknown>; totalRecords: number }>;
     saveConfig: (content: Record<string, unknown>) => Promise<void>;
     getConfigItem: (key: string) => Promise<unknown>;
     getLicenses: () => Promise<string>;
