@@ -10,7 +10,6 @@ import './services/csv';
 // import './services/analytics';
 import './services/errors';
 import './services/geocode';
-import './services/licenses';
 
 updateElectronApp({ updateInterval: '1 hour', logger: logger, notifyUser: false });
 
