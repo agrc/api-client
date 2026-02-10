@@ -86,3 +86,7 @@ GitHub Actions will create and update a draft release with every merged pull req
 ## Dependency Notes
 
 - Upgrading `react-dropzone` to version 14.3.0 or layer [breaks the ability to drag and drop files](https://github.com/react-dropzone/react-dropzone/issues/1411).
+
+## Attribution
+
+This project was developed with the assistance of [GitHub Copilot](https://github.com/features/copilot).
