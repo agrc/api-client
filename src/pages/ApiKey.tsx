@@ -11,7 +11,7 @@ export function ApiKey() {
   const location = useLocation();
   const [keyStatus, setKeyStatus] = useState('unknown');
   const [inputValue, setInputValue] = useState('');
-  const handleError = useErrorBoundary();
+  const { showBoundary } = useErrorBoundary();
 
   useEffect(() => {
     window.ugrc
@@ -32,9 +32,9 @@ export function ApiKey() {
           setInputValue(key ?? '');
         }
       })
-      .catch(handleError);
+      .catch((err) => showBoundary(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [history, handleError, geocodeDispatch]);
+  }, [showBoundary, geocodeDispatch]);
 
   const onApiKeyChange = async (event: { target: { value: string } }) => {
     const apiKey = event.target.value;
@@ -46,15 +46,18 @@ export function ApiKey() {
     geocodeDispatch({ type: 'UPDATE_KEY', payload: isValid ? apiKey : '' });
   };
 
-  const checkApiKey = (apiKey: string) => {
+  const checkApiKey = (apiKey: string): Promise<boolean> => {
     setKeyStatus('validating');
     if (apiKey.length > 19 || apiKey.length < 19) {
       setKeyStatus('invalid');
 
-      return false;
+      return Promise.resolve(false);
     }
 
-    return window.ugrc.checkApiKey(apiKey).catch(handleError);
+    return window.ugrc.checkApiKey(apiKey).catch((err) => {
+      showBoundary(err);
+      return false;
+    });
   };
 
   return (
@@ -109,7 +112,7 @@ export function ApiKey() {
               window.ugrc
                 .saveConfig({ apiKey: geocodeContext.apiKey })
                 .then(() => navigate('/data'))
-                .catch(handleError);
+                .catch(showBoundary);
             }}
             type="button"
             disabled={keyStatus === 'invalid'}

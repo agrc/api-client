@@ -8,20 +8,21 @@ export function Wkid() {
   const [wkid, setWkid] = useState('');
   const [customWkid, setCustomWkid] = useState('');
   const navigate = useNavigate();
-  const handleError = useErrorBoundary();
+  const { showBoundary } = useErrorBoundary();
 
   useEffect(() => {
     window.ugrc
       .getConfigItem('wkid')
       .then((id) => {
-        if ([26912, 4326, 3857].includes(id)) {
-          setWkid(id?.toString());
+        const wkidNumber = Number(id);
+        if ([26912, 4326, 3857].includes(wkidNumber)) {
+          setWkid(wkidNumber?.toString());
         } else {
           setCustomWkid(id?.toString());
         }
       })
-      .catch(handleError);
-  }, [handleError]);
+      .catch(showBoundary);
+  }, [showBoundary]);
   return (
     <article>
       <Link type="back-button" to="/data">
@@ -105,7 +106,7 @@ export function Wkid() {
         <button
           className="mt-4"
           onClick={() => {
-            window.ugrc.saveConfig({ wkid: parseInt(wkid || customWkid) }).catch(handleError);
+            window.ugrc.saveConfig({ wkid: parseInt(wkid || customWkid) }).catch(showBoundary);
 
             navigate('/plan');
           }}

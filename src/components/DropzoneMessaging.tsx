@@ -5,7 +5,7 @@ import { Spinner } from './PageElements';
 interface DropzoneMessagingProps {
   isDragActive: boolean;
   file: File | null;
-  validation: 'validating' | 'valid' | 'invalid';
+  validation: 'validating' | 'valid' | 'invalid' | 'idle';
 }
 
 export const DropzoneMessaging = ({ isDragActive, file, validation }: DropzoneMessagingProps) => {

@@ -5,14 +5,14 @@ import logo from '../assets/logo.svg';
 
 export function Footer() {
   const [version, setVersion] = useState('0.0.0');
-  const handleError = useErrorBoundary();
+  const { showBoundary } = useErrorBoundary();
 
   useEffect(() => {
     window.ugrc
       .getAppVersion()
       .then((version) => setVersion(version))
-      .catch(handleError);
-  }, [handleError]);
+      .catch(showBoundary);
+  }, [showBoundary]);
 
   return (
     <section className="fixed inset-x-0 bottom-0 z-20 mt-10 grid grid-cols-2 items-center bg-indigo-900 px-3 py-2 text-indigo-200">

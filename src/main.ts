@@ -29,6 +29,7 @@ const version = `${app.getVersion()}${token}`;
 const createWindow = () => {
   enforceMacOSAppLocation();
 
+  // @ts-expect-error - electron-window-state types are incomplete
   const mainWindowState = windowStateKeeper({ width: 700, height: 1000, fullScreen: false });
 
   const mainWindow = new BrowserWindow({

@@ -1,21 +1,20 @@
 import { app, ipcMain } from 'electron';
 import { readFile } from 'fs/promises';
-import { generateLicenseFile } from 'generate-license-file';
 import path from 'path';
 
 ipcMain.handle('getLicenses', async () => {
   try {
-    const packageJsonPath = path.join(__dirname, '../../package.json');
-    const configPath = path.join(__dirname, '../../glf.json');
-    const tempOutputPath = path.join(app.getPath('temp'), 'licenses-temp.txt');
+    // In both dev and production, assets are copied relative to __dirname
+    const licensesPath = app.isPackaged
+      ? path.join(process.resourcesPath, 'app.asar', '.vite/build/assets/licenses.txt')
+      : path.join(__dirname, 'assets/licenses.txt');
 
-    await generateLicenseFile(packageJsonPath, tempOutputPath, configPath);
+    const data = await readFile(licensesPath, 'utf-8');
 
-    const licensesContent = await readFile(tempOutputPath, 'utf-8');
-
-    return licensesContent;
+    return data;
   } catch (error) {
-    console.error('Error generating licenses:', error);
+    console.warn('Error reading licenses:', error);
+
     return 'license information is unavailable';
   }
 });

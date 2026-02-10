@@ -21,7 +21,7 @@ export function Geocoding() {
     lastRequest: null,
     failures: 0,
   });
-  const handleError = useErrorBoundary();
+  const { showBoundary } = useErrorBoundary();
 
   // Block navigation when geocoding is in progress
   const blocker = useBlocker(
@@ -32,20 +32,33 @@ export function Geocoding() {
 
   const onDragStart = (event) => {
     event.preventDefault();
-    window.ugrc.startDrag('ugrc_geocode_results.csv').catch(handleError);
+    window.ugrc.startDrag('ugrc_geocode_results.csv').catch((err) => showBoundary(err));
   };
 
   const cancel = useCallback(
-    (reason) => {
-      window.ugrc.cancelGeocode(reason).catch(handleError);
+    (reason: string) => {
+      window.ugrc.cancelGeocode(reason).catch((err) => showBoundary(err));
     },
-    [handleError],
+    [showBoundary],
   );
 
   useEffect(() => {
-    window.ugrc.subscribeToGeocodingUpdates((_, data) => {
-      setStats(data);
-    });
+    window.ugrc.subscribeToGeocodingUpdates(
+      (
+        _: unknown,
+        data: {
+          rowsProcessed: number;
+          totalRows: number;
+          activeMatchRate: number;
+          averageScore: number;
+          status: string;
+          lastRequest: unknown;
+          failures: number;
+        },
+      ) => {
+        setStats(data);
+      },
+    );
 
     window.ugrc
       .getConfigItem('wkid')
@@ -59,15 +72,15 @@ export function Geocoding() {
             sampleData: geocodeContext.data.sampleData,
             totalRows: geocodeContext.data.totalRecords,
           })
-          .catch(handleError);
+          .catch((err) => showBoundary(err));
       })
-      .catch(handleError);
+      .catch((err) => showBoundary(err));
 
     return () => {
       cancel('back');
       window.ugrc.unsubscribeFromGeocodingUpdates();
     };
-  }, [geocodeContext, handleError, cancel]);
+  }, [geocodeContext, showBoundary, cancel]);
 
   const progress = stats.rowsProcessed / stats.totalRows || 0;
   const elapsedTime = new Date().getTime() - startTime.current.getTime();

@@ -4,19 +4,19 @@ import { useNavigate } from 'react-router';
 import logo from '../assets/logo.svg';
 
 export function About() {
-  const [info, setInfo] = useState({
+  const [info, setInfo] = useState<AppInfo>({
     applicationName: 'UGRC API Client',
+    applicationVersion: '0.0.0',
     version: '0.0.0',
-    electronVersion: '0.0.0',
     website: 'https://api.mapserv.utah.gov',
     repo: 'https://github.com/agrc/api-client',
   });
   const navigate = useNavigate();
-  const handleError = useErrorBoundary();
+  const { showBoundary } = useErrorBoundary();
 
   useEffect(() => {
-    window.ugrc.getAppInfo().then(setInfo).catch(handleError);
-  }, [handleError]);
+    window.ugrc.getAppInfo().then(setInfo).catch(showBoundary);
+  }, [showBoundary]);
 
   return (
     <article className="bg-center bg-no-repeat bg-origin-content" style={{ backgroundImage: `url(${logo})` }}>
