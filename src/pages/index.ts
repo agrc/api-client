@@ -3,6 +3,7 @@ export * from './ApiKey';
 export * from './Data';
 export * from './Error';
 export * from './Geocoding';
+export * from './Licenses';
 export * from './Offline';
 export * from './Plan';
 export * from './Wkid';

@@ -44,6 +44,7 @@
     "electron-unhandled": "^5.0.0",
     "electron-util": "^1.0.0",
     "electron-window-state": "^5.0.3",
+    "generate-license-file": "^4.1.1",
     "humanize-duration": "^3.33.2",
     "ky": "^1.14.3",
     "lucide-react": "^0.563.0",

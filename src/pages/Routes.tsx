@@ -2,7 +2,7 @@ import { JSX, useEffect } from 'react';
 import { ErrorBoundary, useErrorBoundary } from 'react-error-boundary';
 import { useNavigatorStatus } from 'react-navigator-status';
 import { createMemoryRouter, Link, Outlet, RouterProvider, useLocation } from 'react-router';
-import { About, ApiKey, Data, Error as ErrorPage, Geocoding, Offline, Plan, Wkid } from '.';
+import { About, ApiKey, Data, Error as ErrorPage, Geocoding, Licenses, Offline, Plan, Wkid } from '.';
 import GeocodeContextProvider from '../components/GeocodeContext';
 import { Chrome, Footer, Header } from '../components/PageElements';
 
@@ -61,6 +61,7 @@ function Layout() {
 
 const pages = [
   { path: 'about', Component: About },
+  { path: 'licenses', Component: Licenses },
   { path: 'geocode', Component: Geocoding },
   { path: 'plan', Component: Plan },
   { path: 'wkid', Component: Wkid },

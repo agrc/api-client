@@ -65,6 +65,11 @@ export function About() {
           <span className="block text-base font-normal text-gray-600">key management</span>
         </h2>
       </section>
+      <section className="relative z-10 mt-4 text-center">
+        <button type="button" onClick={() => navigate('/licenses')} className="text-base">
+          View Third Party Licenses
+        </button>
+      </section>
     </article>
   );
 }
