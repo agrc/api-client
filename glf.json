@@ -1,8 +1,13 @@
 {
+  "inputs": [
+    "./package.json"
+  ],
+  "output": "./src/assets/licenses.txt",
   "exclude": [
     "/^@ugrc\\/.*$/"
   ],
   "omitVersions": true,
+  "overwrite": true,
   "lineEnding": "lf",
   "replace": {
     "@esri/arcgis-rest-fetch": "https://raw.githubusercontent.com/Esri/arcgis-rest-js/main/LICENSE",
