@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.15](https://github.com/agrc/api-client/compare/v1.7.14...v1.7.15) (2026-02-11)
+
+
+### Bug Fixes
+
+* import static 3rd party licenses ([2ebc078](https://github.com/agrc/api-client/commit/2ebc078067552597ffeeab269ad1d48fc2261577))
+
 ## [1.7.14](https://github.com/agrc/api-client/compare/v1.7.13...v1.7.14) (2026-02-11)
 
 
