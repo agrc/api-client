@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.14](https://github.com/agrc/api-client/compare/v1.7.13...v1.7.14) (2026-02-11)
+
+
+### Bug Fixes
+
+* show 3rd party licenses when built ([7d021ac](https://github.com/agrc/api-client/commit/7d021ac14ec725008d186b8d4db2c8cc42a8796c))
+
 ## [1.7.13](https://github.com/agrc/api-client/compare/v1.7.12...v1.7.13) (2026-02-11)
 
 
