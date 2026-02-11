@@ -1,19 +1,24 @@
 import { app, ipcMain } from 'electron';
+import log from 'electron-log';
 import { readFile } from 'fs/promises';
 import path from 'path';
 
 ipcMain.handle('getLicenses', async () => {
   try {
-    // In both dev and production, assets are copied relative to __dirname
-    const licensesPath = app.isPackaged
-      ? path.join(process.resourcesPath, 'app.asar', '.vite/build/assets/licenses.txt')
-      : path.join(__dirname, 'assets/licenses.txt');
+    // Electron's fs reads transparently from asar archives
+    const licensesPath = path.join(__dirname, 'assets/licenses.txt');
+
+    log.info('Attempting to read licenses from:', licensesPath);
+    log.info('App isPackaged:', app.isPackaged);
+    log.info('__dirname:', __dirname);
 
     const data = await readFile(licensesPath, 'utf-8');
+    log.info('Successfully read licenses.txt');
 
     return data;
   } catch (error) {
-    console.warn('Error reading licenses:', error);
+    log.error('Error reading licenses:', error);
+    log.error('Attempted path:', path.join(__dirname, 'assets/licenses.txt'));
 
     return 'license information is unavailable';
   }
