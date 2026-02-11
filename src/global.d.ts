@@ -33,7 +33,6 @@ interface Window {
     getCsvColumns: (content: string) => Promise<{ firstRecord: Record<string, unknown>; totalRecords: number }>;
     saveConfig: (content: Record<string, unknown>) => Promise<void>;
     getConfigItem: (key: string) => Promise<unknown>;
-    getLicenses: () => Promise<string>;
     geocode: (content: unknown) => Promise<unknown>;
     cancelGeocode: (content: unknown) => Promise<void>;
     startDrag: (content: unknown) => Promise<void>;

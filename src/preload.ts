@@ -7,7 +7,6 @@ contextBridge.exposeInMainWorld('ugrc', {
   getCsvColumns: (content) => ipcRenderer.invoke('getCsvColumns', content),
   saveConfig: (content) => ipcRenderer.invoke('saveConfig', content),
   getConfigItem: (content) => ipcRenderer.invoke('getConfigItem', content),
-  getLicenses: () => ipcRenderer.invoke('getLicenses'),
   geocode: (content) => ipcRenderer.invoke('geocode', content),
   cancelGeocode: (content) => ipcRenderer.invoke('cancelGeocode', content),
   startDrag: (content) => ipcRenderer.invoke('onDragStart', content),
