@@ -26,7 +26,9 @@ if (import.meta.env.VITE_IS_BETA === 'true') {
 const version = `${app.getVersion()}${token}`;
 
 const createWindow = () => {
-  enforceMacOSAppLocation();
+  if (process.platform === 'darwin') {
+    enforceMacOSAppLocation();
+  }
 
   // @ts-expect-error - electron-window-state types are incomplete
   const mainWindowState = windowStateKeeper({ width: 700, height: 1000, fullScreen: false });
