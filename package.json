@@ -90,7 +90,7 @@
     "tailwindcss": "^4.1.18",
     "ts-node": "^10.9.2",
     "typescript": "~5.9.3",
-    "vite": "^7.3.1"
+    "vite": "^7.3.2"
   },
   "productName": "ugrc-api-client"
 }
