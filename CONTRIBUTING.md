@@ -81,8 +81,8 @@ Both issue lists are sorted by total number of comments. While not perfect, numb
 The API Client can be developed locally.
 
 - Clone the repository
-- npm install
-- npm start
+- pnpm install
+- pnpm start
 
 ### Pull Requests
 

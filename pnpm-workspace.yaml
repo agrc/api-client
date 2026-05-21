@@ -1,0 +1,13 @@
+nodeLinker: hoisted
+minimumReleaseAge: 10080
+minimumReleaseAgeStrict: true
+minimumReleaseAgeExclude:
+  - '@ugrc/*'
+# Electron Forge currently pulls @electron/node-gyp via a git-hosted transitive dependency.
+blockExoticSubdeps: false
+allowBuilds:
+  electron: true
+  electron-winstaller: true
+  esbuild: true
+  fs-xattr: true
+  macos-alias: true
