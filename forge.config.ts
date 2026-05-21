@@ -74,7 +74,7 @@ const config: ForgeConfig = {
     windowsSign: process.env.NODE_ENV !== 'production' ? undefined : (windowsSign as any),
     osxSign:
       process.env.NODE_ENV !== 'production'
-        ? {}
+        ? undefined
         : {
             identity: process.env.APPLE_IDENTITY,
             // hardenedRuntime: true,

@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to run tests against'
+        description: "Environment to run tests against"
         type: environment
         required: true
 
@@ -30,11 +30,16 @@ jobs:
         with:
           show-progress: false
 
+      - name: 📦 Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
       - name: ⎔ Set up Node.js
         uses: actions/setup-node@v6
         with:
           node-version: lts/*
-          cache: npm
+          cache: pnpm
 
       - name: 🐍 Set up python
         uses: actions/setup-python@v6
@@ -50,13 +55,13 @@ jobs:
       - name: 💻 Set up app DMG
         run: |
           python3 -m pip install setuptools
-          npm install -g appdmg@0.6.6
+          pnpm add --global appdmg@0.6.6
 
       - name: 📥 Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: 🚀 Build, Package, & Release
-        run: npm run publish -- --arch=universal
+        run: pnpm run publish --arch=universal
         env:
           NODE_ENV: production
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
@@ -79,14 +84,19 @@ jobs:
         with:
           show-progress: false
 
+      - name: 📦 Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
       - name: ⎔ Set up Node.js
         uses: actions/setup-node@v6
         with:
           node-version: lts/*
-          cache: npm
+          cache: pnpm
 
       - name: 📥 Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: 📦 Cache CNG Provider
         id: cache-cng
@@ -105,14 +115,14 @@ jobs:
         id: auth
         uses: google-github-actions/auth@v3
         with:
-          access_token_scopes: 'openid, https://www.googleapis.com/auth/cloudkms, https://www.googleapis.com/auth/cloud-platform'
-          token_format: 'access_token'
+          access_token_scopes: "openid, https://www.googleapis.com/auth/cloudkms, https://www.googleapis.com/auth/cloud-platform"
+          token_format: "access_token"
           workload_identity_provider: ${{ secrets.IDENTITY_PROVIDER }}
           service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
           create_credentials_file: true
 
       - name: 🚀 Build, Package, & Release
-        run: npm run publish
+        run: pnpm run publish
         env:
           NODE_ENV: production
           GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}

@@ -12,6 +12,7 @@ export default [
       '**/node_modules',
       '**/dist',
       '**/package-lock.json',
+      '**/pnpm-lock.yaml',
       '**/.vscode',
       '.webpack',
     ],
