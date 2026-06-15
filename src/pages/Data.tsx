@@ -9,6 +9,21 @@ import { AddressParts, DropzoneMessaging, FieldLinker, SampleFieldData, Spinner 
 
 const acceptableFileTypes = ['.csv'];
 
+const getCsvErrorDetails = (error: unknown) => {
+  if (!(error instanceof Error) || !error.message.includes(CSV_PARSE_ERROR)) {
+    return null;
+  }
+
+  const details: string[] = [];
+  error.message.replace(/\{(.*?)\}/g, (_, code: string) => {
+    details.push(code);
+
+    return code;
+  });
+
+  return details;
+};
+
 const chooseCommonFieldName = (fieldName, fieldsFromFile, commonFieldNames) => {
   if (!fieldName) return;
 
@@ -21,13 +36,36 @@ const chooseCommonFieldName = (fieldName, fieldsFromFile, commonFieldNames) => {
   return filtered.length > 0 ? filtered[0] : '';
 };
 
+const getLocalCsvPath = async (file: File & { path?: string }) => {
+  const resolvedPath = window.ugrc.webFilePath(file);
+  if (resolvedPath) {
+    return resolvedPath;
+  }
+
+  const arrayBuffer = await file.arrayBuffer();
+
+  try {
+    return await window.ugrc.saveDroppedFile({
+      name: file.name,
+      bytes: new Uint8Array(arrayBuffer),
+    });
+  } catch (error) {
+    // In development, renderer can hot-reload while the main process still runs older IPC handlers.
+    if (error instanceof Error && error.message.includes("No handler registered for 'saveDroppedFile'")) {
+      return '';
+    }
+
+    throw error;
+  }
+};
+
 export function Data() {
   const { geocodeContext, geocodeDispatch } = useGeocodeContext();
   const [error, setError] = useState<string[] | undefined>();
   const [validation, setValidation] = useState<'validating' | 'valid' | 'invalid' | 'idle'>('idle');
 
   const onDrop = async (files: File[] | null, _: unknown, event: { type?: string } | unknown) => {
-    if (!files) {
+    if (!files || files.length === 0) {
       geocodeDispatch({ type: 'RESET', payload: 'data' });
 
       return;
@@ -38,19 +76,29 @@ export function Data() {
       label: ((event as { type?: string })?.type ?? '') === 'drop' ? 'drag-and-drop' : 'file-dialog',
     });
 
-    const file = window.ugrc.webFilePath(files[0]);
+    let file = '';
+
+    try {
+      file = await getLocalCsvPath(files[0] as File & { path?: string });
+    } catch {
+      setError(['INVALID_FILE_PATH', 'We could not read that file from your local filesystem.']);
+
+      return;
+    }
+
+    if (!file) {
+      setError(['INVALID_FILE_PATH', 'We could not read that file from your local filesystem.']);
+
+      return;
+    }
 
     setError(undefined);
     let stats: { firstRecord: Record<string, unknown>; totalRecords: number } | undefined;
     try {
       stats = await window.ugrc.getCsvColumns(file);
     } catch (e) {
-      const errorDetails = [];
-      if (e.message.includes(CSV_PARSE_ERROR)) {
-        e.message.replace(/\{(.*?)\}/g, (_, code) => {
-          errorDetails.push(code);
-        });
-
+      const errorDetails = getCsvErrorDetails(e);
+      if (errorDetails) {
         setError(errorDetails);
 
         return;
@@ -85,12 +133,8 @@ export function Data() {
       geocodeDispatch({ type: 'UPDATE_FILE', payload: { valid: false } });
       setValidation('idle');
 
-      const errorDetails = [];
-      if (e.message.includes(CSV_PARSE_ERROR)) {
-        e.message.replace(/\{(.*?)\}/g, (_, code) => {
-          errorDetails.push(code);
-        });
-
+      const errorDetails = getCsvErrorDetails(e);
+      if (errorDetails) {
         setError(errorDetails);
 
         return;

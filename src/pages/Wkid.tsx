@@ -16,9 +16,9 @@ export function Wkid() {
       .then((id) => {
         const wkidNumber = Number(id);
         if ([26912, 4326, 3857].includes(wkidNumber)) {
-          setWkid(wkidNumber?.toString());
+          setWkid(wkidNumber.toString());
         } else {
-          setCustomWkid(id?.toString());
+          setCustomWkid(id == null ? '' : String(id));
         }
       })
       .catch(showBoundary);
@@ -92,7 +92,7 @@ export function Wkid() {
                 name="customWkid"
                 value={customWkid}
                 onChange={(event) => {
-                  setWkid(null);
+                  setWkid('');
                   setCustomWkid(event.target.value);
                 }}
                 placeholder="wkid"

@@ -16,20 +16,22 @@ export function ApiKey() {
   useEffect(() => {
     window.ugrc
       .getConfigItem('apiKey')
-      .then((key: string | null) => {
-        geocodeDispatch({ type: 'UPDATE_KEY', payload: key ?? '' });
+      .then((key) => {
+        const savedKey = typeof key === 'string' ? key : null;
 
-        if (key && location.search !== '?skip-forward=1') {
+        geocodeDispatch({ type: 'UPDATE_KEY', payload: savedKey ?? '' });
+
+        if (savedKey && location.search !== '?skip-forward=1') {
           navigate('/data');
         } else {
-          if (key) {
-            checkApiKey(key).then((isValid: boolean) => {
+          if (savedKey) {
+            checkApiKey(savedKey).then((isValid: boolean) => {
               setKeyStatus(isValid ? 'valid' : 'invalid');
-              geocodeDispatch({ type: 'UPDATE_KEY', payload: isValid ? key : '' });
+              geocodeDispatch({ type: 'UPDATE_KEY', payload: isValid ? savedKey : '' });
             });
           }
 
-          setInputValue(key ?? '');
+          setInputValue(savedKey ?? '');
         }
       })
       .catch((err) => showBoundary(err));

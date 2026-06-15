@@ -12,7 +12,34 @@ interface AppInfo {
   repo: string;
 }
 
+interface GeocodeLastRequest {
+  request: {
+    street: string | null;
+    zone: string | null;
+    url: string | null;
+  };
+  response: {
+    status: number | string;
+    body: unknown;
+  };
+}
+
+interface GeocodeUpdate {
+  rowsProcessed: number;
+  totalRows: number;
+  activeMatchRate: number;
+  averageScore: number;
+  status: string;
+  lastRequest: GeocodeLastRequest | null;
+  failures: number;
+}
+
 declare module '*.svg' {
+  const content: string;
+  export default content;
+}
+
+declare module '*.css' {
   const content: string;
   export default content;
 }
@@ -28,7 +55,8 @@ interface ImportMeta {
 
 interface Window {
   ugrc: {
-    webFilePath: (file: File) => string;
+    webFilePath: (file: File & { path?: string }) => string;
+    saveDroppedFile: (content: { name?: string; bytes: Uint8Array }) => Promise<string>;
     validateWithStats: (content: string) => Promise<{ firstRecord: Record<string, unknown>; totalRecords: number }>;
     getCsvColumns: (content: string) => Promise<{ firstRecord: Record<string, unknown>; totalRecords: number }>;
     saveConfig: (content: Record<string, unknown>) => Promise<void>;
@@ -40,7 +68,7 @@ interface Window {
     getAppVersion: () => Promise<string>;
     getAppInfo: () => Promise<AppInfo>;
     getUserConfirmation: (content: string) => Promise<boolean>;
-    subscribeToGeocodingUpdates: (handler: (event: unknown, data: unknown) => void) => void;
+    subscribeToGeocodingUpdates: (handler: (event: unknown, data: GeocodeUpdate) => void) => void;
     unsubscribeFromGeocodingUpdates: () => void;
     isMacOS: () => boolean;
     relaunchApp: () => void;

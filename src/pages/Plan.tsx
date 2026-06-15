@@ -29,7 +29,7 @@ export function Plan() {
           <span className="block text-base text-gray-600">to complete</span>
         </div>
       </section>
-      <h3 className="truncate px-4 text-center text-zinc-700">{geocodeContext.data.file.name}</h3>
+      <h3 className="truncate px-4 text-center text-zinc-700">{geocodeContext.data.file?.name ?? ''}</h3>
       <button onClick={start} type="button">
         Start
       </button>

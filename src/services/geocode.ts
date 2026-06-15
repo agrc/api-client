@@ -10,8 +10,23 @@ import path from 'path';
 const SPACES = / +/;
 const INVALID_CHARS = /[^a-zA-Z0-9]/g;
 
+type KyErrorLike = {
+  response?: {
+    status: number;
+    json: () => Promise<unknown>;
+    text: () => Promise<string>;
+  };
+  request?: {
+    url: URL | string;
+  };
+};
+
+const hasKyResponse = (error: unknown): error is KyErrorLike => {
+  return typeof error === 'object' && error !== null && 'response' in error;
+};
+
 const client = ky.create({
-  prefixUrl: 'https://api.mapserv.utah.gov/api/v1/',
+  prefix: 'https://api.mapserv.utah.gov/api/v1/',
   headers: {
     'x-agrc-geocode-client': 'electron-api-client',
     'x-agrc-geocode-client-version': app.getVersion(),
@@ -48,8 +63,8 @@ const coolYourJets = () => {
   return new Promise((resolve) => setTimeout(resolve, Math.random() * (max - min) + min));
 };
 
-let cancelled: string;
-export const cancelGeocode = (status = 'cancelled') => {
+let cancelled: string | null = null;
+export const cancelGeocode = (status: string | null = 'cancelled') => {
   cancelled = status;
 };
 
@@ -67,12 +82,13 @@ export const checkApiKey = async (apiKey: string) => {
       })
       .json();
   } catch (error) {
-    if (error?.response?.body) {
-      log.error(`Error checking api key: ${error.response.body}`);
-      response = JSON.parse(error.response.body);
-    } else {
+    if (!hasKyResponse(error) || !error.response) {
       throw error;
     }
+
+    const errorBody = await error.response.text();
+    log.error(`Error checking api key: ${errorBody}`);
+    response = errorBody ? JSON.parse(errorBody) : { status: error.response.status };
   }
 
   const isValid = response.status === 200;
@@ -100,13 +116,13 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
   const fastFailLimit = 25;
   let lastRequest = {
     request: {
-      street: null,
-      zone: null,
-      url: null,
+      street: null as string | null,
+      zone: null as string | null,
+      url: null as string | null,
     },
     response: {
       status: 0,
-      body: null,
+      body: null as unknown,
     },
   };
 
@@ -170,15 +186,19 @@ export const geocode = async (event, { filePath, fields, apiKey, wkid = 26912, s
         log.error(`Error geocoding street [${street}] zone [${zone}]: ${error}`);
 
         try {
-          response = await error.response.json();
+          response = hasKyResponse(error) && error.response ? await error.response.json() : { error: null };
         } catch {
-          response = { error: error.message };
+          response = { error: error instanceof Error ? error.message : 'Unknown geocoding error' };
         }
 
-        lastRequest.request.url = error?.request?.url.toString();
+        lastRequest.request.url = hasKyResponse(error) && error.request ? String(error.request.url) : null;
         lastRequest.response = {
-          status: error.response?.status ?? 'response is undefined', // response is undefined when got throws
-          body: response?.error ?? response?.message,
+          status: hasKyResponse(error) && error.response ? error.response.status : -1,
+          body:
+            typeof response === 'object' && response !== null
+              ? (response as { error?: unknown; message?: unknown }).error ??
+                (response as { error?: unknown; message?: unknown }).message
+              : response,
         };
 
         failures += 1;

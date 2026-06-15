@@ -8,6 +8,10 @@ const errors = {
     'that a record did not contain the same amount of columns. Somewhere in the file, a row is missing or has extra field delimiters.',
   CSV_QUOTE_NOT_CLOSED: 'an open quote that was not closed. Please check the quotes in the CSV file.',
   INVALID_OR_EMPTY_FILE: 'no records. The file is empty or invalid.',
+  INVALID_FILE_PATH:
+    'that this app could not read the selected file path. Please choose the file again from your local disk.',
+  FILE_READ_ERROR:
+    'that this app could not read the file from disk. Please make sure the file still exists and is accessible.',
 };
 
 export const CSV_PARSE_ERROR = 'CSV_PARSE_ERROR';

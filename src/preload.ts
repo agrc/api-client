@@ -1,7 +1,30 @@
 import { contextBridge, ipcRenderer, webUtils } from 'electron';
 
+const isAbsoluteLocalPath = (value: unknown): value is string => {
+  if (typeof value !== 'string' || value.trim() === '') {
+    return false;
+  }
+
+  // macOS/Linux absolute path, Windows drive path, or UNC path.
+  return value.startsWith('/') || /^[a-zA-Z]:[\\/]/.test(value) || value.startsWith('\\\\');
+};
+
+const resolveWebFilePath = (file: File & { path?: string }) => {
+  const nativePath = webUtils.getPathForFile(file);
+  if (isAbsoluteLocalPath(nativePath)) {
+    return nativePath;
+  }
+
+  if (isAbsoluteLocalPath(file.path)) {
+    return file.path;
+  }
+
+  return '';
+};
+
 contextBridge.exposeInMainWorld('ugrc', {
-  webFilePath: (file) => webUtils.getPathForFile(file),
+  webFilePath: (file) => resolveWebFilePath(file),
+  saveDroppedFile: (content) => ipcRenderer.invoke('saveDroppedFile', content),
 
   validateWithStats: (content) => ipcRenderer.invoke('validateWithStats', content),
   getCsvColumns: (content) => ipcRenderer.invoke('getCsvColumns', content),
