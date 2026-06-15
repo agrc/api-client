@@ -37,6 +37,9 @@ const kmsKeyPath = (() => {
 
 // Resolve the certificate path (use the actual folder `build/cert/windows.cer` in repo)
 const certPath = path.resolve(__dirname, 'build', 'cert', 'windows.cer');
+const appleId = process.env.APPLE_USER_ID;
+const appleIdPassword = process.env.APPLE_PASSWORD;
+const appleTeamId = process.env.APPLE_TEAM_ID;
 
 const windowsSign = {
   digestAlgorithm: 'sha256',
@@ -83,11 +86,14 @@ const config: ForgeConfig = {
             // entitlements: 'build/entitlements.plist',
             // 'entitlements-inherit': 'build/entitlements.plist',
           },
-    osxNotarize: {
-      appleId: process.env.APPLE_USER_ID,
-      appleIdPassword: process.env.APPLE_PASSWORD,
-      teamId: process.env.APPLE_TEAM_ID,
-    },
+    osxNotarize:
+      appleId && appleIdPassword && appleTeamId
+        ? {
+            appleId,
+            appleIdPassword,
+            teamId: appleTeamId,
+          }
+        : undefined,
   },
   rebuildConfig: {},
   makers: [

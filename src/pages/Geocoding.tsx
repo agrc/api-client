@@ -8,19 +8,21 @@ import { useGeocodeContext } from '../components/GeocodeContext';
 const numberFormat = new Intl.NumberFormat('en-US');
 const percentFormatter = new Intl.NumberFormat('en-US', { style: 'percent' });
 
+const initialStats: GeocodeUpdate = {
+  rowsProcessed: 0,
+  totalRows: 0,
+  activeMatchRate: 0,
+  averageScore: 0,
+  status: 'idle',
+  lastRequest: null,
+  failures: 0,
+};
+
 export function Geocoding() {
   const { geocodeContext } = useGeocodeContext();
   const startTime = useRef(new Date());
-  const draggable = useRef(null);
-  const [stats, setStats] = useState({
-    rowsProcessed: 0,
-    totalRows: geocodeContext.data.totalRecords,
-    activeMatchRate: 0,
-    averageScore: 0,
-    status: 'idle',
-    lastRequest: null,
-    failures: 0,
-  });
+  const draggable = useRef<HTMLDivElement | null>(null);
+  const [stats, setStats] = useState<GeocodeUpdate>({ ...initialStats, totalRows: geocodeContext.data.totalRecords });
   const { showBoundary } = useErrorBoundary();
 
   // Block navigation when geocoding is in progress
@@ -30,7 +32,7 @@ export function Geocoding() {
     }, [stats.status]),
   );
 
-  const onDragStart = (event) => {
+  const onDragStart = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     window.ugrc.startDrag('ugrc_geocode_results.csv').catch((err) => showBoundary(err));
   };
@@ -44,18 +46,7 @@ export function Geocoding() {
 
   useEffect(() => {
     window.ugrc.subscribeToGeocodingUpdates(
-      (
-        _: unknown,
-        data: {
-          rowsProcessed: number;
-          totalRows: number;
-          activeMatchRate: number;
-          averageScore: number;
-          status: string;
-          lastRequest: unknown;
-          failures: number;
-        },
-      ) => {
+      (_: unknown, data: GeocodeUpdate) => {
         setStats(data);
       },
     );
@@ -87,9 +78,13 @@ export function Geocoding() {
   const timePerRow = elapsedTime / stats.rowsProcessed;
   const estimatedTimeRemaining = timePerRow * (stats.totalRows - stats.rowsProcessed);
 
-  const formatError = (statusCode, body) => {
-    if (statusCode >= 500) {
-      return body;
+  const formatError = (statusCode: number | string, body: unknown) => {
+    if (typeof statusCode === 'number' && statusCode >= 500) {
+      return typeof body === 'string' ? body : JSON.stringify(body);
+    }
+
+    if (typeof body !== 'string') {
+      return JSON.stringify(body);
     }
 
     try {
@@ -101,7 +96,7 @@ export function Geocoding() {
     }
   };
 
-  const getElementsByStatus = (status) => {
+  const getElementsByStatus = (status: string) => {
     switch (status) {
       case 'running': {
         return (
@@ -141,6 +136,8 @@ export function Geocoding() {
         );
       }
       case 'fail-fast': {
+        const lastRequest = stats.lastRequest;
+
         return (
           <section className="rounded border border-red-200 bg-red-100 px-3 shadow">
             <h3 className="text-center text-red-800">This job has fast failed</h3>
@@ -170,17 +167,16 @@ export function Geocoding() {
               <p>This was the API response for the last request to help debug the issue</p>
               <div className="text-base">
                 <span className="font-semibold">street: </span>
-                {stats.lastRequest?.request.street}
+                {lastRequest?.request.street}
               </div>
               <div className="text-base">
-                <span className="font-semibold">zone:</span> {stats.lastRequest?.request.zone}
+                <span className="font-semibold">zone:</span> {lastRequest?.request.zone}
               </div>
             </div>
             <pre className="mt-6 rounded border border-red-800 bg-red-400 px-3 py-2 break-all whitespace-normal text-white shadow">
-              <div className="mb-2">{stats.lastRequest.request.url}</div>
+              <div className="mb-2">{lastRequest?.request.url}</div>
               <div>
-                {stats.lastRequest?.response.status} -{' '}
-                {formatError(stats.lastRequest?.response.status, stats.lastRequest?.response.body)}
+                {lastRequest?.response.status} - {formatError(lastRequest?.response.status ?? '', lastRequest?.response.body)}
               </div>
             </pre>
             <p>
