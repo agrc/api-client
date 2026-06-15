@@ -47,6 +47,10 @@ minimumReleaseAgeExclude:
   - serialize-javascript@7.0.5
   - generate-license-file@4.2.1
   - tmp@0.2.6
+  - esbuild@0.28.1
+  - tar@7.5.16
+  - js-yaml@4.1.2
+  - '@babel/core@7.29.1'
 # Electron Forge currently pulls @electron/node-gyp via a git-hosted transitive dependency.
 blockExoticSubdeps: false
 allowBuilds:
