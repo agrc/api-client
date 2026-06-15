@@ -24,7 +24,11 @@ const getCsvErrorDetails = (error: unknown) => {
   return details;
 };
 
-const chooseCommonFieldName = (fieldName, fieldsFromFile, commonFieldNames) => {
+const chooseCommonFieldName = (
+  fieldName: string,
+  fieldsFromFile: string[],
+  commonFieldNames: Record<string, string[]>,
+) => {
   if (!fieldName) return;
 
   if (!['street', 'zone'].includes(fieldName)) {
@@ -76,7 +80,7 @@ export function Data() {
       label: ((event as { type?: string })?.type ?? '') === 'drop' ? 'drag-and-drop' : 'file-dialog',
     });
 
-    let file = '';
+    let file: string;
 
     try {
       file = await getLocalCsvPath(files[0] as File & { path?: string });
