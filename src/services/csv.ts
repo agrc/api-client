@@ -13,7 +13,8 @@ export const validateWithStats = (filePath: string, options: Record<string, unkn
     }
 
     const parser = parse({ columns: true, skipEmptyLines: true, ...options });
-    const rows: Record<string, unknown>[] = [];
+    let firstRecord: Record<string, unknown> | null = null;
+    let totalRecords = 0;
     let settled = false;
 
     const rejectOnce = (error: Error) => {
@@ -38,7 +39,10 @@ export const validateWithStats = (filePath: string, options: Record<string, unkn
       let record: Record<string, unknown> | null;
 
       while ((record = parser.read() as Record<string, unknown> | null) !== null) {
-        rows.push(record);
+        if (firstRecord === null) {
+          firstRecord = record;
+        }
+        totalRecords++;
       }
     });
 
@@ -49,13 +53,13 @@ export const validateWithStats = (filePath: string, options: Record<string, unkn
     });
 
     parser.on('end', () => {
-      if (rows.length === 0) {
+      if (totalRecords === 0) {
         rejectOnce(new Error(`${CSV_PARSE_ERROR}: {INVALID_OR_EMPTY_FILE} {No records found in your file.}`));
 
         return;
       }
 
-      resolveOnce({ firstRecord: rows[0], totalRecords: rows.length });
+      resolveOnce({ firstRecord, totalRecords });
     });
 
     try {
