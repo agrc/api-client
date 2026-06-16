@@ -118,7 +118,7 @@ ipcMain.handle('saveDroppedFile', async (_, content) => {
   await fs.promises.mkdir(importDirectory, { recursive: true });
 
   const providedName = droppedFile.name ?? 'dropped-file.csv';
-  const extension = path.extname(providedName).toLowerCase() === '.csv' ? '.csv' : '.csv';
+  const extension = '.csv';
   const baseName = path
     .basename(providedName, path.extname(providedName))
     .replace(/[^a-zA-Z0-9-_]/g, '-')
