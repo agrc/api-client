@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.14-rc.2](https://github.com/agrc/api-client/compare/v1.7.14-rc.1...v1.7.14-rc.2) (2026-06-22)
+
+
+### Bug Fixes
+
+* remove unused build package ([22241b7](https://github.com/agrc/api-client/commit/22241b73e02f3bf2f605211bfe43de4f07a1a895))
+
 ## [1.7.14-rc.1](https://github.com/agrc/api-client/compare/v1.7.13...v1.7.14-rc.1) (2026-06-17)
 
 
