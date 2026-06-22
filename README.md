@@ -81,7 +81,7 @@ An apple developer certificate is required to sign the application for distribut
 
 ## Deploying a new version
 
-GitHub Actions will create and update a draft release with every merged pull request. When a release is desired, publish the [draft release](https://github.com/agrc/api-client/releases). Another GitHub action will sign the binaries and upload them to the release assets. The API Clients will silently download the update and the installation will occur on the next restart of the app.
+This project uses our [standard release action](https://github.com/agrc/release-composite-action). The existing app installs will silently download the update and the installation will occur on the next restart of the app.
 
 ## Dependency Notes
 
