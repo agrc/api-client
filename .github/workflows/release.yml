@@ -3,12 +3,6 @@ name: Release Events
 on:
   release:
     types: [published]
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: "Environment to run tests against"
-        type: environment
-        required: true
 
 permissions:
   id-token: write
@@ -59,8 +53,8 @@ jobs:
       - name: 📥 Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 🚀 Build, Package, & Release
-        run: pnpm run publish --arch=universal
+      - name: 🚀 Build macOS distributables
+        run: pnpm run make -- --arch=universal
         env:
           NODE_ENV: production
           APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
@@ -69,8 +63,14 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
           GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
+
+      - name: ⬆️ Upload macOS distributables
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-release-assets
+          path: out/make/**
+          if-no-files-found: error
 
   deploy-windows:
     name: Publish windows app
@@ -120,19 +120,51 @@ jobs:
           service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
           create_credentials_file: true
 
-      - name: 🚀 Build, Package, & Release
-        run: pnpm run publish
+      - name: 🚀 Build Windows distributables
+        run: pnpm run make
         env:
           NODE_ENV: production
           GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
           GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
+
+      - name: ⬆️ Upload Windows distributables
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-release-assets
+          path: out/make/**
+          if-no-files-found: error
+
+  upload-release-assets:
+    name: Attach release assets
+    needs: [deploy-macos, deploy-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Download macOS distributables
+        uses: actions/download-artifact@v5
+        with:
+          name: macos-release-assets
+          path: release-assets/macos
+
+      - name: ⬇️ Download Windows distributables
+        uses: actions/download-artifact@v5
+        with:
+          name: windows-release-assets
+          path: release-assets/windows
+
+      - name: 🚀 Attach distributables to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          find release-assets -type f -print0 | while IFS= read -r -d '' file; do
+            gh release upload "$RELEASE_TAG" "$file" --clobber
+          done
 
   change-management:
     name: Change management
-    needs: [deploy-macos, deploy-windows]
+    needs: [deploy-macos, deploy-windows, upload-release-assets]
     runs-on: ubuntu-latest
     permissions:
       contents: read
