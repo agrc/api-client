@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.14-rc.4](https://github.com/agrc/api-client/compare/v1.7.14-rc.3...v1.7.14-rc.4) (2026-06-22)
+
+
+### Bug Fixes
+
+* make output path ([51c4fdc](https://github.com/agrc/api-client/commit/51c4fdcd5ea0132bed05a00a02844e76b0636711))
+
 ## [1.7.14-rc.3](https://github.com/agrc/api-client/compare/v1.7.14-rc.2...v1.7.14-rc.3) (2026-06-22)
 
 
