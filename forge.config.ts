@@ -1,4 +1,3 @@
-import { utils } from '@electron-forge/core';
 import { MakerDMG } from '@electron-forge/maker-dmg';
 import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { MakerZIP } from '@electron-forge/maker-zip';
@@ -15,8 +14,6 @@ if (process.env.NODE_ENV !== 'production') {
   // skip loading any local env files in production
   dotenv.config();
 }
-
-const fromBuildIdentifier = utils.fromBuildIdentifier;
 
 const { version } = packageJson;
 const assets = path.resolve(__dirname, 'src', 'assets');
@@ -50,27 +47,21 @@ const windowsSign = {
   website: 'https://gis.utah.gov/products/sgid/address/api-client/',
   signWithParams: ['/v', '/csp', 'Google Cloud KMS Provider', '/kc', kmsKeyPath],
 };
+const isBeta = process.env.VITE_IS_BETA === 'true';
+const productName = isBeta ? 'UGRC API Client Beta' : 'UGRC API Client';
 
 const config: ForgeConfig = {
-  buildIdentifier: process.env.VITE_IS_BETA === 'true' ? 'beta' : 'prod',
+  buildIdentifier: isBeta ? 'beta' : 'prod',
   packagerConfig: {
-    // @ts-expect-error expect string
-    name: fromBuildIdentifier({
-      beta: 'UGRC API Client Beta',
-      prod: 'UGRC API Client',
-    }),
+    name: productName,
     executableName: 'ugrc-api-client',
     asar: true,
     icon: path.resolve(assets, 'logo.icns'),
-    // @ts-expect-error expect string
-    appBundleId: fromBuildIdentifier({
-      beta: 'com.beta.electron.ugrc-api-client',
-      prod: 'com.electron.ugrc-api-client',
-    }),
+    appBundleId: isBeta ? 'com.beta.electron.ugrc-api-client' : 'com.electron.ugrc-api-client',
     appCategoryType: 'public.app-category.developer-tools',
     win32metadata: {
       CompanyName: 'UGRC',
-      OriginalFilename: 'UGRC API Client',
+      OriginalFilename: productName,
     },
     // Enable Windows signing only in production; cast to avoid dependency version typing drift
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -119,7 +110,7 @@ const config: ForgeConfig = {
     }),
     new MakerZIP({}, ['darwin']),
     new MakerDMG({
-      title: '${productName} ${version}',
+      title: `${productName} ${version}`,
       additionalDMGOptions: {
         window: {
           size: {
@@ -155,11 +146,7 @@ const config: ForgeConfig = {
         owner: 'agrc',
         name: 'api-client',
       },
-      draft: true,
-      prerelease: !!fromBuildIdentifier({
-        beta: true,
-        prod: false,
-      }),
+      prerelease: isBeta,
     }),
   ],
   plugins: [
