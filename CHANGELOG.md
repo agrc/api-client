@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.14-rc.7](https://github.com/agrc/api-client/compare/v1.7.14-rc.6...v1.7.14-rc.7) (2026-06-24)
+
+
+### Bug Fixes
+
+* remove duplicate windows signing ([d8cf04c](https://github.com/agrc/api-client/commit/d8cf04c5c1d5946134f398029bd5b4c25f4c6c8f))
+
 ## [1.7.14-rc.6](https://github.com/agrc/api-client/compare/v1.7.14-rc.5...v1.7.14-rc.6) (2026-06-24)
 
 
