@@ -112,7 +112,7 @@ const config: ForgeConfig = {
     }),
     new MakerZIP({}, ['darwin']),
     new MakerDMG({
-      title: `${productName} ${version}`,
+      title: productName,
       additionalDMGOptions: {
         window: {
           size: {
