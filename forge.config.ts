@@ -5,6 +5,7 @@ import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { VitePlugin } from '@electron-forge/plugin-vite';
 import type { ForgeConfig } from '@electron-forge/shared-types';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
+import type { SignToolOptions } from '@electron/windows-sign';
 import dotenv from 'dotenv';
 import path from 'path';
 import packageJson from './package.json';
@@ -37,9 +38,8 @@ const appleId = process.env.APPLE_USER_ID;
 const appleIdPassword = process.env.APPLE_PASSWORD;
 const appleTeamId = process.env.APPLE_TEAM_ID;
 
-const windowsSign = {
-  digestAlgorithm: 'sha256',
-  hashes: ['sha256'],
+const windowsSign: SignToolOptions = {
+  hashes: ['sha256' as NonNullable<SignToolOptions['hashes']>[number]],
   certificateFile: certPath,
   timestampServer: 'http://timestamp.sectigo.com',
   description: 'UGRC API Client',
@@ -65,9 +65,6 @@ const config: ForgeConfig = {
       CompanyName: 'UGRC',
       OriginalFilename: productName,
     },
-    // Enable Windows signing only in production; cast to avoid dependency version typing drift
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    windowsSign: process.env.NODE_ENV !== 'production' ? undefined : (windowsSign as any),
     osxSign:
       process.env.NODE_ENV !== 'production'
         ? undefined
@@ -100,15 +97,7 @@ const config: ForgeConfig = {
       noMsi: true,
       setupExe: `ugrc-api-client-${version}-win32-setup.exe`,
       setupIcon: path.resolve(assets, 'logo.ico'),
-      windowsSign: {
-        // @ts-expect-error matches enum value
-        hashes: ['sha256'],
-        certificateFile: certPath,
-        timestampServer: 'http://timestamp.sectigo.com',
-        description: 'UGRC API Client',
-        website: 'https://gis.utah.gov/products/sgid/address/api-client/',
-        signWithParams: ['/v', '/csp', 'Google Cloud KMS Provider', '/kc', kmsKeyPath],
-      },
+      windowsSign,
     }),
     new MakerZIP({}, ['darwin']),
     new MakerDMG({
