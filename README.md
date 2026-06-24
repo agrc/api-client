@@ -83,6 +83,16 @@ An apple developer certificate is required to sign the application for distribut
 
 This project uses our [standard release action](https://github.com/agrc/release-composite-action) to create draft releases. Publishing a release triggers GitHub Actions to build/sign the distributables and attach them to the release; existing installs will silently download the update and the installation will occur on the next restart of the app.
 
+### Windows packaging
+
+The Forge config now produces both Squirrel and WiX installers for Windows. WiX builds require the WiX toolset on the machine that runs the build.
+
+1. Install the WiX v3 toolset so `candle` and `light` are available on `PATH`.
+2. Ensure the Windows signing prerequisites above are in place, including `build/cert/windows.cer` and the KMS environment variables used by Forge in production builds.
+3. Run `pnpm make:win` to build all Windows installers, or `pnpm make:wix` to build only the `.msi` artifact.
+
+WiX packaging is only expected to succeed on Windows build machines with the WiX toolset installed.
+
 ## Dependency Notes
 
 - Upgrading `react-dropzone` to version 14.3.0 or layer [breaks the ability to drag and drop files](https://github.com/react-dropzone/react-dropzone/issues/1411).

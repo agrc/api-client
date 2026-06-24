@@ -1,5 +1,6 @@
 import { MakerDMG } from '@electron-forge/maker-dmg';
 import { MakerSquirrel } from '@electron-forge/maker-squirrel';
+import { MakerWix } from '@electron-forge/maker-wix';
 import { MakerZIP } from '@electron-forge/maker-zip';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { VitePlugin } from '@electron-forge/plugin-vite';
@@ -46,6 +47,9 @@ const windowsSign: SignToolOptions = {
   website: 'https://gis.utah.gov/products/sgid/address/api-client/',
   signWithParams: ['/v', '/csp', 'Google Cloud KMS Provider', '/kc', kmsKeyPath],
 };
+const windowsSignParams = Array.isArray(windowsSign.signWithParams)
+  ? windowsSign.signWithParams.join(' ')
+  : windowsSign.signWithParams;
 const isBeta = process.env.VITE_IS_BETA === 'true';
 const productName = isBeta ? 'UGRC API Client Beta' : 'UGRC API Client';
 const isUniversalArch = process.argv.includes('--arch=universal') || process.env.npm_config_arch === 'universal';
@@ -97,6 +101,18 @@ const config: ForgeConfig = {
       noMsi: true,
       setupExe: `ugrc-api-client-${version}-win32-setup.exe`,
       setupIcon: path.resolve(assets, 'logo.ico'),
+      windowsSign,
+    }),
+    new MakerWix({
+      certificateFile: certPath,
+      description: 'The official UGRC API client',
+      exe: 'ugrc-api-client.exe',
+      icon: path.resolve(assets, 'logo.ico'),
+      language: 1033,
+      manufacturer: 'UGRC',
+      name: productName,
+      signWithParams: windowsSignParams,
+      version,
       windowsSign,
     }),
     new MakerZIP({}, ['darwin']),
