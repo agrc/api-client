@@ -32,7 +32,7 @@ jobs:
       - name: ⎔ Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: lts/*
+          node-version-file: .node-version
           cache: pnpm
 
       - name: 🐍 Set up python
@@ -66,7 +66,7 @@ jobs:
           VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
 
       - name: ⬆️ Upload macOS distributables
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: macos-release-assets
           path: out/**/make/**
@@ -91,7 +91,7 @@ jobs:
       - name: ⎔ Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: lts/*
+          node-version-file: .node-version
           cache: pnpm
 
       - name: 📥 Install dependencies
@@ -130,7 +130,7 @@ jobs:
           VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
 
       - name: ⬆️ Upload Windows distributables
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-release-assets
           path: out/**/make/**
@@ -142,13 +142,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Download macOS distributables
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: macos-release-assets
           path: release-assets/macos
 
       - name: ⬇️ Download Windows distributables
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: windows-release-assets
           path: release-assets/windows
