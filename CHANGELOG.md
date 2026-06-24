@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.15-rc.3](https://github.com/agrc/api-client/compare/v1.7.15-rc.2...v1.7.15-rc.3) (2026-06-24)
+
+
+### Bug Fixes
+
+* add author ([a827b4a](https://github.com/agrc/api-client/commit/a827b4aa32050216b9facc6cb2763f52c9e9f699))
+
 ## [1.7.15-rc.2](https://github.com/agrc/api-client/compare/v1.7.15-rc.1...v1.7.15-rc.2) (2026-06-24)
 
 
