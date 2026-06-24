@@ -121,14 +121,37 @@ jobs:
           service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
           create_credentials_file: true
 
-      - name: 🚀 Build Windows distributables
-        run: pnpm run make
+      - name: 🚀 Build Squirrel distributables
+        run: pnpm exec electron-forge make --platform=win32 --targets=@electron-forge/maker-squirrel
         env:
           NODE_ENV: production
           GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
           GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
           VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
+
+      - name: 🚀 Build WiX distributables
+        run: pnpm run make:wix
+        env:
+          NODE_ENV: production
+          GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
+          GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+          VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
+
+      - name: 🪵 Dump windows signing log
+        if: failure()
+        shell: pwsh
+        run: |
+          $logPath = Join-Path $PWD 'node_modules\electron-winstaller\vendor\electron-windows-sign.log'
+
+          if (Test-Path $logPath) {
+            Write-Host "electron-windows-sign log:"
+            Get-Content $logPath
+          }
+          else {
+            Write-Host "No electron-windows-sign log found at $logPath"
+          }
 
       - name: ⬆️ Upload Windows distributables
         uses: actions/upload-artifact@v7
