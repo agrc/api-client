@@ -11,6 +11,7 @@ permissions:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  BUILD_IDENTIFIER: ${{ github.event.release.prerelease && 'beta' || 'prod' }}
 
 jobs:
   deploy-macos:
@@ -69,7 +70,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: macos-release-assets
-          path: out/[prod|beta]/make/
+          path: out/${{ env.BUILD_IDENTIFIER }}/make/
           if-no-files-found: error
 
   deploy-windows:
@@ -133,7 +134,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: windows-release-assets
-          path: out/[prod|beta]/make/
+          path: out/${{ env.BUILD_IDENTIFIER }}/make/
           if-no-files-found: error
 
   upload-release-assets:
