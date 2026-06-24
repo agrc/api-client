@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.15-rc.2](https://github.com/agrc/api-client/compare/v1.7.15-rc.1...v1.7.15-rc.2) (2026-06-24)
+
+
+### Bug Fixes
+
+* build squirrel and wix sequentially ([54a276f](https://github.com/agrc/api-client/commit/54a276fdeb8e62e39275ee0975d51221384f58fd))
+
 ## [1.7.15-rc.1](https://github.com/agrc/api-client/compare/v1.7.14...v1.7.15-rc.1) (2026-06-24)
 
 
