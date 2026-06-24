@@ -81,7 +81,7 @@ An apple developer certificate is required to sign the application for distribut
 
 ## Deploying a new version
 
-This project uses our [standard release action](https://github.com/agrc/release-composite-action). The existing app installs will silently download the update and the installation will occur on the next restart of the app.
+This project uses our [standard release action](https://github.com/agrc/release-composite-action) to create draft releases. Publishing a release triggers GitHub Actions to build/sign the distributables and attach them to the release; existing installs will silently download the update and the installation will occur on the next restart of the app.
 
 ## Dependency Notes
 
