@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.15-rc.4](https://github.com/agrc/api-client/compare/v1.7.15-rc.3...v1.7.15-rc.4) (2026-06-24)
+
+
+### Bug Fixes
+
+* update windowsSignParams to use explicit array definition ([312ba94](https://github.com/agrc/api-client/commit/312ba94d1101239e581b8433f05624b0cbd46543))
+
 ## [1.7.15-rc.3](https://github.com/agrc/api-client/compare/v1.7.15-rc.2...v1.7.15-rc.3) (2026-06-24)
 
 
