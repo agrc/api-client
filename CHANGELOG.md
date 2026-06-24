@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.15-rc.5](https://github.com/agrc/api-client/compare/v1.7.15-rc.4...v1.7.15-rc.5) (2026-06-24)
+
+
+### Bug Fixes
+
+* update windowsSignParams to use explicit array definition and log Windows build environment ([bbe83ff](https://github.com/agrc/api-client/commit/bbe83ffb9809cef98b8c878ea1c2cebfb9de8ca7))
+
 ## [1.7.15-rc.4](https://github.com/agrc/api-client/compare/v1.7.15-rc.3...v1.7.15-rc.4) (2026-06-24)
 
 
