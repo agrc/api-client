@@ -54,7 +54,7 @@ minimumReleaseAgeExclude:
 # Electron Forge currently pulls @electron/node-gyp via a git-hosted transitive dependency.
 blockExoticSubdeps: false
 allowBuilds:
-  '@bitdisaster/exe-icon-extractor': set this to true or false
+  '@bitdisaster/exe-icon-extractor': true
   electron: true
   electron-winstaller: true
   esbuild: true
