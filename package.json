@@ -13,6 +13,7 @@
   "bugs": "https://github.com/agrc/api-client/issues",
   "repository": "https://github.com/agrc/api-client",
   "license": "MIT",
+  "author": "UGRC Developers",
   "contributors": [
     {
       "name": "Steve Gourley",
@@ -32,8 +33,9 @@
     "format": "prettier . --write",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "make": "electron-forge make",
+    "make:squirrel": "electron-forge make --platform=win32 --targets=squirrel",
     "make:win": "electron-forge make --platform=win32",
-    "make:wix": "electron-forge make --platform=win32 --targets=@electron-forge/maker-wix",
+    "make:wix": "electron-forge make --platform=win32 --targets=wix",
     "package": "electron-forge package",
     "start": "cross-env ELECTRON_ENABLE_LOGGING=1 electron-forge start"
   },

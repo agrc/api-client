@@ -122,7 +122,7 @@ jobs:
           create_credentials_file: true
 
       - name: 🚀 Build Squirrel distributables
-        run: pnpm exec electron-forge make --platform=win32 --targets=@electron-forge/maker-squirrel
+        run: pnpm run make:squirrel
         env:
           NODE_ENV: production
           GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
