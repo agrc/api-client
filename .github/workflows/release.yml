@@ -121,6 +121,22 @@ jobs:
           service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
           create_credentials_file: true
 
+      - name: 🔎 Log Windows build environment
+        shell: pwsh
+        run: |
+          Write-Host "Runner image: windows-2022"
+          Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsBuildNumber
+          $sdkSigntool = Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\bin' -Filter signtool.exe -Recurse |
+            Sort-Object FullName -Descending |
+            Select-Object -First 1
+
+          if ($sdkSigntool) {
+            Write-Host "SDK signtool: $($sdkSigntool.FullName)"
+          }
+          else {
+            Write-Host 'SDK signtool not found'
+          }
+
       - name: 🚀 Build Squirrel distributables
         run: pnpm run make:squirrel
         env:
