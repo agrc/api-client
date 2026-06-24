@@ -47,9 +47,21 @@ const windowsSign: SignToolOptions = {
   website: 'https://gis.utah.gov/products/sgid/address/api-client/',
   signWithParams: ['/v', '/csp', 'Google Cloud KMS Provider', '/kc', kmsKeyPath],
 };
-const windowsSignParams = Array.isArray(windowsSign.signWithParams)
-  ? windowsSign.signWithParams.join(' ')
-  : windowsSign.signWithParams;
+const windowsSignParams = [
+  '/v',
+  '/fd',
+  'SHA256',
+  '/tr',
+  'http://timestamp.sectigo.com',
+  '/td',
+  'SHA256',
+  '/f',
+  `"${certPath}"`,
+  '/csp',
+  '"Google Cloud KMS Provider"',
+  '/kc',
+  `"${kmsKeyPath}"`,
+].join(' ');
 const isBeta = process.env.VITE_IS_BETA === 'true';
 const productName = isBeta ? 'UGRC API Client Beta' : 'UGRC API Client';
 const isUniversalArch = process.argv.includes('--arch=universal') || process.env.npm_config_arch === 'universal';
@@ -99,9 +111,9 @@ const config: ForgeConfig = {
         'https://raw.githubusercontent.com/agrc/api-client/dac3554721f3ef6341910e5eee5c5395820ec8f1/src/assets/logo.ico',
       loadingGif: './src/assets/loading.gif',
       noMsi: true,
+      signWithParams: windowsSignParams,
       setupExe: `ugrc-api-client-${version}-win32-setup.exe`,
       setupIcon: path.resolve(assets, 'logo.ico'),
-      windowsSign,
     }),
     new MakerWix({
       certificateFile: certPath,
