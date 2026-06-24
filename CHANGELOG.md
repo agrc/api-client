@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.14-rc.6](https://github.com/agrc/api-client/compare/v1.7.14-rc.5...v1.7.14-rc.6) (2026-06-24)
+
+
+### Bug Fixes
+
+* prevent dmg mount name from exceeding the 27 character limit ([b52e490](https://github.com/agrc/api-client/commit/b52e490fc4ff16b2e63581f2de13b814a9472b7a))
+
 ## [1.7.14-rc.5](https://github.com/agrc/api-client/compare/v1.7.14-rc.4...v1.7.14-rc.5) (2026-06-24)
 
 
