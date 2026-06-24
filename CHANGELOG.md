@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.14-rc.8](https://github.com/agrc/api-client/compare/v1.7.14-rc.7...v1.7.14-rc.8) (2026-06-24)
+
+
+### Bug Fixes
+
+* add env var to help gh cli know which repo to target ([4b53dae](https://github.com/agrc/api-client/commit/4b53daee918932cf898183dcdfb513dc93b6b5b0))
+
 ## [1.7.14-rc.7](https://github.com/agrc/api-client/compare/v1.7.14-rc.6...v1.7.14-rc.7) (2026-06-24)
 
 
