@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.15-rc.1](https://github.com/agrc/api-client/compare/v1.7.14...v1.7.15-rc.1) (2026-06-24)
+
+
+### Features
+
+* add .msi installer option for windows ([0a1af5f](https://github.com/agrc/api-client/commit/0a1af5fb0674351c6b7c2bcf2f57f95f3288444d))
+
 ## [1.7.14](https://github.com/agrc/api-client/compare/v1.7.13...v1.7.14) (2026-06-24)
 
 
