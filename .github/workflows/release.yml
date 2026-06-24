@@ -157,6 +157,7 @@ jobs:
       - name: 🚀 Attach distributables to release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
           find release-assets -type f -print0 | while IFS= read -r -d '' file; do
