@@ -1,5 +1,103 @@
 # Changelog
 
+## [1.7.15-rc.14](https://github.com/agrc/api-client/compare/v1.7.15-rc.13...v1.7.15-rc.14) (2026-07-01)
+
+
+### Bug Fixes
+
+* update version handling in forge config to include windows compliant version ([dd72455](https://github.com/agrc/api-client/commit/dd724553026d306e51cc44da9a13d0198caf4529))
+
+## [1.7.15-rc.13](https://github.com/agrc/api-client/compare/v1.7.15-rc.12...v1.7.15-rc.13) (2026-06-29)
+
+
+### Bug Fixes
+
+* cleaner msi stub name ([fa88b29](https://github.com/agrc/api-client/commit/fa88b294b356ea6e92b5bec4791460924e80bd2a))
+
+## [1.7.15-rc.12](https://github.com/agrc/api-client/compare/v1.7.15-rc.11...v1.7.15-rc.12) (2026-06-29)
+
+
+### Bug Fixes
+
+* use a valid version number for MSI builds ([1e067b4](https://github.com/agrc/api-client/commit/1e067b4aa5499cc734acb5a120e5ec482efa80ec))
+
+## [1.7.15-rc.11](https://github.com/agrc/api-client/compare/v1.7.15-rc.10...v1.7.15-rc.11) (2026-06-29)
+
+
+### Bug Fixes
+
+* add missing checkout step to upload jobs ([cba9df9](https://github.com/agrc/api-client/commit/cba9df910331b5658d2255df674e68bbb209b630))
+
+## [1.7.15-rc.10](https://github.com/agrc/api-client/compare/v1.7.15-rc.9...v1.7.15-rc.10) (2026-06-29)
+
+
+### Bug Fixes
+
+* fix msi installer pointing to incorrect app after install ([e71cce1](https://github.com/agrc/api-client/commit/e71cce171513089d4ab40d930cedebd005946eae))
+
+## [1.7.15-rc.9](https://github.com/agrc/api-client/compare/v1.7.15-rc.8...v1.7.15-rc.9) (2026-06-26)
+
+
+### Bug Fixes
+
+* fix wix config name change ([ef37e0e](https://github.com/agrc/api-client/commit/ef37e0ec701b6246a1f61a56057a495b0727caa4))
+
+## [1.7.15-rc.8](https://github.com/agrc/api-client/compare/v1.7.15-rc.7...v1.7.15-rc.8) (2026-06-26)
+
+
+### Bug Fixes
+
+* add version to msi filename ([883c29e](https://github.com/agrc/api-client/commit/883c29e72acb002339d1700240b6cacff4c554f6))
+
+## [1.7.15-rc.7](https://github.com/agrc/api-client/compare/v1.7.15-rc.6...v1.7.15-rc.7) (2026-06-26)
+
+
+### Bug Fixes
+
+* use appropriate macOS casing ([a0cb616](https://github.com/agrc/api-client/commit/a0cb6168893906e30b7949cc04ed017649726bd1))
+
+## [1.7.15-rc.6](https://github.com/agrc/api-client/compare/v1.7.15-rc.5...v1.7.15-rc.6) (2026-06-26)
+
+
+### Bug Fixes
+
+* implement Windows signing hook and update signing parameters ([c936548](https://github.com/agrc/api-client/commit/c9365485d9a992a46fcb1440501d89c57a568b0f))
+
+## [1.7.15-rc.5](https://github.com/agrc/api-client/compare/v1.7.15-rc.4...v1.7.15-rc.5) (2026-06-24)
+
+
+### Bug Fixes
+
+* update windowsSignParams to use explicit array definition and log Windows build environment ([bbe83ff](https://github.com/agrc/api-client/commit/bbe83ffb9809cef98b8c878ea1c2cebfb9de8ca7))
+
+## [1.7.15-rc.4](https://github.com/agrc/api-client/compare/v1.7.15-rc.3...v1.7.15-rc.4) (2026-06-24)
+
+
+### Bug Fixes
+
+* update windowsSignParams to use explicit array definition ([312ba94](https://github.com/agrc/api-client/commit/312ba94d1101239e581b8433f05624b0cbd46543))
+
+## [1.7.15-rc.3](https://github.com/agrc/api-client/compare/v1.7.15-rc.2...v1.7.15-rc.3) (2026-06-24)
+
+
+### Bug Fixes
+
+* add author ([a827b4a](https://github.com/agrc/api-client/commit/a827b4aa32050216b9facc6cb2763f52c9e9f699))
+
+## [1.7.15-rc.2](https://github.com/agrc/api-client/compare/v1.7.15-rc.1...v1.7.15-rc.2) (2026-06-24)
+
+
+### Bug Fixes
+
+* build squirrel and wix sequentially ([54a276f](https://github.com/agrc/api-client/commit/54a276fdeb8e62e39275ee0975d51221384f58fd))
+
+## [1.7.15-rc.1](https://github.com/agrc/api-client/compare/v1.7.14...v1.7.15-rc.1) (2026-06-24)
+
+
+### Features
+
+* add .msi installer option for windows ([0a1af5f](https://github.com/agrc/api-client/commit/0a1af5fb0674351c6b7c2bcf2f57f95f3288444d))
+
 ## [1.7.14](https://github.com/agrc/api-client/compare/v1.7.13...v1.7.14) (2026-06-24)
 
 

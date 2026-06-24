@@ -121,8 +121,17 @@ jobs:
           service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
           create_credentials_file: true
 
-      - name: 🚀 Build Windows distributables
-        run: pnpm run make
+      - name: 🚀 Build Squirrel distributables
+        run: pnpm run make:squirrel
+        env:
+          NODE_ENV: production
+          GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
+          GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+          VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
+
+      - name: 🚀 Build WiX distributables
+        run: pnpm run make:wix
         env:
           NODE_ENV: production
           GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
@@ -142,17 +151,22 @@ jobs:
     needs: [deploy-macos, deploy-windows]
     runs-on: ubuntu-latest
     steps:
-      - name: ⬇️ Download macOS distributables
-        uses: actions/download-artifact@v8
-        with:
-          name: macos-release-assets
-          path: release-assets/macos
+      - name: ⬇️ Set up code
+        uses: actions/checkout@v6
 
-      - name: ⬇️ Download Windows distributables
-        uses: actions/download-artifact@v8
+      - name: 🚀 Attach distributables to release
+        uses: ./.github/actions/upload-release-assets
         with:
           name: windows-release-assets
           path: release-assets/windows
+
+  upload-release-assets-beta:
+    name: Attach release assets (Beta)
+    needs: [deploy-macos-beta, deploy-windows-beta]
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Set up code
+        uses: actions/checkout@v6
 
       - name: 🚀 Attach distributables to release
         env:
