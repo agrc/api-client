@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.7.14](https://github.com/agrc/api-client/compare/v1.7.13...v1.7.14) (2026-06-24)
+
+
+### Bug Fixes
+
+* PNPM audit ([028510e](https://github.com/agrc/api-client/commit/028510ed6baffe6b5abb3086297f26883d9feb75))
+
+
+### Dependencies
+
+* bump NPM dependencies 🌲 ([e0d1e78](https://github.com/agrc/api-client/commit/e0d1e7822239789c2fc63aabb1a66242a0bb8791))
+* bump NPM dependencies 🌲 ([ab217c7](https://github.com/agrc/api-client/commit/ab217c793a21f2bea062925880dadbfcf611a2f9))
+
 ## [1.7.14-rc.8](https://github.com/agrc/api-client/compare/v1.7.14-rc.7...v1.7.14-rc.8) (2026-06-24)
 
 
