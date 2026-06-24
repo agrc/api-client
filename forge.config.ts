@@ -49,7 +49,8 @@ const windowsSign = {
 const isBeta = process.env.VITE_IS_BETA === 'true';
 const productName = isBeta ? 'UGRC API Client Beta' : 'UGRC API Client';
 const isUniversalArch = process.argv.includes('--arch=universal') || process.env.npm_config_arch === 'universal';
-const shouldSkipFusesForUniversal = process.platform === 'darwin' && isUniversalArch && process.env.NODE_ENV !== 'production';
+const shouldSkipFusesForUniversal =
+  process.platform === 'darwin' && isUniversalArch && process.env.NODE_ENV !== 'production';
 
 const config: ForgeConfig = {
   buildIdentifier: isBeta ? 'beta' : 'prod',
