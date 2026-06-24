@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.7.14-rc.5](https://github.com/agrc/api-client/compare/v1.7.14-rc.4...v1.7.14-rc.5) (2026-06-24)
+
+
+### Bug Fixes
+
+* more specific upload path for artifacts ([e242253](https://github.com/agrc/api-client/commit/e242253a30323e1ee48849592b05e5d6c18eaded))
+
+
+### Dependencies
+
+* pin to node v22 ([114a8d7](https://github.com/agrc/api-client/commit/114a8d78003f14e8369a828f0be7dc1071665713))
+
 ## [1.7.14-rc.4](https://github.com/agrc/api-client/compare/v1.7.14-rc.3...v1.7.14-rc.4) (2026-06-22)
 
 
