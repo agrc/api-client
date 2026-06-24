@@ -66,8 +66,6 @@ An apple developer certificate is required to sign the application for distribut
    - GCP_KEYRING_PATH examples:
      - Full key version path (preferred for REST calls):
        `projects/my-project/locations/cloud-region/keyRings/ring-name/cryptoKeys/key-name/cryptoKeyVersions/1`
-     - Key ring style (when using JSign -s with a keyRing path):
-       `projects/my-project/locations/cloud-region/keyRings/ring-name`
 
    - GCP_KEY_NAME example (used as JSign alias -a):
      - `key-name`
@@ -83,9 +81,17 @@ An apple developer certificate is required to sign the application for distribut
 
 This project uses our [standard release action](https://github.com/agrc/release-composite-action) to create draft releases. Publishing a release triggers GitHub Actions to build/sign the distributables and attach them to the release; existing installs will silently download the update and the installation will occur on the next restart of the app.
 
+### Windows packaging
+
+Windows builds produce both Squirrel and WiX installers. WiX builds require the WiX v3 toolset on the machine that runs the build.
+
+1. Install the WiX v3 toolset so `candle` and `light` are available on `PATH`.
+2. Ensure the Windows signing prerequisites above are in place, including `build/cert/windows.cer` and the KMS environment variables used by Forge in production builds.
+3. Run `pnpm make:win` to build all Windows installers, `pnpm make:squirrel` to build only the Squirrel artifacts, or `pnpm make:wix` to build only the `.msi` artifact.
+
 ## Dependency Notes
 
-- Upgrading `react-dropzone` to version 14.3.0 or layer [breaks the ability to drag and drop files](https://github.com/react-dropzone/react-dropzone/issues/1411).
+- Upgrading `react-dropzone` to version 14.3.0 or later [breaks the ability to drag and drop files](https://github.com/react-dropzone/react-dropzone/issues/1411).
 
 ## Attribution
 

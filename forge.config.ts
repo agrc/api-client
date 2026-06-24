@@ -1,5 +1,6 @@
 import { MakerDMG } from '@electron-forge/maker-dmg';
 import { MakerSquirrel } from '@electron-forge/maker-squirrel';
+import { MakerWix } from '@electron-forge/maker-wix';
 import { MakerZIP } from '@electron-forge/maker-zip';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { VitePlugin } from '@electron-forge/plugin-vite';
@@ -46,6 +47,31 @@ const windowsSign: SignToolOptions = {
   website: 'https://gis.utah.gov/products/sgid/address/api-client/',
   signWithParams: ['/v', '/csp', 'Google Cloud KMS Provider', '/kc', kmsKeyPath],
 };
+const squirrelWindowsSign: SignToolOptions = {
+  ...windowsSign,
+  hookModulePath: path.resolve(__dirname, 'scripts', 'windows-sign-serial-hook.cjs'),
+};
+const windowsSignParams = Array.isArray(windowsSign.signWithParams)
+  ? windowsSign.signWithParams.join(' ')
+  : windowsSign.signWithParams;
+
+const getWixVersion = (input: string) => {
+  const match = input.match(
+    /^(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)(?:-(?<prerelease>[0-9A-Za-z.-]+))?(?:\+[0-9A-Za-z.-]+)?$/,
+  );
+
+  if (!match?.groups) {
+    throw new Error(`Invalid package version for WiX build: ${input}`);
+  }
+
+  const { major, minor, patch, prerelease } = match.groups;
+  const revision = prerelease?.match(/\d+/)?.[0] ?? '0';
+
+  return `${major}.${minor}.${patch}.${revision}`;
+};
+
+const wixVersion = getWixVersion(version);
+
 const isBeta = process.env.VITE_IS_BETA === 'true';
 const productName = isBeta ? 'UGRC API Client Beta' : 'UGRC API Client';
 const isUniversalArch = process.argv.includes('--arch=universal') || process.env.npm_config_arch === 'universal';
@@ -94,9 +120,26 @@ const config: ForgeConfig = {
       iconUrl:
         'https://raw.githubusercontent.com/agrc/api-client/dac3554721f3ef6341910e5eee5c5395820ec8f1/src/assets/logo.ico',
       loadingGif: './src/assets/loading.gif',
+      // Keep Squirrel focused on the setup.exe + update artifacts.
+      // We keep MakerWix below because it produces the traditional enterprise-style MSI we want to ship.
       noMsi: true,
       setupExe: `ugrc-api-client-${version}-win32-setup.exe`,
       setupIcon: path.resolve(assets, 'logo.ico'),
+      windowsSign: squirrelWindowsSign,
+    }),
+    new MakerWix({
+      certificateFile: certPath,
+      description: 'The official UGRC API client',
+      exe: 'ugrc-api-client',
+      icon: path.resolve(assets, 'logo.ico'),
+      language: 1033,
+      manufacturer: 'UGRC',
+      name: productName,
+      signWithParams: windowsSignParams,
+      version,
+      beforeCreate: (creator) => {
+        creator.windowsCompliantVersion = wixVersion;
+      },
       windowsSign,
     }),
     new MakerZIP({}, ['darwin']),
