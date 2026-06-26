@@ -98,59 +98,29 @@ jobs:
           identity-provider: ${{ secrets.IDENTITY_PROVIDER }}
           service-account-email: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
 
-  upload-release-assets:
+  upload-release-assets-prod:
     name: Attach release assets
-    needs:
-      [
-        deploy-macos-prod,
-        deploy-macos-beta,
-        deploy-windows-prod,
-        deploy-windows-beta,
-      ]
-    if: >-
-      ${{
-        always() &&
-        (
-          (!github.event.release.prerelease &&
-            needs.deploy-macos-prod.result == 'success' &&
-            needs.deploy-windows-prod.result == 'success') ||
-          (github.event.release.prerelease &&
-            needs.deploy-macos-beta.result == 'success' &&
-            needs.deploy-windows-beta.result == 'success')
-        )
-      }}
+    needs: [deploy-macos-prod, deploy-windows-prod]
     runs-on: ubuntu-latest
     steps:
-      - name: ⬇️ Set up code
-        uses: actions/checkout@v6
-
       - name: 🚀 Attach distributables to release
         uses: ./.github/actions/upload-release-assets
         with:
-          name: windows-release-assets
-          path: release-assets/windows
+          release-tag: ${{ github.event.release.tag_name }}
 
   upload-release-assets-beta:
     name: Attach release assets (Beta)
     needs: [deploy-macos-beta, deploy-windows-beta]
     runs-on: ubuntu-latest
     steps:
-      - name: ⬇️ Set up code
-        uses: actions/checkout@v6
-
       - name: 🚀 Attach distributables to release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-          RELEASE_TAG: ${{ github.event.release.tag_name }}
-        run: |
-          find release-assets -type f -print0 | while IFS= read -r -d '' file; do
-            gh release upload "$RELEASE_TAG" "$file" --clobber
-          done
+        uses: ./.github/actions/upload-release-assets
+        with:
+          release-tag: ${{ github.event.release.tag_name }}
 
   change-management:
     name: Change management
-    needs: [upload-release-assets]
+    needs: [upload-release-assets-prod]
     runs-on: ubuntu-latest
     permissions:
       contents: read

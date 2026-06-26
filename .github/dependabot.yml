@@ -28,6 +28,7 @@ updates:
       - /
       - /.github/actions/deploy-macos
       - /.github/actions/deploy-windows
+      - /.github/actions/upload-release-assets
     schedule:
       interval: quarterly
     groups:
