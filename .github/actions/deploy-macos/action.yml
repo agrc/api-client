@@ -1,0 +1,84 @@
+name: Deploy macOS
+description: Build, sign, and upload artifacts to the GitHub release
+inputs:
+  build-identifier:
+    description: The build identifier (e.g., beta or prod)
+    required: true
+  apple-certificate:
+    description: Base64 encoded Apple certificate (P12 format)
+    required: true
+  apple-certificate-password:
+    description: Password for the Apple certificate (P12 format)
+    required: true
+  apple-identity:
+    description: Apple identity for signing
+    required: true
+  apple-user-id:
+    description: Apple user ID for signing
+    required: true
+  apple-password:
+    description: Apple password for signing
+    required: true
+  apple-team-id:
+    description: Apple team ID for signing
+    required: true
+  gcp-keyring-path:
+    description: Path to the GCP keyring for signing
+    required: true
+  gcp-key-name:
+    description: Name of the GCP key for signing
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: 📦 Setup PNPM
+      uses: pnpm/action-setup@v6
+      with:
+        version: 11
+
+    - name: ⎔ Set up Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version-file: .node-version
+        cache: pnpm
+
+    - name: 🐍 Set up python
+      uses: actions/setup-python@v6
+      with:
+        python-version: 3.12
+
+    - name: 🧑‍🎓 Set up signing certificates
+      uses: apple-actions/import-codesign-certs@v6
+      with:
+        p12-file-base64: ${{ inputs.apple-certificate }}
+        p12-password: ${{ inputs.apple-certificate-password }}
+
+    - name: 💻 Set up app DMG
+      shell: bash
+      run: |
+        python3 -m pip install setuptools
+
+    - name: 📥 Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile
+
+    - name: 🚀 Build macOS distributables
+      shell: bash
+      run: pnpm make --arch=universal
+      env:
+        NODE_ENV: production
+        APPLE_IDENTITY: ${{ inputs.apple-identity }}
+        APPLE_USER_ID: ${{ inputs.apple-user-id }}
+        APPLE_PASSWORD: ${{ inputs.apple-password }}
+        APPLE_TEAM_ID: ${{ inputs.apple-team-id }}
+        GCP_KEYRING_PATH: ${{ inputs.gcp-keyring-path }}
+        GCP_KEY_NAME: ${{ inputs.gcp-key-name }}
+        VITE_IS_BETA: ${{ inputs.build-identifier == 'beta' }}
+
+    - name: ⬆️ Upload macOS distributables
+      uses: actions/upload-artifact@v7
+      with:
+        name: macos-release-assets
+        path: out/${{ inputs.build-identifier }}/make/
+        if-no-files-found: error
