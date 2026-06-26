@@ -48,7 +48,7 @@ body:
       description: What OS are you running?
       options:
         - Windows
-        - MacOS
+        - macOS
     validations:
       required: true
   - type: textarea
