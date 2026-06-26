@@ -1,0 +1,33 @@
+name: Upload release assets
+description: Download built artifacts and attach them to the GitHub release
+
+inputs:
+  release-tag:
+    description: The release tag to upload assets to
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: ⬇️ Download macOS distributables
+      uses: actions/download-artifact@v8
+      with:
+        name: macos-release-assets
+        path: release-assets/macos
+
+    - name: ⬇️ Download Windows distributables
+      uses: actions/download-artifact@v8
+      with:
+        name: windows-release-assets
+        path: release-assets/windows
+
+    - name: 🚀 Attach distributables to release
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+        RELEASE_TAG: ${{ inputs.release-tag }}
+      run: |
+        find release-assets -type f -print0 | while IFS= read -r -d '' file; do
+          gh release upload "$RELEASE_TAG" "$file" --clobber
+        done
