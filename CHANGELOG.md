@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.15-rc.9](https://github.com/agrc/api-client/compare/v1.7.15-rc.8...v1.7.15-rc.9) (2026-06-26)
+
+
+### Bug Fixes
+
+* fix wix config name change ([ef37e0e](https://github.com/agrc/api-client/commit/ef37e0ec701b6246a1f61a56057a495b0727caa4))
+
 ## [1.7.15-rc.8](https://github.com/agrc/api-client/compare/v1.7.15-rc.7...v1.7.15-rc.8) (2026-06-26)
 
 
