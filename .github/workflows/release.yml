@@ -14,141 +14,111 @@ env:
   BUILD_IDENTIFIER: ${{ github.event.release.prerelease && 'beta' || 'prod' }}
 
 jobs:
-  deploy-macos:
+  deploy-macos-prod:
     name: Publish macOS app
+    if: ${{ !github.event.release.prerelease }}
     runs-on: macos-latest
     environment:
       name: prod
     steps:
       - name: ⬇️ Set up code
         uses: actions/checkout@v6
+
+      - name: 🚀 Deploy macOS app
+        uses: ./.github/actions/deploy-macos
         with:
-          show-progress: false
+          build-identifier: ${{ env.BUILD_IDENTIFIER }}
+          apple-certificate: ${{ secrets.APPLE_CERTIFICATE }}
+          apple-certificate-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          apple-identity: ${{ secrets.APPLE_IDENTITY }}
+          apple-user-id: ${{ secrets.APPLE_USER_ID }}
+          apple-password: ${{ secrets.APPLE_PASSWORD }}
+          apple-team-id: ${{ secrets.APPLE_TEAM_ID }}
+          gcp-keyring-path: ${{ secrets.GCP_KEYRING_PATH }}
+          gcp-key-name: ${{ secrets.GCP_KEY_NAME }}
 
-      - name: 📦 Setup PNPM
-        uses: pnpm/action-setup@v6
+  deploy-macos-beta:
+    name: Publish macOS app (Beta)
+    if: ${{ github.event.release.prerelease }}
+    runs-on: macos-latest
+    environment:
+      name: dev
+    steps:
+      - name: ⬇️ Set up code
+        uses: actions/checkout@v6
+
+      - name: 🚀 Deploy macOS app
+        uses: ./.github/actions/deploy-macos
         with:
-          version: 11
+          build-identifier: ${{ env.BUILD_IDENTIFIER }}
+          apple-certificate: ${{ secrets.APPLE_CERTIFICATE }}
+          apple-certificate-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          apple-identity: ${{ secrets.APPLE_IDENTITY }}
+          apple-user-id: ${{ secrets.APPLE_USER_ID }}
+          apple-password: ${{ secrets.APPLE_PASSWORD }}
+          apple-team-id: ${{ secrets.APPLE_TEAM_ID }}
+          gcp-keyring-path: ${{ secrets.GCP_KEYRING_PATH }}
+          gcp-key-name: ${{ secrets.GCP_KEY_NAME }}
 
-      - name: ⎔ Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: .node-version
-          cache: pnpm
-
-      - name: 🐍 Set up python
-        uses: actions/setup-python@v6
-        with:
-          python-version: 3.12
-
-      - name: 🧑‍🎓 Set up signing certificates
-        uses: apple-actions/import-codesign-certs@v6
-        with:
-          p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
-          p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-
-      - name: 💻 Set up app DMG
-        run: |
-          python3 -m pip install setuptools
-
-      - name: 📥 Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: 🚀 Build macOS distributables
-        run: pnpm make --arch=universal
-        env:
-          NODE_ENV: production
-          APPLE_IDENTITY: ${{ secrets.APPLE_IDENTITY }}
-          APPLE_USER_ID: ${{ secrets.APPLE_USER_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
-          GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
-          VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
-
-      - name: ⬆️ Upload macOS distributables
-        uses: actions/upload-artifact@v7
-        with:
-          name: macos-release-assets
-          path: out/${{ env.BUILD_IDENTIFIER }}/make/
-          if-no-files-found: error
-
-  deploy-windows:
-    name: Publish windows app
+  deploy-windows-prod:
+    name: Publish Windows app
+    if: ${{ !github.event.release.prerelease }}
     runs-on: windows-latest
     environment:
       name: prod
     steps:
       - name: ⬇️ Set up code
         uses: actions/checkout@v6
+
+      - name: 🚀 Deploy Windows app
+        uses: ./.github/actions/deploy-windows
         with:
-          show-progress: false
+          build-identifier: ${{ env.BUILD_IDENTIFIER }}
+          gcp-keyring-path: ${{ secrets.GCP_KEYRING_PATH }}
+          gcp-key-name: ${{ secrets.GCP_KEY_NAME }}
+          identity-provider: ${{ secrets.IDENTITY_PROVIDER }}
+          service-account-email: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
 
-      - name: 📦 Setup PNPM
-        uses: pnpm/action-setup@v6
+  deploy-windows-beta:
+    name: Publish Windows app (Beta)
+    if: ${{ github.event.release.prerelease }}
+    runs-on: windows-latest
+    environment:
+      name: dev
+    steps:
+      - name: ⬇️ Set up code
+        uses: actions/checkout@v6
+
+      - name: 🚀 Deploy Windows app
+        uses: ./.github/actions/deploy-windows
         with:
-          version: 11
-
-      - name: ⎔ Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: .node-version
-          cache: pnpm
-
-      - name: 📥 Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: 📦 Cache CNG Provider
-        id: cache-cng
-        uses: actions/cache@v5
-        with:
-          path: C:\Users\runneradmin\AppData\Local\Temp\KmsCngInstall
-          key: cng-provider-v1.3-windows
-
-      - name: 🏗️ Install Google Cloud KMS Provider
-        shell: pwsh
-        run: .\build\install-kms.ps1
-        env:
-          CACHE_HIT: ${{ steps.cache-cng.outputs.cache-hit }}
-
-      - name: 🗝️ Authenticate to Google Cloud
-        id: auth
-        uses: google-github-actions/auth@v3
-        with:
-          access_token_scopes: "openid, https://www.googleapis.com/auth/cloudkms, https://www.googleapis.com/auth/cloud-platform"
-          token_format: "access_token"
-          workload_identity_provider: ${{ secrets.IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
-          create_credentials_file: true
-
-      - name: 🚀 Build Squirrel distributables
-        run: pnpm run make:squirrel
-        env:
-          NODE_ENV: production
-          GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
-          GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
-          VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
-
-      - name: 🚀 Build WiX distributables
-        run: pnpm run make:wix
-        env:
-          NODE_ENV: production
-          GCP_KEYRING_PATH: ${{ secrets.GCP_KEYRING_PATH }}
-          GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
-          VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
-
-      - name: ⬆️ Upload Windows distributables
-        uses: actions/upload-artifact@v7
-        with:
-          name: windows-release-assets
-          path: out/${{ env.BUILD_IDENTIFIER }}/make/
-          if-no-files-found: error
+          build-identifier: ${{ env.BUILD_IDENTIFIER }}
+          gcp-keyring-path: ${{ secrets.GCP_KEYRING_PATH }}
+          gcp-key-name: ${{ secrets.GCP_KEY_NAME }}
+          identity-provider: ${{ secrets.IDENTITY_PROVIDER }}
+          service-account-email: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
 
   upload-release-assets:
     name: Attach release assets
-    needs: [deploy-macos, deploy-windows]
+    needs:
+      [
+        deploy-macos-prod,
+        deploy-macos-beta,
+        deploy-windows-prod,
+        deploy-windows-beta,
+      ]
+    if: >-
+      ${{
+        always() &&
+        (
+          (!github.event.release.prerelease &&
+            needs.deploy-macos-prod.result == 'success' &&
+            needs.deploy-windows-prod.result == 'success') ||
+          (github.event.release.prerelease &&
+            needs.deploy-macos-beta.result == 'success' &&
+            needs.deploy-windows-beta.result == 'success')
+        )
+      }}
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Set up code
@@ -180,7 +150,7 @@ jobs:
 
   change-management:
     name: Change management
-    needs: [deploy-macos, deploy-windows, upload-release-assets]
+    needs: [upload-release-assets]
     runs-on: ubuntu-latest
     permissions:
       contents: read

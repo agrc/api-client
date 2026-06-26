@@ -22,8 +22,12 @@ updates:
       semver-patch-days: 7
       exclude:
         - '@ugrc/*'
+
   - package-ecosystem: github-actions
-    directory: /
+    directories:
+      - /
+      - /.github/actions/deploy-macos
+      - /.github/actions/deploy-windows
     schedule:
       interval: quarterly
     groups:
