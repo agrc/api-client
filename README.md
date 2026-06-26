@@ -66,8 +66,6 @@ An apple developer certificate is required to sign the application for distribut
    - GCP_KEYRING_PATH examples:
      - Full key version path (preferred for REST calls):
        `projects/my-project/locations/cloud-region/keyRings/ring-name/cryptoKeys/key-name/cryptoKeyVersions/1`
-     - Key ring style (when using JSign -s with a keyRing path):
-       `projects/my-project/locations/cloud-region/keyRings/ring-name`
 
    - GCP_KEY_NAME example (used as JSign alias -a):
      - `key-name`
@@ -93,7 +91,7 @@ Windows builds produce both Squirrel and WiX installers. WiX builds require the 
 
 ## Dependency Notes
 
-- Upgrading `react-dropzone` to version 14.3.0 or layer [breaks the ability to drag and drop files](https://github.com/react-dropzone/react-dropzone/issues/1411).
+- Upgrading `react-dropzone` to version 14.3.0 or later [breaks the ability to drag and drop files](https://github.com/react-dropzone/react-dropzone/issues/1411).
 
 ## Attribution
 

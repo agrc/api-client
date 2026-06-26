@@ -102,6 +102,8 @@ const config: ForgeConfig = {
       iconUrl:
         'https://raw.githubusercontent.com/agrc/api-client/dac3554721f3ef6341910e5eee5c5395820ec8f1/src/assets/logo.ico',
       loadingGif: './src/assets/loading.gif',
+      // Keep Squirrel focused on the setup.exe + update artifacts.
+      // We keep MakerWix below because it produces the traditional enterprise-style MSI we want to ship.
       noMsi: true,
       setupExe: `ugrc-api-client-${version}-win32-setup.exe`,
       setupIcon: path.resolve(assets, 'logo.ico'),
@@ -114,7 +116,7 @@ const config: ForgeConfig = {
       icon: path.resolve(assets, 'logo.ico'),
       language: 1033,
       manufacturer: 'UGRC',
-      name: productName,
+      name: `${productName}-${version}.msi`,
       signWithParams: windowsSignParams,
       version,
       windowsSign,
