@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 // this fixed errors introduced after we added the wix stuff, perhaps it can be removed in the future?
 const fs = require('node:fs');
 const fsp = require('node:fs/promises');
