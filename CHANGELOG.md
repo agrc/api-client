@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.15-rc.8](https://github.com/agrc/api-client/compare/v1.7.15-rc.7...v1.7.15-rc.8) (2026-06-26)
+
+
+### Bug Fixes
+
+* add version to msi filename ([883c29e](https://github.com/agrc/api-client/commit/883c29e72acb002339d1700240b6cacff4c554f6))
+
 ## [1.7.15-rc.7](https://github.com/agrc/api-client/compare/v1.7.15-rc.6...v1.7.15-rc.7) (2026-06-26)
 
 
