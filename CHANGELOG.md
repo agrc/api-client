@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.15-rc.6](https://github.com/agrc/api-client/compare/v1.7.15-rc.5...v1.7.15-rc.6) (2026-06-26)
+
+
+### Bug Fixes
+
+* implement Windows signing hook and update signing parameters ([c936548](https://github.com/agrc/api-client/commit/c9365485d9a992a46fcb1440501d89c57a568b0f))
+
 ## [1.7.15-rc.5](https://github.com/agrc/api-client/compare/v1.7.15-rc.4...v1.7.15-rc.5) (2026-06-24)
 
 
