@@ -47,6 +47,10 @@ const windowsSign: SignToolOptions = {
   website: 'https://gis.utah.gov/products/sgid/address/api-client/',
   signWithParams: ['/v', '/csp', 'Google Cloud KMS Provider', '/kc', kmsKeyPath],
 };
+const squirrelWindowsSign: SignToolOptions = {
+  ...windowsSign,
+  hookModulePath: path.resolve(__dirname, 'scripts', 'windows-sign-serial-hook.cjs'),
+};
 const windowsSignParams = Array.isArray(windowsSign.signWithParams)
   ? windowsSign.signWithParams.join(' ')
   : windowsSign.signWithParams;
@@ -101,7 +105,7 @@ const config: ForgeConfig = {
       noMsi: true,
       setupExe: `ugrc-api-client-${version}-win32-setup.exe`,
       setupIcon: path.resolve(assets, 'logo.ico'),
-      windowsSign,
+      windowsSign: squirrelWindowsSign,
     }),
     new MakerWix({
       certificateFile: certPath,
