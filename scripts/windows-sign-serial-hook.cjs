@@ -1,3 +1,4 @@
+// this fixed errors introduced after we added the wix stuff, perhaps it can be removed in the future?
 const fs = require('node:fs');
 const fsp = require('node:fs/promises');
 const os = require('node:os');
@@ -82,7 +83,6 @@ const runSigntool = async (fileToSign) => {
   const args = [
     'sign',
     '/v',
-    '/debug',
     '/fd',
     'SHA256',
     '/tr',

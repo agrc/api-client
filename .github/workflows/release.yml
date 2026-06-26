@@ -121,22 +121,6 @@ jobs:
           service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
           create_credentials_file: true
 
-      - name: 🔎 Log Windows build environment
-        shell: pwsh
-        run: |
-          Write-Host "Runner image: windows-latest"
-          Get-ComputerInfo | Select-Object WindowsProductName, WindowsVersion, OsBuildNumber
-          $sdkSigntool = Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\bin' -Filter signtool.exe -Recurse |
-            Sort-Object FullName -Descending |
-            Select-Object -First 1
-
-          if ($sdkSigntool) {
-            Write-Host "SDK signtool: $($sdkSigntool.FullName)"
-          }
-          else {
-            Write-Host 'SDK signtool not found'
-          }
-
       - name: 🚀 Build Squirrel distributables
         run: pnpm run make:squirrel
         env:
@@ -154,20 +138,6 @@ jobs:
           GCP_KEY_NAME: ${{ secrets.GCP_KEY_NAME }}
           GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
           VITE_IS_BETA: ${{ github.event.release.prerelease == true }}
-
-      - name: 🪵 Dump windows signing log
-        if: failure()
-        shell: pwsh
-        run: |
-          $logPath = Join-Path $PWD 'node_modules\electron-winstaller\vendor\electron-windows-sign.log'
-
-          if (Test-Path $logPath) {
-            Write-Host "electron-windows-sign log:"
-            Get-Content $logPath
-          }
-          else {
-            Write-Host "No electron-windows-sign log found at $logPath"
-          }
 
       - name: ⬆️ Upload Windows distributables
         uses: actions/upload-artifact@v7

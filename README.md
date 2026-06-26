@@ -85,13 +85,11 @@ This project uses our [standard release action](https://github.com/agrc/release-
 
 ### Windows packaging
 
-The Forge config now produces both Squirrel and WiX installers for Windows. WiX builds require the WiX toolset on the machine that runs the build.
+Windows builds produce both Squirrel and WiX installers. WiX builds require the WiX v3 toolset on the machine that runs the build.
 
 1. Install the WiX v3 toolset so `candle` and `light` are available on `PATH`.
 2. Ensure the Windows signing prerequisites above are in place, including `build/cert/windows.cer` and the KMS environment variables used by Forge in production builds.
-3. Run `pnpm make:win` to build all Windows installers, or `pnpm make:wix` to build only the `.msi` artifact.
-
-WiX packaging is only expected to succeed on Windows build machines with the WiX toolset installed.
+3. Run `pnpm make:win` to build all Windows installers, `pnpm make:squirrel` to build only the Squirrel artifacts, or `pnpm make:wix` to build only the `.msi` artifact.
 
 ## Dependency Notes
 
