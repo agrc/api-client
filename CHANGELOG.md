@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.15-rc.7](https://github.com/agrc/api-client/compare/v1.7.15-rc.6...v1.7.15-rc.7) (2026-06-26)
+
+
+### Bug Fixes
+
+* use appropriate macOS casing ([a0cb616](https://github.com/agrc/api-client/commit/a0cb6168893906e30b7949cc04ed017649726bd1))
+
 ## [1.7.15-rc.6](https://github.com/agrc/api-client/compare/v1.7.15-rc.5...v1.7.15-rc.6) (2026-06-26)
 
 
