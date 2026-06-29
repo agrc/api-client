@@ -112,7 +112,6 @@ const config: ForgeConfig = {
     new MakerWix({
       certificateFile: certPath,
       description: 'The official UGRC API client',
-      exe: `ugrc-api-client-${version}.exe`,
       icon: path.resolve(assets, 'logo.ico'),
       language: 1033,
       manufacturer: 'UGRC',
