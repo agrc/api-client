@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.15-rc.11](https://github.com/agrc/api-client/compare/v1.7.15-rc.10...v1.7.15-rc.11) (2026-06-29)
+
+
+### Bug Fixes
+
+* add missing checkout step to upload jobs ([cba9df9](https://github.com/agrc/api-client/commit/cba9df910331b5658d2255df674e68bbb209b630))
+
 ## [1.7.15-rc.10](https://github.com/agrc/api-client/compare/v1.7.15-rc.9...v1.7.15-rc.10) (2026-06-29)
 
 
