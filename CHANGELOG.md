@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.15-rc.13](https://github.com/agrc/api-client/compare/v1.7.15-rc.12...v1.7.15-rc.13) (2026-06-29)
+
+
+### Bug Fixes
+
+* cleaner msi stub name ([fa88b29](https://github.com/agrc/api-client/commit/fa88b294b356ea6e92b5bec4791460924e80bd2a))
+
 ## [1.7.15-rc.12](https://github.com/agrc/api-client/compare/v1.7.15-rc.11...v1.7.15-rc.12) (2026-06-29)
 
 
