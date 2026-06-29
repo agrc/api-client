@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.15-rc.12](https://github.com/agrc/api-client/compare/v1.7.15-rc.11...v1.7.15-rc.12) (2026-06-29)
+
+
+### Bug Fixes
+
+* use a valid version number for MSI builds ([1e067b4](https://github.com/agrc/api-client/commit/1e067b4aa5499cc734acb5a120e5ec482efa80ec))
+
 ## [1.7.15-rc.11](https://github.com/agrc/api-client/compare/v1.7.15-rc.10...v1.7.15-rc.11) (2026-06-29)
 
 
