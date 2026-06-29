@@ -54,6 +54,24 @@ const squirrelWindowsSign: SignToolOptions = {
 const windowsSignParams = Array.isArray(windowsSign.signWithParams)
   ? windowsSign.signWithParams.join(' ')
   : windowsSign.signWithParams;
+
+const getWixVersion = (input: string) => {
+  const match = input.match(
+    /^(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)(?:-(?<prerelease>[0-9A-Za-z.-]+))?(?:\+[0-9A-Za-z.-]+)?$/,
+  );
+
+  if (!match?.groups) {
+    throw new Error(`Invalid package version for WiX build: ${input}`);
+  }
+
+  const { major, minor, patch, prerelease } = match.groups;
+  const revision = prerelease?.match(/\d+/)?.[0] ?? '0';
+
+  return `${major}.${minor}.${patch}.${revision}`;
+};
+
+const wixVersion = getWixVersion(version);
+
 const isBeta = process.env.VITE_IS_BETA === 'true';
 const productName = isBeta ? 'UGRC API Client Beta' : 'UGRC API Client';
 const isUniversalArch = process.argv.includes('--arch=universal') || process.env.npm_config_arch === 'universal';
@@ -117,7 +135,7 @@ const config: ForgeConfig = {
       manufacturer: 'UGRC',
       name: productName,
       signWithParams: windowsSignParams,
-      version,
+      version: wixVersion,
       windowsSign,
     }),
     new MakerZIP({}, ['darwin']),
