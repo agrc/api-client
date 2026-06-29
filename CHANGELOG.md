@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.15-rc.10](https://github.com/agrc/api-client/compare/v1.7.15-rc.9...v1.7.15-rc.10) (2026-06-29)
+
+
+### Bug Fixes
+
+* fix msi installer pointing to incorrect app after install ([e71cce1](https://github.com/agrc/api-client/commit/e71cce171513089d4ab40d930cedebd005946eae))
+
 ## [1.7.15-rc.9](https://github.com/agrc/api-client/compare/v1.7.15-rc.8...v1.7.15-rc.9) (2026-06-26)
 
 
