@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.15-rc.14](https://github.com/agrc/api-client/compare/v1.7.15-rc.13...v1.7.15-rc.14) (2026-07-01)
+
+
+### Bug Fixes
+
+* update version handling in forge config to include windows compliant version ([dd72455](https://github.com/agrc/api-client/commit/dd724553026d306e51cc44da9a13d0198caf4529))
+
 ## [1.7.15-rc.13](https://github.com/agrc/api-client/compare/v1.7.15-rc.12...v1.7.15-rc.13) (2026-06-29)
 
 
