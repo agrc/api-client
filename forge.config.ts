@@ -136,7 +136,10 @@ const config: ForgeConfig = {
       manufacturer: 'UGRC',
       name: productName,
       signWithParams: windowsSignParams,
-      version: wixVersion,
+      version,
+      beforeCreate: (creator) => {
+        creator.windowsCompliantVersion = wixVersion;
+      },
       windowsSign,
     }),
     new MakerZIP({}, ['darwin']),
