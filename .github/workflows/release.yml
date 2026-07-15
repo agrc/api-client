@@ -22,7 +22,7 @@ jobs:
       name: prod
     steps:
       - name: ⬇️ Set up code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: 🚀 Deploy macOS app
         uses: ./.github/actions/deploy-macos
@@ -45,7 +45,7 @@ jobs:
       name: dev
     steps:
       - name: ⬇️ Set up code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: 🚀 Deploy macOS app
         uses: ./.github/actions/deploy-macos
@@ -68,7 +68,7 @@ jobs:
       name: prod
     steps:
       - name: ⬇️ Set up code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: 🚀 Deploy Windows app
         uses: ./.github/actions/deploy-windows
@@ -87,7 +87,7 @@ jobs:
       name: dev
     steps:
       - name: ⬇️ Set up code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: 🚀 Deploy Windows app
         uses: ./.github/actions/deploy-windows
@@ -104,7 +104,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Set up code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: 🚀 Attach distributables to release
         uses: ./.github/actions/upload-release-assets
@@ -117,7 +117,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Set up code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: 🚀 Attach distributables to release
         uses: ./.github/actions/upload-release-assets
