@@ -103,6 +103,9 @@ jobs:
     needs: [deploy-macos-prod, deploy-windows-prod]
     runs-on: ubuntu-latest
     steps:
+      - name: ⬇️ Set up code
+        uses: actions/checkout@v6
+
       - name: 🚀 Attach distributables to release
         uses: ./.github/actions/upload-release-assets
         with:
@@ -113,6 +116,9 @@ jobs:
     needs: [deploy-macos-beta, deploy-windows-beta]
     runs-on: ubuntu-latest
     steps:
+      - name: ⬇️ Set up code
+        uses: actions/checkout@v6
+
       - name: 🚀 Attach distributables to release
         uses: ./.github/actions/upload-release-assets
         with:
