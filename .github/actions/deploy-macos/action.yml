@@ -1,5 +1,5 @@
 name: Deploy macOS
-description: Build, sign, and upload artifacts to the GitHub release
+description: Build, sign, and upload workflow artifacts for later attachment to the GitHub release
 inputs:
   build-identifier:
     description: The build identifier (e.g., beta or prod)

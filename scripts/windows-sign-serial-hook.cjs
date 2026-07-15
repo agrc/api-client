@@ -8,7 +8,7 @@ const { spawn } = require('node:child_process');
 
 const lockPath = path.join(os.tmpdir(), 'ugrc-api-client-kms-sign.lock');
 const certPath = path.resolve(__dirname, '..', 'build', 'cert', 'windows.cer');
-const timestampServer = 'http://timestamp.sectigo.com';
+const timestampServer = 'https://timestamp.sectigo.com';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -18,6 +18,10 @@ const resolveKmsKeyPath = () => {
 
   if (!ring) {
     throw new Error('GCP_KEYRING_PATH environment variable is not set');
+  }
+
+  if (!keyName) {
+    throw new Error('GCP_KEY_NAME environment variable is not set');
   }
 
   return `${ring}/cryptoKeys/${keyName}/cryptoKeyVersions/1`;
