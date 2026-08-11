@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.16](https://github.com/agrc/api-client/compare/v1.7.15...v1.7.16) (2026-08-11)
+
+
+### Dependencies
+
+* bump the safe-dependencies group across 1 directory with 18 updates ([191956c](https://github.com/agrc/api-client/commit/191956c7763b3a4dceab26e533088687f0cd303a))
+
 ## [1.7.15](https://github.com/agrc/api-client/compare/v1.7.14...v1.7.15) (2026-07-15)
 
 
